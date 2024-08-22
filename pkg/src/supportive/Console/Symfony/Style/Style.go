@@ -5,6 +5,7 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/OutputFormatter/OutputStyleInterface"
 	"github.com/gookit/color"
 	"github.com/jedib0t/go-pretty/v6/table"
+	"github.com/jedib0t/go-pretty/v6/text"
 	"github.com/schollz/progressbar/v3"
 	"strings"
 )
@@ -58,7 +59,7 @@ func (s *Style) DefinitionList(list []OutputStyleInterface.StringOrArrayOfString
 	for _, value := range list {
 		if value.TableSeparator {
 			headers = append(headers, "")
-			row = append(row, "")
+			row = append(row, "<TS>")
 			continue
 		}
 
@@ -86,12 +87,61 @@ func (s *Style) Table(headers []string, rows [][]string) {
 
 	for _, rowsRow := range rows {
 		for j, row := range rowsRow {
+			if row == "<TS>" {
+				tw.AppendSeparator()
+				continue
+			}
+
 			tw.AppendRow(table.Row{headers[j], row})
 		}
 	}
 
-	style := table.StyleColoredMagentaWhiteOnBlack
-	style.Color = table.ColorOptionsDefault
+	style := table.Style{
+		Name: "deptrac-original-style",
+		Box: table.BoxStyle{
+			BottomLeft:       "-",
+			BottomRight:      "-",
+			BottomSeparator:  " ",
+			EmptySeparator:   "",
+			Left:             " ",
+			LeftSeparator:    "-",
+			MiddleHorizontal: "-",
+			MiddleSeparator:  " ",
+			MiddleVertical:   " ",
+			PaddingLeft:      " ",
+			PaddingRight:     " ",
+			PageSeparator:    "22",
+			Right:            " ",
+			RightSeparator:   "-",
+			TopLeft:          "-",
+			TopRight:         "-",
+			TopSeparator:     " ",
+			UnfinishedRow:    "",
+		},
+		Color: table.ColorOptions{
+			Border: text.Colors{
+				text.Reset,
+			},
+			Footer:      nil,
+			Header:      nil,
+			IndexColumn: nil,
+			Row: text.Colors{
+				text.FgGreen,
+			},
+			RowAlternate: nil,
+			Separator: text.Colors{
+				text.Reset,
+			},
+		},
+		Format: table.FormatOptions{},
+		HTML:   table.HTMLOptions{},
+		Options: table.Options{
+			DrawBorder:      true,
+			SeparateColumns: true,
+			SeparateHeader:  true,
+		},
+		Title: table.TitleOptions{},
+	}
 	tw.SetStyle(style)
 	fmt.Println(tw.Render())
 }

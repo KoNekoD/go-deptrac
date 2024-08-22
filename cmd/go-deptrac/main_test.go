@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/Console/Application"
 	"os"
 	"testing"
@@ -17,4 +18,6 @@ func TestMainOk(t *testing.T) {
 	//flag.CommandLine.Parse(os.Args)
 
 	Application.NewApplication().Run()
+
+	fmt.Println("", "")
 }
