@@ -48,21 +48,51 @@ func (a *Application) doRun() (int, error) {
 	//     return parent::doRun($input, $output);
 	// }
 
+	var help bool
+	flag.BoolVar(
+		&help,
+		"help",
+		false,
+		"Display help for the given command. When no command is given display help for the <info>analyse</> command",
+	)
+	var noCacheArgument bool
+	flag.BoolVar(
+		&noCacheArgument,
+		"no-cache",
+		false,
+		"Disable caching mechanisms (wins over --cache-file)",
+	)
+	var clearCache bool
+	flag.BoolVar(
+		&clearCache,
+		"clear-cache",
+		false,
+		"Clears cache file before run",
+	)
+	var cacheFile string
+	flag.StringVar(
+		&cacheFile,
+		"cache-file",
+		"",
+		"Location where cache file will be stored",
+	)
+	var configFile string
+	flag.StringVar(
+		&configFile,
+		"config-file",
+		currentWorkingDirectory+DirectorySeparator+"deptrac.yaml",
+		"Location of Depfile containing the configuration",
+	)
+
+	flag.Parse()
+
 	var (
 		commandArgument = flag.Arg(0)
 	)
 
-	var (
-		help            = flag.Bool("help", false, "Display help for the given command. When no command is given display help for the <info>analyse</> command")
-		noCacheArgument = flag.Bool("no-cache", false, "Disable caching mechanisms (wins over --cache-file)")
-		clearCache      = flag.Bool("clear-cache", false, "Clears cache file before run")
-		cacheFile       = flag.String("cache-file", "", "Location where cache file will be stored")
-		configFile      = flag.String("config-file", currentWorkingDirectory+DirectorySeparator+"deptrac.yaml", "Location of Depfile containing the configuration")
-	)
-
 	config := currentWorkingDirectory + DirectorySeparator + "deptrac.yaml"
-	if configFile != nil {
-		config = *configFile
+	if configFile != "" {
+		config = configFile
 	}
 
 	cache := cacheFile
@@ -77,18 +107,18 @@ func (a *Application) doRun() (int, error) {
 	}
 
 	noCache := false
-	if noCacheArgument != nil && *noCacheArgument == true {
+	if noCacheArgument == true {
 		noCache = true
 	}
 
 	var factoryBuildCache *string
 	if !noCache {
-		factoryBuildCache = cache
+		factoryBuildCache = &cache
 	}
 
-	_, err = factory.Build(factoryBuildCache, clearCache != nil && *clearCache == true)
+	_, err = factory.Build(factoryBuildCache, clearCache)
 	if err != nil {
-		if help != nil && *help == true {
+		if help == true {
 			a.setDefaultCommand("help")
 		} else {
 			return 0, err

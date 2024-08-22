@@ -9,9 +9,12 @@ import (
 
 func TestMainOk(t *testing.T) {
 
-	os.Args[0] = "analyse"
+	os.Args = []string{
+		"",
+		"analyse",
+	}
 	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
-	flag.CommandLine.Parse(os.Args)
+	//flag.CommandLine.Parse(os.Args)
 
 	Application.NewApplication().Run()
 }

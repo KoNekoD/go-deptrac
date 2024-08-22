@@ -90,66 +90,68 @@ func NewDeptracConfig(parsed map[string]interface{}) (*DeptracConfig, error) {
 		layers = append(layers, layer)
 	}
 
-	for formatterKey, formatterRawRaw := range parsedDeptrac["formatters"].(map[string]interface{}) {
-		formatterRaw := formatterRawRaw.(map[string]interface{})
-		switch formatterKey {
-		case string(FormatterType.FormatterTypeCodeclimateConfig):
-			formatters[FormatterType.FormatterTypeCodeclimateConfig] = CodeclimateConfig.CreateCodeclimateConfig(
-				formatterRaw["failure"].(*CodeclimateLevelEnum.CodeclimateLevelEnum),
-				formatterRaw["skipped"].(*CodeclimateLevelEnum.CodeclimateLevelEnum),
-				formatterRaw["uncovered"].(*CodeclimateLevelEnum.CodeclimateLevelEnum),
-			)
-		case string(FormatterType.FormatterTypeGraphvizConfig):
-			hiddenLayers := make([]*Layer.Layer, 0)
+	if parsedDeptracFormatters, ok := parsedDeptrac["formatters"]; ok {
+		for formatterKey, formatterRawRaw := range parsedDeptracFormatters.(map[string]interface{}) {
+			formatterRaw := formatterRawRaw.(map[string]interface{})
+			switch formatterKey {
+			case string(FormatterType.FormatterTypeCodeclimateConfig):
+				formatters[FormatterType.FormatterTypeCodeclimateConfig] = CodeclimateConfig.CreateCodeclimateConfig(
+					formatterRaw["failure"].(*CodeclimateLevelEnum.CodeclimateLevelEnum),
+					formatterRaw["skipped"].(*CodeclimateLevelEnum.CodeclimateLevelEnum),
+					formatterRaw["uncovered"].(*CodeclimateLevelEnum.CodeclimateLevelEnum),
+				)
+			case string(FormatterType.FormatterTypeGraphvizConfig):
+				hiddenLayers := make([]*Layer.Layer, 0)
 
-			for _, hiddenLayer := range formatterRaw["hiddenLayers"].([]string) {
-				for _, layer := range layers {
-					if layer.Name == hiddenLayer {
-						hiddenLayers = append(hiddenLayers, layer)
-						break
-					}
-				}
-			}
-
-			formatter := GraphvizConfig.CreateGraphvizConfig().
-				PointsToGroup(formatterRaw["pointsToGroup"].(*bool)).
-				HiddenLayers(hiddenLayers...)
-
-			formatters[FormatterType.FormatterTypeGraphvizConfig] = formatter
-
-			for groupLayerName, groupRaw := range formatterRaw["groups"].(map[string][]string) {
-				groupLayer := make([]*Layer.Layer, 0)
-
-				for _, layerName := range groupRaw {
+				for _, hiddenLayer := range formatterRaw["hiddenLayers"].([]string) {
 					for _, layer := range layers {
-						if layer.Name == layerName {
-							groupLayer = append(groupLayer, layer)
+						if layer.Name == hiddenLayer {
+							hiddenLayers = append(hiddenLayers, layer)
 							break
 						}
 					}
 				}
 
-				formatter.Groups(groupLayerName, groupLayer...)
-			}
-		case string(FormatterType.FormatterTypeMermaidJsConfig):
-			formatter := MermaidJsConfig.CreateMermaidJsConfig().
-				Direction(formatterRaw["direction"].(string))
+				formatter := GraphvizConfig.CreateGraphvizConfig().
+					PointsToGroup(formatterRaw["pointsToGroup"].(*bool)).
+					HiddenLayers(hiddenLayers...)
 
-			formatters[FormatterType.FormatterTypeMermaidJsConfig] = formatter
+				formatters[FormatterType.FormatterTypeGraphvizConfig] = formatter
 
-			for groupLayerName, groupRaw := range formatterRaw["groups"].(map[string][]string) {
-				groupLayer := make([]*Layer.Layer, 0)
+				for groupLayerName, groupRaw := range formatterRaw["groups"].(map[string][]string) {
+					groupLayer := make([]*Layer.Layer, 0)
 
-				for _, layerName := range groupRaw {
-					for _, layer := range layers {
-						if layer.Name == layerName {
-							groupLayer = append(groupLayer, layer)
-							break
+					for _, layerName := range groupRaw {
+						for _, layer := range layers {
+							if layer.Name == layerName {
+								groupLayer = append(groupLayer, layer)
+								break
+							}
 						}
 					}
-				}
 
-				formatter.Groups(groupLayerName, groupLayer...)
+					formatter.Groups(groupLayerName, groupLayer...)
+				}
+			case string(FormatterType.FormatterTypeMermaidJsConfig):
+				formatter := MermaidJsConfig.CreateMermaidJsConfig().
+					Direction(formatterRaw["direction"].(string))
+
+				formatters[FormatterType.FormatterTypeMermaidJsConfig] = formatter
+
+				for groupLayerName, groupRaw := range formatterRaw["groups"].(map[string][]string) {
+					groupLayer := make([]*Layer.Layer, 0)
+
+					for _, layerName := range groupRaw {
+						for _, layer := range layers {
+							if layer.Name == layerName {
+								groupLayer = append(groupLayer, layer)
+								break
+							}
+						}
+					}
+
+					formatter.Groups(groupLayerName, groupLayer...)
+				}
 			}
 		}
 	}
@@ -168,12 +170,14 @@ func NewDeptracConfig(parsed map[string]interface{}) (*DeptracConfig, error) {
 
 		rulesetLayers := make([]*Layer.Layer, 0)
 
-		for _, layerNameRaw := range rulesetLayersNames.([]interface{}) {
-			layerName := layerNameRaw.(string)
-			for _, layer := range layers {
-				if layer.Name == layerName {
-					rulesetLayers = append(rulesetLayers, layer)
-					break
+		if rulesetLayersNames != nil { // If not ~
+			for _, layerNameRaw := range rulesetLayersNames.([]interface{}) {
+				layerName := layerNameRaw.(string)
+				for _, layer := range layers {
+					if layer.Name == layerName {
+						rulesetLayers = append(rulesetLayers, layer)
+						break
+					}
 				}
 			}
 		}
@@ -183,32 +187,33 @@ func NewDeptracConfig(parsed map[string]interface{}) (*DeptracConfig, error) {
 		rulesets[rulesetLayerName] = ruleset
 	}
 
-	analyzerRaw := parsedDeptrac["analyser"].(map[string]interface{})
+	analyzerTypesDefault := []EmitterType.EmitterType{EmitterType.ClassToken, EmitterType.FunctionToken}
 	analyzerTypes := make([]EmitterType.EmitterType, 0)
+	internalTag := "@internal"
+	if parsedDeptracAnalyzer, ok := parsedDeptrac["analyzer"]; ok {
+		analyzerRaw := parsedDeptracAnalyzer.(map[string]interface{})
+		for _, typeRaw := range analyzerRaw["types"].([]interface{}) {
+			analyzerType, err := EmitterType.NewEmitterTypeFromString(typeRaw.(string))
 
-	for _, typeRaw := range analyzerRaw["types"].([]interface{}) {
-		analyzerType, err := EmitterType.NewEmitterTypeFromString(typeRaw.(string))
+			if err != nil {
+				return nil, err
+			}
 
-		if err != nil {
-			return nil, err
+			analyzerTypes = append(analyzerTypes, analyzerType)
 		}
-
-		analyzerTypes = append(analyzerTypes, analyzerType)
+		internalTag = analyzerRaw["internal_tag"].(string)
+	} else {
+		analyzerTypes = analyzerTypesDefault
 	}
 
-	internalTag := analyzerRaw["internal_tag"].(string)
-
-	analyser := AnalyserConfig.Create(
-		analyzerTypes,
-		&internalTag,
-	)
+	analyser := AnalyserConfig.Create(analyzerTypes, &internalTag)
 
 	paths := make([]string, 0)
 	for _, path := range parsedDeptrac["paths"].([]interface{}) {
 		paths = append(paths, path.(string))
 	}
 
-	ignoreUncoveredInternalStructs := false
+	ignoreUncoveredInternalStructs := true
 	if v, ok := parsedDeptrac["ignore_uncovered_internal_structs"]; ok {
 		ignoreUncoveredInternalStructs = v.(bool)
 	}
