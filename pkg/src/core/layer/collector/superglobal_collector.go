@@ -1,8 +1,8 @@
 package collector
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/TokenReferenceInterface"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Layer/InvalidCollectorDefinitionException"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/util"
 )
@@ -13,7 +13,7 @@ func NewSuperglobalCollector() *SuperglobalCollector {
 	return &SuperglobalCollector{}
 }
 
-func (c SuperglobalCollector) Satisfy(config map[string]interface{}, reference TokenReferenceInterface.TokenReferenceInterface) (bool, error) {
+func (c SuperglobalCollector) Satisfy(config map[string]interface{}, reference ast.TokenReferenceInterface) (bool, error) {
 	if _, ok := reference.(*ast_map.VariableReference); !ok {
 		return false, nil
 	}

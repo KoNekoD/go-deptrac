@@ -1,4 +1,4 @@
-package DependencyType
+package ast
 
 // DependencyType - Specifies the type of AST dependency. You can use this information to enrich the displayed output to the user in your output formatter.
 type DependencyType string

@@ -2,26 +2,26 @@ package process_event
 
 import (
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/TokenReferenceInterface"
 	Dependency2 "github.com/KoNekoD/go-deptrac/pkg/src/contract/Dependency/DependencyInterface"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/analyser/analysis_result"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
 )
 
 // ProcessEvent - Event that is triggered on every found dependency. Used to apply rules on the found dependencies.
 type ProcessEvent struct {
 	Dependency         Dependency2.DependencyInterface
-	DependerReference  TokenReferenceInterface.TokenReferenceInterface
+	DependerReference  ast.TokenReferenceInterface
 	DependerLayer      string
-	DependentReference TokenReferenceInterface.TokenReferenceInterface
+	DependentReference ast.TokenReferenceInterface
 	DependentLayers    map[string]bool
 	result             *analysis_result.AnalysisResult
 }
 
 func NewProcessEvent(
 	dependency Dependency2.DependencyInterface,
-	dependerReference TokenReferenceInterface.TokenReferenceInterface,
+	dependerReference ast.TokenReferenceInterface,
 	dependerLayer string,
-	dependentReference TokenReferenceInterface.TokenReferenceInterface,
+	dependentReference ast.TokenReferenceInterface,
 	dependentLayers map[string]bool,
 	result *analysis_result.AnalysisResult,
 ) *ProcessEvent {

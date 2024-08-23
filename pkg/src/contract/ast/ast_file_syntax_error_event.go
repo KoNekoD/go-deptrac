@@ -1,4 +1,4 @@
-package AstFileSyntaxErrorEvent
+package ast
 
 // AstFileSyntaxErrorEvent - Event triggered when parsing the AST failed on syntax error in the PHP file.
 type AstFileSyntaxErrorEvent struct {

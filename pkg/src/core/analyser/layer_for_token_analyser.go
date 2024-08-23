@@ -1,7 +1,7 @@
 package analyser
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/TokenReferenceInterface"
+	astContract "github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/dependency"
@@ -61,7 +61,7 @@ func (a *LayerForTokenAnalyser) FindLayerForToken(tokenName string, tokenType To
 }
 
 func (a *LayerForTokenAnalyser) findLayersForReferences(referencesAny any, tokenName string, astMap *ast_map.AstMap) (map[string][]string, error) {
-	references := referencesAny.([]TokenReferenceInterface.TokenReferenceInterface)
+	references := referencesAny.([]astContract.TokenReferenceInterface)
 	if len(references) == 0 {
 		return make(map[string][]string), nil
 	}

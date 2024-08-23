@@ -2,16 +2,13 @@ package ConsoleSubscriber
 
 import (
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/AstFileAnalysedEvent"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/AstFileSyntaxErrorEvent"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/PostCreateAstMapEvent"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/PreCreateAstMapEvent"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Dependency/PostEmitEvent"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Dependency/PostFlattenEvent"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Dependency/PreEmitEvent"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Dependency/PreFlattenEvent"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/OutputFormatter/OutputInterface"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/OutputFormatter/OutputStyleInterface"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
 	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/TimeStopwatch"
 )
 
@@ -29,7 +26,7 @@ func NewConsoleSubscriber(output OutputInterface.OutputInterface, stopwatch *Tim
 
 func (s *ConsoleSubscriber) InvokeEventSubscriber(rawEvent interface{}, stopPropagation func()) error {
 	switch event := rawEvent.(type) {
-	case *PreCreateAstMapEvent.PreCreateAstMapEvent:
+	case *ast.PreCreateAstMapEvent:
 		if s.output.IsVerbose() {
 			err := s.stopwatchStart("ast")
 			if err != nil {
@@ -37,15 +34,15 @@ func (s *ConsoleSubscriber) InvokeEventSubscriber(rawEvent interface{}, stopProp
 			}
 			s.output.WriteLineFormatted(OutputStyleInterface.StringOrArrayOfStrings{String: fmt.Sprintf("Start to create an AstMap for <info>%d</> Files.", event.ExpectedFileCount)})
 		}
-	case *PostCreateAstMapEvent.PostCreateAstMapEvent:
+	case *ast.PostCreateAstMapEvent:
 		if s.output.IsVerbose() {
 			s.printMessageWithTime("ast", "<info>AstMap created in %01.2f sec.</>", "<info>AstMap created.</>")
 		}
-	case *AstFileAnalysedEvent.AstFileAnalysedEvent:
+	case *ast.AstFileAnalysedEvent:
 		if s.output.IsVerbose() {
 			s.output.WriteLineFormatted(OutputStyleInterface.StringOrArrayOfStrings{String: fmt.Sprintf("Parsing File %s", event.File)})
 		}
-	case *AstFileSyntaxErrorEvent.AstFileSyntaxErrorEvent:
+	case *ast.AstFileSyntaxErrorEvent:
 		s.output.WriteLineFormatted(OutputStyleInterface.StringOrArrayOfStrings{String: fmt.Sprintf("\nSyntax Error on File %s\n<error>%s</>\n", event.File, event.SyntaxError)})
 	case *PreEmitEvent.PreEmitEvent:
 		if s.output.IsVerbose() {

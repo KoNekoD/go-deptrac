@@ -2,8 +2,8 @@ package collector
 
 import (
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/TokenReferenceInterface"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Layer/InvalidCollectorDefinitionException"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/util"
 )
@@ -14,7 +14,7 @@ func NewFunctionNameCollector() *FunctionNameCollector {
 	return &FunctionNameCollector{}
 }
 
-func (c FunctionNameCollector) Satisfy(config map[string]interface{}, reference TokenReferenceInterface.TokenReferenceInterface) (bool, error) {
+func (c FunctionNameCollector) Satisfy(config map[string]interface{}, reference ast.TokenReferenceInterface) (bool, error) {
 	if _, ok := reference.(*ast_map.FunctionReference); !ok {
 		return false, nil
 	}

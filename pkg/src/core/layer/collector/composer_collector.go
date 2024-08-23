@@ -1,8 +1,8 @@
 package collector
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/TokenReferenceInterface"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Layer/InvalidCollectorDefinitionException"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
 	"github.com/KoNekoD/go-deptrac/pkg/util"
 )
 
@@ -12,7 +12,7 @@ func NewComposerCollector() *ComposerCollector {
 	return &ComposerCollector{}
 }
 
-func (c *ComposerCollector) Satisfy(config map[string]interface{}, reference TokenReferenceInterface.TokenReferenceInterface) (bool, error) {
+func (c *ComposerCollector) Satisfy(config map[string]interface{}, reference ast.TokenReferenceInterface) (bool, error) {
 	if !util.MapKeyExists(config, "composerPath") || !util.MapKeyIsString(config, "composerPath") {
 		return false, InvalidCollectorDefinitionException.NewInvalidCollectorDefinitionExceptionInvalidCollectorConfiguration("ComposerCollector needs the path to the composer.json file as string.")
 	}

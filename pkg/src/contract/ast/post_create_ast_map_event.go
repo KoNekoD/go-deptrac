@@ -1,4 +1,4 @@
-package PostCreateAstMapEvent
+package ast
 
 // PostCreateAstMapEvent - Event triggered after the AST map of all files has been created.
 type PostCreateAstMapEvent struct{}

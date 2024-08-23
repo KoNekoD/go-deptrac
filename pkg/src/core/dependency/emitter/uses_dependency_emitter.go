@@ -1,8 +1,7 @@
 package emitter
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/DependencyType"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/TaggedTokenReferenceInterface"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/dependency"
 	"strings"
@@ -19,7 +18,7 @@ func (u *UsesDependencyEmitter) GetName() string {
 }
 
 func (u *UsesDependencyEmitter) ApplyDependencies(astMap ast_map.AstMap, dependencyList *dependency.DependencyList) {
-	references := make([]TaggedTokenReferenceInterface.TaggedTokenReferenceInterface, 0)
+	references := make([]ast.TaggedTokenReferenceInterface, 0)
 	for _, structLikeReference := range astMap.GetClassLikeReferences() {
 		references = append(references, structLikeReference)
 	}
@@ -42,7 +41,7 @@ func (u *UsesDependencyEmitter) ApplyDependencies(astMap ast_map.AstMap, depende
 	for _, fileReference := range astMap.GetFileReferences() {
 		for _, astStructReference := range fileReference.ClassLikeReferences {
 			for _, emittedDependency := range fileReference.Dependencies {
-				if emittedDependency.Context.DependencyType == DependencyType.DependencyTypeUse && u.IsFQDN(emittedDependency, FQDNIndex) {
+				if emittedDependency.Context.DependencyType == ast.DependencyTypeUse && u.IsFQDN(emittedDependency, FQDNIndex) {
 					dependencyList.AddDependency(dependency.NewDependency(astStructReference.GetToken(), emittedDependency.Token, emittedDependency.Context))
 				}
 			}

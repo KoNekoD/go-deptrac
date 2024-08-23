@@ -1,7 +1,7 @@
 package emitter
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/DependencyType"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/dependency"
 )
@@ -20,7 +20,7 @@ func (f *FunctionSuperglobalDependencyEmitter) ApplyDependencies(astMap ast_map.
 	for _, fileReference := range astMap.GetFileReferences() {
 		for _, astFunctionReference := range fileReference.FunctionReferences {
 			for _, dependencyToken := range astFunctionReference.Dependencies {
-				if dependencyToken.Context.DependencyType != DependencyType.DependencyTypeSuperGlobalVariable {
+				if dependencyToken.Context.DependencyType != ast.DependencyTypeSuperGlobalVariable {
 					continue
 				}
 

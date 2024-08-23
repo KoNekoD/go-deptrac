@@ -1,8 +1,8 @@
 package emitter
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/DependencyType"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/TokenReferenceInterface/TokenReferenceWithDependenciesInterface"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast/token_reference_with_dependencies_interface"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/dependency"
 )
@@ -17,30 +17,30 @@ func (f *FunctionCallDependencyEmitter) GetName() string {
 	return "FunctionCallDependencyEmitter"
 }
 func (f *FunctionCallDependencyEmitter) ApplyDependencies(astMap ast_map.AstMap, dependencyList *dependency.DependencyList) {
-	references := make([]TokenReferenceWithDependenciesInterface.TokenReferenceWithDependenciesInterface, 0)
+	references := make([]token_reference_with_dependencies_interface.TokenReferenceWithDependenciesInterface, 0)
 	for _, reference := range astMap.GetClassLikeReferences() {
 		references = append(references, reference)
 	}
 	f.createDependenciesForReferences(references, astMap, dependencyList)
 
-	references = make([]TokenReferenceWithDependenciesInterface.TokenReferenceWithDependenciesInterface, 0)
+	references = make([]token_reference_with_dependencies_interface.TokenReferenceWithDependenciesInterface, 0)
 	for _, reference := range astMap.GetFunctionReferences() {
 		references = append(references, reference)
 	}
 	f.createDependenciesForReferences(references, astMap, dependencyList)
 
-	references = make([]TokenReferenceWithDependenciesInterface.TokenReferenceWithDependenciesInterface, 0)
+	references = make([]token_reference_with_dependencies_interface.TokenReferenceWithDependenciesInterface, 0)
 	for _, reference := range astMap.GetFileReferences() {
 		references = append(references, reference)
 	}
 	f.createDependenciesForReferences(references, astMap, dependencyList)
 }
 
-func (f *FunctionCallDependencyEmitter) createDependenciesForReferences(references []TokenReferenceWithDependenciesInterface.TokenReferenceWithDependenciesInterface, astMap ast_map.AstMap, dependencyList *dependency.DependencyList) {
+func (f *FunctionCallDependencyEmitter) createDependenciesForReferences(references []token_reference_with_dependencies_interface.TokenReferenceWithDependenciesInterface, astMap ast_map.AstMap, dependencyList *dependency.DependencyList) {
 	for _, referenceInterface := range references {
-		reference := referenceInterface.(TokenReferenceWithDependenciesInterface.TokenReferenceWithDependenciesInterface)
+		reference := referenceInterface.(token_reference_with_dependencies_interface.TokenReferenceWithDependenciesInterface)
 		for _, dependencyToken := range reference.GetDependencies() {
-			if dependencyToken.Context.DependencyType != DependencyType.DependencyTypeUnresolvedFunctionCall {
+			if dependencyToken.Context.DependencyType != ast.DependencyTypeUnresolvedFunctionCall {
 				continue
 			}
 			token := dependencyToken.Token

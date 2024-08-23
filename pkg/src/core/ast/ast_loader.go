@@ -1,10 +1,7 @@
 package ast
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/AstFileAnalysedEvent"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/AstFileSyntaxErrorEvent"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/PostCreateAstMapEvent"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/PreCreateAstMapEvent"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast/parser"
 	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/DependencyInjection/EventDispatcher/EventDispatcherInterface"
@@ -25,7 +22,7 @@ func NewAstLoader(parser parser.ParserInterface, eventDispatcher util.EventDispa
 func (l *AstLoader) CreateAstMap(files []string) (*ast_map.AstMap, error) {
 	references := make([]*ast_map.FileReference, 0)
 
-	err := l.eventDispatcher.DispatchEvent(PreCreateAstMapEvent.NewPreCreateAstMapEvent(len(files)))
+	err := l.eventDispatcher.DispatchEvent(ast.NewPreCreateAstMapEvent(len(files)))
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +31,7 @@ func (l *AstLoader) CreateAstMap(files []string) (*ast_map.AstMap, error) {
 		reference, err := l.parser.ParseFile(file)
 
 		if err != nil {
-			err := l.eventDispatcher.DispatchEvent(AstFileSyntaxErrorEvent.NewAstFileSyntaxErrorEvent(file, err.Error()))
+			err := l.eventDispatcher.DispatchEvent(ast.NewAstFileSyntaxErrorEvent(file, err.Error()))
 			if err != nil {
 				return nil, err
 			}
@@ -44,7 +41,7 @@ func (l *AstLoader) CreateAstMap(files []string) (*ast_map.AstMap, error) {
 
 		references = append(references, reference)
 
-		errDispatchAnalysed := l.eventDispatcher.DispatchEvent(AstFileAnalysedEvent.NewAstFileAnalysedEvent(file))
+		errDispatchAnalysed := l.eventDispatcher.DispatchEvent(ast.NewAstFileAnalysedEvent(file))
 		if errDispatchAnalysed != nil {
 			return nil, errDispatchAnalysed
 		}
@@ -52,7 +49,7 @@ func (l *AstLoader) CreateAstMap(files []string) (*ast_map.AstMap, error) {
 
 	astMap := ast_map.NewAstMap(references)
 
-	errDispatchPostCreateMap := l.eventDispatcher.DispatchEvent(PostCreateAstMapEvent.NewPostCreateAstMapEvent())
+	errDispatchPostCreateMap := l.eventDispatcher.DispatchEvent(ast.NewPostCreateAstMapEvent())
 	if errDispatchPostCreateMap != nil {
 		return nil, errDispatchPostCreateMap
 	}

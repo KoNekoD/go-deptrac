@@ -2,9 +2,9 @@ package collector
 
 import (
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/TokenReferenceInterface"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Layer/InvalidCollectorDefinitionException"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Layer/InvalidLayerDefinitionException"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/layer/layer_resolver_interface"
 	"github.com/KoNekoD/go-deptrac/pkg/util"
 )
@@ -20,7 +20,7 @@ func NewLayerCollector(resolver layer_resolver_interface.LayerResolverInterface)
 	}
 }
 
-func (c *LayerCollector) Satisfy(config map[string]interface{}, reference TokenReferenceInterface.TokenReferenceInterface) (bool, error) {
+func (c *LayerCollector) Satisfy(config map[string]interface{}, reference ast.TokenReferenceInterface) (bool, error) {
 	if _, ok := config["value"]; !ok {
 		if _, ok2 := config["value"].(string); !ok2 {
 			return false, InvalidCollectorDefinitionException.NewInvalidCollectorDefinitionExceptionInvalidCollectorConfiguration("LayerCollector needs the layer configuration, expected 'value' config is missing or invalid.")

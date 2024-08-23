@@ -1,16 +1,13 @@
 package EventSubscriberInterfaceMapReg
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/AstFileAnalysedEvent"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/AstFileSyntaxErrorEvent"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/PostCreateAstMapEvent"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/PreCreateAstMapEvent"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Dependency/PostEmitEvent"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Dependency/PostFlattenEvent"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Dependency/PreEmitEvent"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Dependency/PreFlattenEvent"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/analyser/post_process_event"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/analyser/process_event"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
 	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/Console/Subscriber/ConsoleSubscriber"
 	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/Console/Subscriber/ProgressSubscriber"
 	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/DependencyInjection/EventSubscriberDefaultPriority"
@@ -23,10 +20,10 @@ import (
 func RegForAnalyseCommand(consoleSubscriber *ConsoleSubscriber.ConsoleSubscriber, progressSubscriber *ProgressSubscriber.ProgressSubscriber, withProgress bool) {
 	processEvent := &process_event.ProcessEvent{}
 	postProcessEvent := &post_process_event.PostProcessEvent{}
-	preCreateAstMapEvent := &PreCreateAstMapEvent.PreCreateAstMapEvent{}
-	postCreateAstMapEvent := &PostCreateAstMapEvent.PostCreateAstMapEvent{}
-	astFileAnalysedEvent := &AstFileAnalysedEvent.AstFileAnalysedEvent{}
-	astFileSyntaxErrorEvent := &AstFileSyntaxErrorEvent.AstFileSyntaxErrorEvent{}
+	preCreateAstMapEvent := &ast.PreCreateAstMapEvent{}
+	postCreateAstMapEvent := &ast.PostCreateAstMapEvent{}
+	astFileAnalysedEvent := &ast.AstFileAnalysedEvent{}
+	astFileSyntaxErrorEvent := &ast.AstFileSyntaxErrorEvent{}
 	preEmitEvent := &PreEmitEvent.PreEmitEvent{}
 	postEmitEvent := &PostEmitEvent.PostEmitEvent{}
 	preFlattenEvent := &PreFlattenEvent.PreFlattenEvent{}

@@ -1,8 +1,7 @@
 package dependency
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/TokenInterface"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/TokenReferenceInterface"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
 	AstMap2 "github.com/KoNekoD/go-deptrac/pkg/src/core/ast/ast_map"
 )
 
@@ -12,7 +11,7 @@ func NewTokenResolver() *TokenResolver {
 	return &TokenResolver{}
 }
 
-func (r *TokenResolver) Resolve(token TokenInterface.TokenInterface, astMap *AstMap2.AstMap) TokenReferenceInterface.TokenReferenceInterface {
+func (r *TokenResolver) Resolve(token ast.TokenInterface, astMap *AstMap2.AstMap) ast.TokenReferenceInterface {
 	switch v := token.(type) {
 	case *AstMap2.ClassLikeToken:
 		return astMap.GetClassReferenceForToken(v)

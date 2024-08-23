@@ -1,7 +1,7 @@
 package ast_map
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/DependencyType"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
 )
 
 type FileReferenceBuilder struct {
@@ -15,7 +15,7 @@ func CreateFileReferenceBuilder(filepath string) *FileReferenceBuilder {
 }
 
 func (b *FileReferenceBuilder) UseStatement(classLikeName string, occursAtLine int) *FileReferenceBuilder {
-	b.Dependencies = append(b.Dependencies, NewDependencyToken(NewClassLikeTokenFromFQCN(classLikeName), b.CreateContext(occursAtLine, DependencyType.DependencyTypeUse)))
+	b.Dependencies = append(b.Dependencies, NewDependencyToken(NewClassLikeTokenFromFQCN(classLikeName), b.CreateContext(occursAtLine, ast.DependencyTypeUse)))
 	return b
 }
 

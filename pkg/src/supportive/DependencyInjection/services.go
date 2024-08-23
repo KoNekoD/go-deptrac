@@ -2,8 +2,6 @@ package DependencyInjection
 
 import (
 	"flag"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/PostCreateAstMapEvent"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/PreCreateAstMapEvent"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Config/CollectorType"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Config/EmitterType"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Layer/CollectorInterface"
@@ -13,6 +11,7 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/analyser/event_helper"
 	post_process_event2 "github.com/KoNekoD/go-deptrac/pkg/src/contract/analyser/post_process_event"
 	process_event2 "github.com/KoNekoD/go-deptrac/pkg/src/contract/analyser/process_event"
+	astContract "github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/analyser"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/analyser/event_handler/post_process_event"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/analyser/event_handler/process_event"
@@ -150,8 +149,8 @@ func Services(builder *ContainerBuilder.ContainerBuilder) error {
 
 	processEvent := &process_event2.ProcessEvent{}
 	postProcessEvent := &post_process_event2.PostProcessEvent{}
-	preCreateAstMapEvent := &PreCreateAstMapEvent.PreCreateAstMapEvent{}
-	postCreateAstMapEvent := &PostCreateAstMapEvent.PostCreateAstMapEvent{}
+	preCreateAstMapEvent := &astContract.PreCreateAstMapEvent{}
+	postCreateAstMapEvent := &astContract.PostCreateAstMapEvent{}
 	// Events Handlers
 	// TODO: Тут надо реализовать глобальный хук на параметры deptrac чтобы сделать что-то вида "param('skip_violations')"
 	EventSubscriberInterfaceMapReg.Reg(processEvent, allowDependencyHandler, -100)

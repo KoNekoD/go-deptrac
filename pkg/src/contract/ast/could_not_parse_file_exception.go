@@ -1,4 +1,4 @@
-package CouldNotParseFileException
+package ast
 
 // CouldNotParseFileException - Exception thrown in a collector when it cannot parse a file.
 type CouldNotParseFileException struct {

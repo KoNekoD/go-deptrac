@@ -2,10 +2,10 @@ package analyser
 
 import (
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/CouldNotParseFileException"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Layer/CircularReferenceException"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Layer/InvalidCollectorDefinitionException"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Layer/InvalidLayerDefinitionException"
+	astContract "github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/dependency"
 )
@@ -43,7 +43,7 @@ func NewFailedAstParsing(e *ast.AstException) *AnalyserException {
 	return &AnalyserException{Message: "Failed Ast parsing.", Previous: e}
 }
 
-func NewCouldNotParseFile(e *CouldNotParseFileException.CouldNotParseFileException) *AnalyserException {
+func NewCouldNotParseFile(e *astContract.CouldNotParseFileException) *AnalyserException {
 	return &AnalyserException{Message: "Could not parse file.", Previous: e}
 }
 

@@ -1,4 +1,4 @@
-package FileOccurrence
+package ast
 
 // FileOccurrence - Where in the file has the dependency occurred.
 type FileOccurrence struct {

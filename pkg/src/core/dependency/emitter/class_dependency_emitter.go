@@ -1,8 +1,7 @@
 package emitter
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/DependencyContext"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/DependencyType"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
 	AstMap2 "github.com/KoNekoD/go-deptrac/pkg/src/core/ast/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/dependency"
 )
@@ -22,11 +21,11 @@ func (c *ClassDependencyEmitter) ApplyDependencies(astMap AstMap2.AstMap, depend
 		classLikeName := classReference.GetToken().(*AstMap2.ClassLikeToken)
 
 		for _, dependencyToken := range classReference.Dependencies {
-			if dependencyToken.Context.DependencyType == DependencyType.DependencyTypeSuperGlobalVariable {
+			if dependencyToken.Context.DependencyType == ast.DependencyTypeSuperGlobalVariable {
 				continue
 			}
 
-			if dependencyToken.Context.DependencyType == DependencyType.DependencyTypeUnresolvedFunctionCall {
+			if dependencyToken.Context.DependencyType == ast.DependencyTypeUnresolvedFunctionCall {
 				continue
 			}
 
@@ -34,7 +33,7 @@ func (c *ClassDependencyEmitter) ApplyDependencies(astMap AstMap2.AstMap, depend
 		}
 
 		for _, inherit := range astMap.GetClassInherits(classLikeName) {
-			dependencyList.AddDependency(dependency.NewDependency(classLikeName, inherit.ClassLikeName, DependencyContext.NewDependencyContext(inherit.FileOccurrence, DependencyType.DependencyTypeInherit)))
+			dependencyList.AddDependency(dependency.NewDependency(classLikeName, inherit.ClassLikeName, ast.NewDependencyContext(inherit.FileOccurrence, ast.DependencyTypeInherit)))
 		}
 	}
 }

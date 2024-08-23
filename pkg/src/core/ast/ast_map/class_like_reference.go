@@ -1,7 +1,7 @@
 package ast_map
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/TokenInterface"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
 )
 
 type ClassLikeReference struct {
@@ -38,7 +38,7 @@ func (c *ClassLikeReference) GetFilepath() *string {
 	return c.fileReference.Filepath
 }
 
-func (c *ClassLikeReference) GetToken() TokenInterface.TokenInterface {
+func (c *ClassLikeReference) GetToken() ast.TokenInterface {
 	return c.classLikeName
 }
 

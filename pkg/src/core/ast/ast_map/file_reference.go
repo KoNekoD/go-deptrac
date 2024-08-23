@@ -1,7 +1,7 @@
 package ast_map
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/TokenInterface"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
 )
 
 type FileReference struct {
@@ -37,7 +37,7 @@ func (r *FileReference) GetFilepath() *string {
 	return r.Filepath
 }
 
-func (r *FileReference) GetToken() TokenInterface.TokenInterface {
+func (r *FileReference) GetToken() ast.TokenInterface {
 	return NewFileToken(r.Filepath)
 }
 

@@ -1,7 +1,7 @@
 package emitter
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/DependencyType"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/dependency"
 )
@@ -20,11 +20,11 @@ func (f FunctionDependencyEmitter) ApplyDependencies(astMap ast_map.AstMap, depe
 	for _, fileReference := range astMap.GetFileReferences() {
 		for _, astFunctionReference := range fileReference.FunctionReferences {
 			for _, dependencyToken := range astFunctionReference.Dependencies {
-				if dependencyToken.Context.DependencyType == DependencyType.DependencyTypeSuperGlobalVariable {
+				if dependencyToken.Context.DependencyType == ast.DependencyTypeSuperGlobalVariable {
 					continue
 				}
 
-				if dependencyToken.Context.DependencyType == DependencyType.DependencyTypeUnresolvedFunctionCall {
+				if dependencyToken.Context.DependencyType == ast.DependencyTypeUnresolvedFunctionCall {
 					continue
 				}
 

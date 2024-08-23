@@ -2,8 +2,8 @@ package layer
 
 import (
 	"errors"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/TokenReferenceInterface"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Config/Layer"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/layer/collector"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/layer/layer_resolver_interface"
 	"reflect"
@@ -31,7 +31,7 @@ func NewLayerResolver(collectorResolver collector.CollectorResolverInterface, la
 }
 
 // GetLayersForReference retrieves layers for a given reference
-func (r *LayerResolver) GetLayersForReference(reference TokenReferenceInterface.TokenReferenceInterface) (map[string]bool, error) {
+func (r *LayerResolver) GetLayersForReference(reference ast.TokenReferenceInterface) (map[string]bool, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -76,7 +76,7 @@ func (r *LayerResolver) GetLayersForReference(reference TokenReferenceInterface.
 }
 
 // IsReferenceInLayer checks if a reference is in a given layer
-func (r *LayerResolver) IsReferenceInLayer(layer string, reference TokenReferenceInterface.TokenReferenceInterface) (bool, error) {
+func (r *LayerResolver) IsReferenceInLayer(layer string, reference ast.TokenReferenceInterface) (bool, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 

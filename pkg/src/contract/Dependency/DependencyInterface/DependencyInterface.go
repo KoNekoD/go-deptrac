@@ -1,17 +1,16 @@
 package DependencyInterface
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/DependencyContext"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/TokenInterface"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
 )
 
 // DependencyInterface - Represents a dependency between 2 tokens (depender and dependent).
 type DependencyInterface interface {
-	GetDepender() TokenInterface.TokenInterface
+	GetDepender() ast.TokenInterface
 
-	GetDependent() TokenInterface.TokenInterface
+	GetDependent() ast.TokenInterface
 
-	GetContext() *DependencyContext.DependencyContext
+	GetContext() *ast.DependencyContext
 
 	Serialize() []map[string]interface{}
 }

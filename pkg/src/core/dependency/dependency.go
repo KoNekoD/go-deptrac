@@ -1,17 +1,16 @@
 package dependency
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/DependencyContext"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/TokenInterface"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
 )
 
 type Dependency struct {
-	depender  TokenInterface.TokenInterface
-	dependent TokenInterface.TokenInterface
-	context   *DependencyContext.DependencyContext
+	depender  ast.TokenInterface
+	dependent ast.TokenInterface
+	context   *ast.DependencyContext
 }
 
-func NewDependency(depender TokenInterface.TokenInterface, dependent TokenInterface.TokenInterface, context *DependencyContext.DependencyContext) *Dependency {
+func NewDependency(depender ast.TokenInterface, dependent ast.TokenInterface, context *ast.DependencyContext) *Dependency {
 	if dependent.ToString() == "" {
 		panic("1")
 	}
@@ -28,14 +27,14 @@ func (d *Dependency) Serialize() []map[string]interface{} {
 	}
 }
 
-func (d *Dependency) GetDepender() TokenInterface.TokenInterface {
+func (d *Dependency) GetDepender() ast.TokenInterface {
 	return d.depender
 }
 
-func (d *Dependency) GetDependent() TokenInterface.TokenInterface {
+func (d *Dependency) GetDependent() ast.TokenInterface {
 	return d.dependent
 }
 
-func (d *Dependency) GetContext() *DependencyContext.DependencyContext {
+func (d *Dependency) GetContext() *ast.DependencyContext {
 	return d.context
 }

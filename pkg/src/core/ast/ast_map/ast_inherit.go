@@ -2,18 +2,18 @@ package ast_map
 
 import (
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/FileOccurrence"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
 	"strings"
 )
 
 type AstInherit struct {
 	ClassLikeName  *ClassLikeToken
-	FileOccurrence *FileOccurrence.FileOccurrence
+	FileOccurrence *ast.FileOccurrence
 	Type           AstInheritType
 	path           []*AstInherit
 }
 
-func NewAstInherit(classLikeName *ClassLikeToken, fileOccurrence *FileOccurrence.FileOccurrence, astInheritType AstInheritType, path []*AstInherit) *AstInherit {
+func NewAstInherit(classLikeName *ClassLikeToken, fileOccurrence *ast.FileOccurrence, astInheritType AstInheritType, path []*AstInherit) *AstInherit {
 	return &AstInherit{
 		ClassLikeName:  classLikeName,
 		FileOccurrence: fileOccurrence,

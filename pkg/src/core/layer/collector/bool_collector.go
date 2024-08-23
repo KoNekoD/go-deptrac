@@ -2,9 +2,9 @@ package collector
 
 import (
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/TokenReferenceInterface"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Config/CollectorConfig"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Layer/InvalidCollectorDefinitionException"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
 )
 
 type BoolCollector struct {
@@ -17,7 +17,7 @@ func NewBoolCollector(collectorResolver CollectorResolverInterface) *BoolCollect
 	}
 }
 
-func (b *BoolCollector) Satisfy(config map[string]interface{}, reference TokenReferenceInterface.TokenReferenceInterface) (bool, error) {
+func (b *BoolCollector) Satisfy(config map[string]interface{}, reference ast.TokenReferenceInterface) (bool, error) {
 	configuration, err := b.normalizeConfiguration(config)
 	if err != nil {
 		return false, err

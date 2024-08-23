@@ -1,4 +1,4 @@
-package PreCreateAstMapEvent
+package ast
 
 // PreCreateAstMapEvent - Event triggered before the AST map and parsing of all files has started.
 type PreCreateAstMapEvent struct {

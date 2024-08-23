@@ -1,7 +1,7 @@
 package ast_map
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/FileOccurrence"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
 )
 
 type ClassLikeReferenceBuilder struct {
@@ -50,16 +50,16 @@ func (b *ClassLikeReferenceBuilder) Build() *ClassLikeReference {
 }
 
 func (b *ClassLikeReferenceBuilder) Extends(classLikeName string, occursAtLine int) *ClassLikeReferenceBuilder {
-	b.inherits = append(b.inherits, NewAstInherit(NewClassLikeTokenFromFQCN(classLikeName), FileOccurrence.NewFileOccurrence(b.Filepath, occursAtLine), AstInheritTypeExtends, make([]*AstInherit, 0)))
+	b.inherits = append(b.inherits, NewAstInherit(NewClassLikeTokenFromFQCN(classLikeName), ast.NewFileOccurrence(b.Filepath, occursAtLine), AstInheritTypeExtends, make([]*AstInherit, 0)))
 	return b
 }
 
 func (b *ClassLikeReferenceBuilder) Implements(classLikeName string, occursAtLine int) *ClassLikeReferenceBuilder {
-	b.inherits = append(b.inherits, NewAstInherit(NewClassLikeTokenFromFQCN(classLikeName), FileOccurrence.NewFileOccurrence(b.Filepath, occursAtLine), AstInheritTypeImplements, make([]*AstInherit, 0)))
+	b.inherits = append(b.inherits, NewAstInherit(NewClassLikeTokenFromFQCN(classLikeName), ast.NewFileOccurrence(b.Filepath, occursAtLine), AstInheritTypeImplements, make([]*AstInherit, 0)))
 	return b
 }
 
 func (b *ClassLikeReferenceBuilder) Trait(classLikeName string, occursAtLine int) *ClassLikeReferenceBuilder {
-	b.inherits = append(b.inherits, NewAstInherit(NewClassLikeTokenFromFQCN(classLikeName), FileOccurrence.NewFileOccurrence(b.Filepath, occursAtLine), AstInheritTypeUses, make([]*AstInherit, 0)))
+	b.inherits = append(b.inherits, NewAstInherit(NewClassLikeTokenFromFQCN(classLikeName), ast.NewFileOccurrence(b.Filepath, occursAtLine), AstInheritTypeUses, make([]*AstInherit, 0)))
 	return b
 }
