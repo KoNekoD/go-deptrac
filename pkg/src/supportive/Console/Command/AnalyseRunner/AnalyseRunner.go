@@ -8,7 +8,7 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/OutputFormatter/OutputInterface"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/OutputFormatter/OutputStyleInterface"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Result/OutputResult"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Analyser/DependencyLayersAnalyser"
+	"github.com/KoNekoD/go-deptrac/pkg/src/core/analyser"
 	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/Console/Command/AnalyseOptions"
 	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/Console/Command/CommandRunException"
 	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/OutputFormatter/FormatterProvider"
@@ -18,11 +18,11 @@ import (
 
 // AnalyseRunner - Should only be used by AnalyseCommand
 type AnalyseRunner struct {
-	analyzer          *DependencyLayersAnalyser.DependencyLayersAnalyser
+	analyzer          *analyser.DependencyLayersAnalyser
 	formatterProvider *FormatterProvider.FormatterProvider
 }
 
-func NewAnalyseRunner(analyzer *DependencyLayersAnalyser.DependencyLayersAnalyser, formatterProvider *FormatterProvider.FormatterProvider) *AnalyseRunner {
+func NewAnalyseRunner(analyzer *analyser.DependencyLayersAnalyser, formatterProvider *FormatterProvider.FormatterProvider) *AnalyseRunner {
 	return &AnalyseRunner{
 		analyzer:          analyzer,
 		formatterProvider: formatterProvider,

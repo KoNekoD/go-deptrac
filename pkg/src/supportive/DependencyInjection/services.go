@@ -2,9 +2,6 @@ package DependencyInjection
 
 import (
 	"flag"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Analyser/EventHelper"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Analyser/PostProcessEvent"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Analyser/ProcessEvent"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/PostCreateAstMapEvent"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/PreCreateAstMapEvent"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Config/CollectorType"
@@ -13,56 +10,23 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Layer/LayerProvider"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/OutputFormatter/OutputFormatterInterface"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/OutputFormatter/OutputFormatterInterface/OutputFormatterType"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Analyser/DependencyLayersAnalyser"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Analyser/EventHandler/PostProcessEvent/UnmatchedSkippedViolations"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Analyser/EventHandler/ProcessEvent/AllowDependencyHandler"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Analyser/EventHandler/ProcessEvent/DependsOnDisallowedLayer"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Analyser/EventHandler/ProcessEvent/DependsOnInternalToken"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Analyser/EventHandler/ProcessEvent/DependsOnPrivateLayer"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Analyser/EventHandler/ProcessEvent/MatchingLayersHandler"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Analyser/EventHandler/ProcessEvent/UncoveredDependentHandler"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Analyser/LayerDependenciesAnalyser"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Analyser/LayerForTokenAnalyser"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Analyser/RulesetUsageAnalyser"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Analyser/TokenInLayerAnalyser"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Analyser/UnassignedTokenAnalyser"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Ast/AstLoader"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Ast/AstMapExtractor"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Ast/Parser/Cache/AstFileReferenceInMemoryCache"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Ast/Parser/Extractors/ReferenceExtractorInterface"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Ast/Parser/NikicPhpParser/NikicPhpParser"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Ast/Parser/TypeResolver"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Dependency/DependencyResolver"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Dependency/Emitter/ClassDependencyEmitter"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Dependency/Emitter/ClassSuperglobalDependencyEmitter"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Dependency/Emitter/DependencyEmitterInterface"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Dependency/Emitter/FileDependencyEmitter"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Dependency/Emitter/FunctionCallDependencyEmitter"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Dependency/Emitter/FunctionDependencyEmitter"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Dependency/Emitter/FunctionSuperglobalDependencyEmitter"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Dependency/Emitter/UsesDependencyEmitter"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Dependency/InheritanceFlattener"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Dependency/TokenResolver"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/InputCollector/FileInputCollector"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Layer/Collector/BoolCollector"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Layer/Collector/ClassCollector"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Layer/Collector/ClassLikeCollector"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Layer/Collector/ClassNameRegexCollector"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Layer/Collector/CollectorProvider"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Layer/Collector/CollectorResolver"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Layer/Collector/ComposerCollector"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Layer/Collector/DirectoryCollector"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Layer/Collector/FunctionNameCollector"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Layer/Collector/GlobCollector"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Layer/Collector/InheritanceLevelCollector"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Layer/Collector/InheritsCollector"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Layer/Collector/InterfaceCollector"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Layer/Collector/LayerCollector"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Layer/Collector/MethodCollector"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Layer/Collector/SuperglobalCollector"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Layer/Collector/TraitCollector"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Layer/Collector/UsesCollector"
-	"github.com/KoNekoD/go-deptrac/pkg/src/core/Layer/LayerResolver"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/analyser/event_helper"
+	post_process_event2 "github.com/KoNekoD/go-deptrac/pkg/src/contract/analyser/post_process_event"
+	process_event2 "github.com/KoNekoD/go-deptrac/pkg/src/contract/analyser/process_event"
+	"github.com/KoNekoD/go-deptrac/pkg/src/core/analyser"
+	"github.com/KoNekoD/go-deptrac/pkg/src/core/analyser/event_handler/post_process_event"
+	"github.com/KoNekoD/go-deptrac/pkg/src/core/analyser/event_handler/process_event"
+	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast"
+	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast/parser"
+	Cache2 "github.com/KoNekoD/go-deptrac/pkg/src/core/ast/parser/cache"
+	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast/parser/extractors"
+	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast/parser/nikic_php_parser"
+	"github.com/KoNekoD/go-deptrac/pkg/src/core/dependency"
+	"github.com/KoNekoD/go-deptrac/pkg/src/core/dependency/dependency_resolver"
+	"github.com/KoNekoD/go-deptrac/pkg/src/core/dependency/emitter"
+	"github.com/KoNekoD/go-deptrac/pkg/src/core/input_collector"
+	"github.com/KoNekoD/go-deptrac/pkg/src/core/layer"
+	"github.com/KoNekoD/go-deptrac/pkg/src/core/layer/collector"
 	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/Console/Command/AnalyseCommand"
 	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/Console/Command/AnalyseRunner"
 	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/Console/Subscriber/ConsoleSubscriber"
@@ -104,7 +68,7 @@ func Services(builder *ContainerBuilder.ContainerBuilder) error {
 	 */
 	eventDispatcher := EventDispatcher.NewEventDispatcher(debugBoolFlag != nil && *debugBoolFlag == true)
 
-	fileInputCollector, err := FileInputCollector.NewFileInputCollector(
+	fileInputCollector, err := input_collector.NewFileInputCollector(
 		configuration.Paths,
 		configuration.ExcludeFiles,
 		projectDirectory,
@@ -119,12 +83,12 @@ func Services(builder *ContainerBuilder.ContainerBuilder) error {
 	/*
 	 * AST
 	 */
-	astFileReferenceInMemoryCache := AstFileReferenceInMemoryCache.NewAstFileReferenceInMemoryCache()
+	astFileReferenceInMemoryCache := Cache2.NewAstFileReferenceInMemoryCache()
 	if builder.AstFileReferenceCacheInterface == nil {
 		builder.AstFileReferenceCacheInterface = astFileReferenceInMemoryCache
 	}
-	typeResolver := TypeResolver.NewTypeResolver()
-	referenceExtractors := []ReferenceExtractorInterface.ReferenceExtractorInterface{
+	typeResolver := parser.NewTypeResolver()
+	referenceExtractors := []extractors.ReferenceExtractorInterface{
 		/**
 
 		TODO: Implement all reference extractors
@@ -140,30 +104,30 @@ func Services(builder *ContainerBuilder.ContainerBuilder) error {
 
 		*/
 	}
-	nikicPhpParser := NikicPhpParser.NewNikicPhpParser(builder.AstFileReferenceCacheInterface, typeResolver, referenceExtractors)
+	nikicPhpParser := nikic_php_parser.NewNikicPhpParser(builder.AstFileReferenceCacheInterface, typeResolver, referenceExtractors)
 	parserInterface := nikicPhpParser
-	astLoader := AstLoader.NewAstLoader(parserInterface, eventDispatcher)
+	astLoader := ast.NewAstLoader(parserInterface, eventDispatcher)
 
 	/*
 	 * Dependency
 	 */
-	dependencyEmitters := map[EmitterType.EmitterType]DependencyEmitterInterface.DependencyEmitterInterface{
-		EmitterType.ClassToken:               ClassDependencyEmitter.NewClassDependencyEmitter(),
-		EmitterType.ClassSuperGlobalToken:    ClassSuperglobalDependencyEmitter.NewClassSuperglobalDependencyEmitter(),
-		EmitterType.FileToken:                FileDependencyEmitter.NewFileDependencyEmitter(),
-		EmitterType.FunctionToken:            FunctionDependencyEmitter.NewFunctionDependencyEmitter(),
-		EmitterType.FunctionCall:             FunctionCallDependencyEmitter.NewFunctionCallDependencyEmitter(),
-		EmitterType.FunctionSuperGlobalToken: FunctionSuperglobalDependencyEmitter.NewFunctionSuperglobalDependencyEmitter(),
-		EmitterType.UseToken:                 UsesDependencyEmitter.NewUsesDependencyEmitter(),
+	dependencyEmitters := map[EmitterType.EmitterType]emitter.DependencyEmitterInterface{
+		EmitterType.ClassToken:               emitter.NewClassDependencyEmitter(),
+		EmitterType.ClassSuperGlobalToken:    emitter.NewClassSuperglobalDependencyEmitter(),
+		EmitterType.FileToken:                emitter.NewFileDependencyEmitter(),
+		EmitterType.FunctionToken:            emitter.NewFunctionDependencyEmitter(),
+		EmitterType.FunctionCall:             emitter.NewFunctionCallDependencyEmitter(),
+		EmitterType.FunctionSuperGlobalToken: emitter.NewFunctionSuperglobalDependencyEmitter(),
+		EmitterType.UseToken:                 emitter.NewUsesDependencyEmitter(),
 	}
-	inheritanceFlattener := InheritanceFlattener.NewInheritanceFlattener()
-	dependencyResolver := DependencyResolver.NewDependencyResolver(configuration.Analyser, dependencyEmitters, inheritanceFlattener, eventDispatcher)
-	tokenResolver := TokenResolver.NewTokenResolver()
+	inheritanceFlattener := dependency.NewInheritanceFlattener()
+	dependencyResolver := dependency_resolver.NewDependencyResolver(configuration.Analyser, dependencyEmitters, inheritanceFlattener, eventDispatcher)
+	tokenResolver := dependency.NewTokenResolver()
 
-	astMapExtractor := AstMapExtractor.NewAstMapExtractor(fileInputCollector, astLoader)
+	astMapExtractor := ast.NewAstMapExtractor(fileInputCollector, astLoader)
 
 	layerProvider := LayerProvider.NewLayerProvider(configuration.Rulesets)
-	eventHelper := EventHelper.NewEventHelper(configuration.SkipViolations, layerProvider)
+	eventHelper := event_helper.NewEventHelper(configuration.SkipViolations, layerProvider)
 
 	/*
 	 * Events (before first possible event)
@@ -174,18 +138,18 @@ func Services(builder *ContainerBuilder.ContainerBuilder) error {
 	EventSubscriberInterfaceMap.Map = orderedmap.NewOrderedMap[string, *orderedmap.OrderedMap[int, []EventSubscriberInterface2.EventSubscriberInterface]]()
 
 	// Events
-	uncoveredDependentHandler := UncoveredDependentHandler.NewUncoveredDependentHandler(configuration.IgnoreUncoveredInternalStructs)
-	matchingLayersHandler := MatchingLayersHandler.NewMatchingLayersHandler()
-	allowDependencyHandler := AllowDependencyHandler.NewAllowDependencyHandler()
+	uncoveredDependentHandler := process_event.NewUncoveredDependentHandler(configuration.IgnoreUncoveredInternalStructs)
+	matchingLayersHandler := process_event.NewMatchingLayersHandler()
+	allowDependencyHandler := process_event.NewAllowDependencyHandler()
 	consoleSubscriber := ConsoleSubscriber.NewConsoleSubscriber(symfonyOutput, timeStopwatch)
 	progressSubscriber := ProgressSubscriber.NewProgressSubscriber(symfonyOutput)
-	dependsOnDisallowedLayer := DependsOnDisallowedLayer.NewDependsOnDisallowedLayer(eventHelper)
-	dependsOnPrivateLayer := DependsOnPrivateLayer.NewDependsOnPrivateLayer(eventHelper)
-	dependsOnInternalToken := DependsOnInternalToken.NewDependsOnInternalToken(eventHelper, configuration.Analyser)
-	unmatchedSkippedViolations := UnmatchedSkippedViolations.NewUnmatchedSkippedViolations(eventHelper)
+	dependsOnDisallowedLayer := process_event.NewDependsOnDisallowedLayer(eventHelper)
+	dependsOnPrivateLayer := process_event.NewDependsOnPrivateLayer(eventHelper)
+	dependsOnInternalToken := process_event.NewDependsOnInternalToken(eventHelper, configuration.Analyser)
+	unmatchedSkippedViolations := post_process_event.NewUnmatchedSkippedViolations(eventHelper)
 
-	processEvent := &ProcessEvent.ProcessEvent{}
-	postProcessEvent := &PostProcessEvent.PostProcessEvent{}
+	processEvent := &process_event2.ProcessEvent{}
+	postProcessEvent := &post_process_event2.PostProcessEvent{}
 	preCreateAstMapEvent := &PreCreateAstMapEvent.PreCreateAstMapEvent{}
 	postCreateAstMapEvent := &PostCreateAstMapEvent.PostCreateAstMapEvent{}
 	// Events Handlers
@@ -205,55 +169,55 @@ func Services(builder *ContainerBuilder.ContainerBuilder) error {
 	/*
 	 * Layer
 	 */
-	inheritanceLevelCollector, err := InheritanceLevelCollector.NewInheritanceLevelCollector(astMapExtractor)
+	inheritanceLevelCollector, err := collector.NewInheritanceLevelCollector(astMapExtractor)
 	if err != nil {
 		return err
 	}
-	inheritsCollector, err := InheritsCollector.NewInheritsCollector(astMapExtractor)
+	inheritsCollector, err := collector.NewInheritsCollector(astMapExtractor)
 	if err != nil {
 		return err
 	}
-	usesCollector, err := UsesCollector.NewUsesCollector(astMapExtractor)
+	usesCollector, err := collector.NewUsesCollector(astMapExtractor)
 	if err != nil {
 		return err
 	}
-	collectorProvider := CollectorProvider.NewCollectorProvider()
-	collectorResolver := CollectorResolver.NewCollectorResolver(collectorProvider)
-	layerResolver := LayerResolver.NewLayerResolver(collectorResolver, configuration.Layers)
+	collectorProvider := collector.NewCollectorProvider()
+	collectorResolver := collector.NewCollectorResolver(collectorProvider)
+	layerResolver := layer.NewLayerResolver(collectorResolver, configuration.Layers)
 	collectors := map[CollectorType.CollectorType]CollectorInterface.CollectorInterface{
 		//AttributeCollector
-		CollectorType.TypeBool:           BoolCollector.NewBoolCollector(collectorResolver),
-		CollectorType.TypeClass:          ClassCollector.NewClassCollector(),
-		CollectorType.TypeClasslike:      ClassLikeCollector.NewClassLikeCollector(),
-		CollectorType.TypeClassNameRegex: ClassNameRegexCollector.NewClassNameRegexCollector(),
+		CollectorType.TypeBool:           collector.NewBoolCollector(collectorResolver),
+		CollectorType.TypeClass:          collector.NewClassCollector(),
+		CollectorType.TypeClasslike:      collector.NewClassLikeCollector(),
+		CollectorType.TypeClassNameRegex: collector.NewClassNameRegexCollector(),
 		//CollectorType.TypeTagValueRegex: TagValueRegexCollector.NewTagValueRegexCollector(),
-		CollectorType.TypeDirectory: DirectoryCollector.NewDirectoryCollector(),
+		CollectorType.TypeDirectory: collector.NewDirectoryCollector(),
 		//CollectorType.TypeExtends: ExtendsCollector.NewExtendsCollector(collectorResolver),
-		CollectorType.TypeFunctionName: FunctionNameCollector.NewFunctionNameCollector(),
-		CollectorType.TypeGlob:         GlobCollector.NewGlobCollector(projectDirectory),
+		CollectorType.TypeFunctionName: collector.NewFunctionNameCollector(),
+		CollectorType.TypeGlob:         collector.NewGlobCollector(projectDirectory),
 		//ImplementsCollector
 		CollectorType.TypeInheritance: inheritanceLevelCollector,
-		CollectorType.TypeInterface:   InterfaceCollector.NewInterfaceCollector(),
+		CollectorType.TypeInterface:   collector.NewInterfaceCollector(),
 		CollectorType.TypeInherits:    inheritsCollector,
-		CollectorType.TypeLayer:       LayerCollector.NewLayerCollector(layerResolver),
-		CollectorType.TypeMethod:      MethodCollector.NewMethodCollector(nikicPhpParser),
-		CollectorType.TypeSuperGlobal: SuperglobalCollector.NewSuperglobalCollector(),
-		CollectorType.TypeTrait:       TraitCollector.NewTraitCollector(),
+		CollectorType.TypeLayer:       collector.NewLayerCollector(layerResolver),
+		CollectorType.TypeMethod:      collector.NewMethodCollector(nikicPhpParser),
+		CollectorType.TypeSuperGlobal: collector.NewSuperglobalCollector(),
+		CollectorType.TypeTrait:       collector.NewTraitCollector(),
 		CollectorType.TypeUses:        usesCollector,
 		//CollectorType.TypePhpInternal: PhpInternalCollector
-		CollectorType.TypeComposer: ComposerCollector.NewComposerCollector(),
+		CollectorType.TypeComposer: collector.NewComposerCollector(),
 	}
 	collectorProvider.Set(collectors)
 
 	/*
 	 * SetAnalyser
 	 */
-	dependencyLayersAnalyser := DependencyLayersAnalyser.NewDependencyLayersAnalyser(astMapExtractor, dependencyResolver, tokenResolver, layerResolver, eventDispatcher)
-	tokenInLayerAnalyser := TokenInLayerAnalyser.NewTokenInLayerAnalyser(astMapExtractor, tokenResolver, layerResolver, configuration.Analyser)
-	layerForTokenAnalyser := LayerForTokenAnalyser.NewLayerForTokenAnalyser(astMapExtractor, tokenResolver, layerResolver)
-	unassignedTokenAnalyser := UnassignedTokenAnalyser.NewUnassignedTokenAnalyser(astMapExtractor, tokenResolver, layerResolver, configuration.Analyser)
-	layerDependenciesAnalyser := LayerDependenciesAnalyser.NewLayerDependenciesAnalyser(astMapExtractor, tokenResolver, dependencyResolver, layerResolver)
-	rulesetUsageAnalyser := RulesetUsageAnalyser.NewRulesetUsageAnalyser(layerProvider, layerResolver, astMapExtractor, dependencyResolver, tokenResolver, configuration.Layers)
+	dependencyLayersAnalyser := analyser.NewDependencyLayersAnalyser(astMapExtractor, dependencyResolver, tokenResolver, layerResolver, eventDispatcher)
+	tokenInLayerAnalyser := analyser.NewTokenInLayerAnalyser(astMapExtractor, tokenResolver, layerResolver, configuration.Analyser)
+	layerForTokenAnalyser := analyser.NewLayerForTokenAnalyser(astMapExtractor, tokenResolver, layerResolver)
+	unassignedTokenAnalyser := analyser.NewUnassignedTokenAnalyser(astMapExtractor, tokenResolver, layerResolver, configuration.Analyser)
+	layerDependenciesAnalyser := analyser.NewLayerDependenciesAnalyser(astMapExtractor, tokenResolver, dependencyResolver, layerResolver)
+	rulesetUsageAnalyser := analyser.NewRulesetUsageAnalyser(layerProvider, layerResolver, astMapExtractor, dependencyResolver, tokenResolver, configuration.Layers)
 
 	/*
 	 * OutputFormatter

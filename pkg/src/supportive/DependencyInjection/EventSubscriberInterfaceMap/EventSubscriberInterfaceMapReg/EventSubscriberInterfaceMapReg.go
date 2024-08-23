@@ -1,8 +1,6 @@
 package EventSubscriberInterfaceMapReg
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Analyser/PostProcessEvent"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Analyser/ProcessEvent"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/AstFileAnalysedEvent"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/AstFileSyntaxErrorEvent"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Ast/PostCreateAstMapEvent"
@@ -11,6 +9,8 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Dependency/PostFlattenEvent"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Dependency/PreEmitEvent"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Dependency/PreFlattenEvent"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/analyser/post_process_event"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/analyser/process_event"
 	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/Console/Subscriber/ConsoleSubscriber"
 	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/Console/Subscriber/ProgressSubscriber"
 	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/DependencyInjection/EventSubscriberDefaultPriority"
@@ -21,8 +21,8 @@ import (
 )
 
 func RegForAnalyseCommand(consoleSubscriber *ConsoleSubscriber.ConsoleSubscriber, progressSubscriber *ProgressSubscriber.ProgressSubscriber, withProgress bool) {
-	processEvent := &ProcessEvent.ProcessEvent{}
-	postProcessEvent := &PostProcessEvent.PostProcessEvent{}
+	processEvent := &process_event.ProcessEvent{}
+	postProcessEvent := &post_process_event.PostProcessEvent{}
 	preCreateAstMapEvent := &PreCreateAstMapEvent.PreCreateAstMapEvent{}
 	postCreateAstMapEvent := &PostCreateAstMapEvent.PostCreateAstMapEvent{}
 	astFileAnalysedEvent := &AstFileAnalysedEvent.AstFileAnalysedEvent{}

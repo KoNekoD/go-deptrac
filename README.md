@@ -19,29 +19,30 @@ Here is an example depfile:
 
 ```yaml
 # depfile.yaml
-paths:
-  - ./src
-exclude_files:
-  - .*test.*
-layers:
-  - name: Controller
-    collectors:
-      - type: directory
-        regex: .*Controller.*
-  - name: Repository
-    collectors:
-      - type: directory
-        regex: .*Repository.*
-  - name: Service
-    collectors:
-      - type: directory
-        regex: .*Service.*
-ruleset:
-  Controller:
-    - Service
-  Service:
-    - Repository
-  Repository: ~
+deptrac:
+    paths:
+      - ./src
+    exclude_files:
+      - .*test.*
+    layers:
+      - name: Controller
+        collectors:
+          - type: directory
+            value: .*Controller.*
+      - name: Repository
+        collectors:
+          - type: directory
+            value: .*Repository.*
+      - name: Service
+        collectors:
+          - type: directory
+            value: .*Service.*
+    ruleset:
+      Controller:
+        - Service
+      Service:
+        - Repository
+      Repository: ~
 ```
 
 #### Explanation

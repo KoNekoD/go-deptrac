@@ -1,7 +1,6 @@
 package OutputResult
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Analyser/AnalysisResult"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Result/Allowed"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Result/Error"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Result/RuleInterface"
@@ -10,6 +9,7 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Result/Uncovered"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Result/Violation"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Result/Warning"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/analyser/analysis_result"
 )
 
 // OutputResult - Represents a result ready for output formatting
@@ -23,7 +23,7 @@ func newOutputResult(rules map[RuleTypeEnum.RuleTypeEnum]map[string]RuleInterfac
 	return &OutputResult{rules: rules, Errors: errors, Warnings: warnings}
 }
 
-func NewOutputResultFromAnalysisResult(analysisResult *AnalysisResult.AnalysisResult) *OutputResult {
+func NewOutputResultFromAnalysisResult(analysisResult *analysis_result.AnalysisResult) *OutputResult {
 	return newOutputResult(
 		analysisResult.Rules(),
 		analysisResult.Errors(),

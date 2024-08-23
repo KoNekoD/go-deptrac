@@ -2,8 +2,8 @@ package Violation
 
 import (
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Analyser/ViolationCreatingInterface"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Dependency/DependencyInterface"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/analyser/violation_creating_interface"
 )
 
 // Violation - Represents a dependency that is NOT allowed to exist given the defined rules
@@ -11,10 +11,10 @@ type Violation struct {
 	Dependency            DependencyInterface.DependencyInterface
 	DependerLayer         string
 	DependentLayer        string
-	ViolationCreatingRule ViolationCreatingInterface.ViolationCreatingInterface
+	ViolationCreatingRule violation_creating_interface.ViolationCreatingInterface
 }
 
-func NewViolation(dependency DependencyInterface.DependencyInterface, dependerLayer string, dependentLayer string, violationCreatingRule ViolationCreatingInterface.ViolationCreatingInterface) *Violation {
+func NewViolation(dependency DependencyInterface.DependencyInterface, dependerLayer string, dependentLayer string, violationCreatingRule violation_creating_interface.ViolationCreatingInterface) *Violation {
 
 	if dependentLayer == dependerLayer {
 		panic("1")
