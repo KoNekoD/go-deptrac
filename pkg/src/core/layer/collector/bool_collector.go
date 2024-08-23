@@ -2,9 +2,9 @@ package collector
 
 import (
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Config/CollectorConfig"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Layer/InvalidCollectorDefinitionException"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/config"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/layer"
 )
 
 type BoolCollector struct {
@@ -55,15 +55,15 @@ func (b *BoolCollector) Satisfy(config map[string]interface{}, reference ast.Tok
 
 func (b *BoolCollector) normalizeConfiguration(configuration map[string]interface{}) (map[string]interface{}, error) {
 	if _, ok := configuration["must"]; !ok {
-		configuration["must"] = make([]*CollectorConfig.CollectorConfig, 0)
+		configuration["must"] = make([]*config.CollectorConfig, 0)
 	}
 
 	if _, ok := configuration["must_not"]; !ok {
-		configuration["must_not"] = make([]*CollectorConfig.CollectorConfig, 0)
+		configuration["must_not"] = make([]*config.CollectorConfig, 0)
 	}
 
 	if len(configuration["must"].([]interface{})) == 0 && len(configuration["must_not"].([]interface{})) == 0 {
-		return nil, InvalidCollectorDefinitionException.NewInvalidCollectorDefinitionExceptionInvalidCollectorConfiguration(fmt.Sprintf("\"bool\" collector must have a \"must\" or a \"must_not\" attribute."))
+		return nil, layer.NewInvalidCollectorDefinitionExceptionInvalidCollectorConfiguration(fmt.Sprintf("\"bool\" collector must have a \"must\" or a \"must_not\" attribute."))
 	}
 
 	return configuration, nil

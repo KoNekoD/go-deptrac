@@ -2,10 +2,8 @@ package analyser
 
 import (
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Layer/CircularReferenceException"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Layer/InvalidCollectorDefinitionException"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Layer/InvalidLayerDefinitionException"
 	astContract "github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/layer"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/dependency"
 )
@@ -31,11 +29,11 @@ func NewUnrecognizedToken(e *dependency.UnrecognizedTokenException) *AnalyserExc
 	return &AnalyserException{Message: "Unrecognized token.", Previous: e}
 }
 
-func NewInvalidLayerDefinition(e *InvalidLayerDefinitionException.InvalidLayerDefinitionException) *AnalyserException {
+func NewInvalidLayerDefinition(e *layer.InvalidLayerDefinitionException) *AnalyserException {
 	return &AnalyserException{Message: "Invalid layer definition.", Previous: e}
 }
 
-func NewInvalidCollectorDefinition(e *InvalidCollectorDefinitionException.InvalidCollectorDefinitionException) *AnalyserException {
+func NewInvalidCollectorDefinition(e *layer.InvalidCollectorDefinitionException) *AnalyserException {
 	return &AnalyserException{Message: "Invalid collector definition.", Previous: e}
 }
 
@@ -47,6 +45,6 @@ func NewCouldNotParseFile(e *astContract.CouldNotParseFileException) *AnalyserEx
 	return &AnalyserException{Message: "Could not parse file.", Previous: e}
 }
 
-func NewCircularReference(e *CircularReferenceException.CircularReferenceException) *AnalyserException {
+func NewCircularReference(e *layer.CircularReferenceException) *AnalyserException {
 	return &AnalyserException{Message: "Circular layer dependency.", Previous: e}
 }

@@ -2,16 +2,16 @@ package analyser
 
 import (
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Result/Warning"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/analyser/analysis_result"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/analyser/post_process_event"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/analyser/process_event"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/result"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/dependency"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/dependency/dependency_resolver"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/layer/layer_resolver_interface"
-	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/DependencyInjection/EventDispatcher/EventDispatcherInterface"
+	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/dependency_injection/event_dispatcher/event_dispatcher_interface"
 )
 
 type DependencyLayersAnalyser struct {
@@ -46,8 +46,8 @@ func (a *DependencyLayersAnalyser) Analyse() (*analysis_result.AnalysisResult, e
 	if err != nil {
 		return nil, err
 	}
-	result := analysis_result.NewAnalysisResult()
-	warnings := make(map[string]*Warning.Warning)
+	analysisResult := analysis_result.NewAnalysisResult()
+	warnings := make(map[string]*result.Warning)
 	for _, dependency := range dependencies.GetDependenciesAndInheritDependencies() {
 		depender := dependency.GetDepender()
 		dependerRef := a.tokenResolver.Resolve(depender, astMap)
@@ -72,7 +72,7 @@ func (a *DependencyLayersAnalyser) Analyse() (*analysis_result.AnalysisResult, e
 
 		_, ok := warnings[depender.ToString()]
 		if !ok && len(dependerLayers) > 1 {
-			warnings[depender.ToString()] = Warning.NewWarningTokenIsInMoreThanOneLayer(depender.ToString(), dependerLayers)
+			warnings[depender.ToString()] = result.NewWarningTokenIsInMoreThanOneLayer(depender.ToString(), dependerLayers)
 		}
 
 		dependent := dependency.GetDependent()
@@ -84,20 +84,20 @@ func (a *DependencyLayersAnalyser) Analyse() (*analysis_result.AnalysisResult, e
 		}
 
 		for _, dependerLayer := range dependerLayers {
-			event := process_event.NewProcessEvent(dependency, dependerRef, dependerLayer, dependentRef, dependentLayers, result)
+			event := process_event.NewProcessEvent(dependency, dependerRef, dependerLayer, dependentRef, dependentLayers, analysisResult)
 			err := a.eventDispatcher.DispatchEvent(event)
 			if err != nil {
 				return nil, err
 			}
-			result = event.GetResult()
+			analysisResult = event.GetResult()
 		}
 	}
 
 	for _, warning := range warnings {
-		result.AddWarning(warning)
+		analysisResult.AddWarning(warning)
 	}
 
-	event := post_process_event.NewPostProcessEvent(result)
+	event := post_process_event.NewPostProcessEvent(analysisResult)
 	errDispatch := a.eventDispatcher.DispatchEvent(event)
 	if errDispatch != nil {
 		return nil, errDispatch

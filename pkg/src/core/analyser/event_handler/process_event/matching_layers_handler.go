@@ -1,6 +1,8 @@
 package process_event
 
-import "github.com/KoNekoD/go-deptrac/pkg/src/contract/analyser/process_event"
+import (
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/analyser/process_event"
+)
 
 type MatchingLayersHandler struct{}
 

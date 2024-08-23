@@ -1,19 +1,19 @@
 package dependency
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Dependency/DependencyInterface"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
+	Dependency2 "github.com/KoNekoD/go-deptrac/pkg/src/contract/dependency"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast/ast_map"
 )
 
 type InheritDependency struct {
 	depender           *ast_map.ClassLikeToken
 	dependent          ast.TokenInterface
-	originalDependency DependencyInterface.DependencyInterface
+	originalDependency Dependency2.DependencyInterface
 	inheritPath        *ast_map.AstInherit
 }
 
-func NewInheritDependency(depender *ast_map.ClassLikeToken, dependent ast.TokenInterface, originalDependency DependencyInterface.DependencyInterface, inheritPath *ast_map.AstInherit) *InheritDependency {
+func NewInheritDependency(depender *ast_map.ClassLikeToken, dependent ast.TokenInterface, originalDependency Dependency2.DependencyInterface, inheritPath *ast_map.AstInherit) *InheritDependency {
 	return &InheritDependency{depender: depender, dependent: dependent, originalDependency: originalDependency, inheritPath: inheritPath}
 }
 

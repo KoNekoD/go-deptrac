@@ -1,8 +1,8 @@
 package process_event
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Result/Uncovered"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/analyser/process_event"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/result"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast/ast_map"
 )
 
@@ -27,7 +27,7 @@ func (h *UncoveredDependentHandler) InvokeEventSubscriber(rawEvent interface{}, 
 
 	if dependentClassLike, ok := dependent.(*ast_map.ClassLikeToken); ok {
 		if !h.isIgnoreUncoveredInternalClasses(dependentClassLike) {
-			ruleset.AddRule(Uncovered.NewUncovered(event.Dependency, event.DependerLayer))
+			ruleset.AddRule(result.NewUncovered(event.Dependency, event.DependerLayer))
 		}
 	}
 

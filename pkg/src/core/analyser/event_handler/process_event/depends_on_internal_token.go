@@ -1,9 +1,9 @@
 package process_event
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Config/AnalyserConfig"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/analyser/event_helper"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/analyser/process_event"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/config"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast/ast_map"
 )
 
@@ -12,7 +12,7 @@ type DependsOnInternalToken struct {
 	internalTag *string
 }
 
-func NewDependsOnInternalToken(eventHelper *event_helper.EventHelper, analyser *AnalyserConfig.AnalyserConfig) *DependsOnInternalToken {
+func NewDependsOnInternalToken(eventHelper *event_helper.EventHelper, analyser *config.AnalyserConfig) *DependsOnInternalToken {
 	return &DependsOnInternalToken{eventHelper: eventHelper, internalTag: analyser.InternalTag}
 }
 

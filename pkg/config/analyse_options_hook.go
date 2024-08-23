@@ -2,12 +2,12 @@ package config
 
 import (
 	"flag"
-	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/Console/Command/AnalyseOptions"
+	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/console/command"
 )
 
 type analyseOptionsHook struct{}
 type AnalyseOptionsHook interface {
-	GetOptions() *AnalyseOptions.AnalyseOptions
+	GetOptions() *command.AnalyseOptions
 }
 
 func NewAnalyseOptionsHook() AnalyseOptionsHook {
@@ -30,7 +30,7 @@ const (
 	OptionNoProgressUsage      = "Do not show progress bar"
 )
 
-func (h *analyseOptionsHook) GetOptions() *AnalyseOptions.AnalyseOptions {
+func (h *analyseOptionsHook) GetOptions() *command.AnalyseOptions {
 
 	reportUncovered := flag.Bool(OptionReportUncovered, false, OptionReportUncoveredUsage)
 	failOnUncovered := flag.Bool(OptionFailOnUncovered, false, OptionFailOnUncoveredUsage)
@@ -39,7 +39,7 @@ func (h *analyseOptionsHook) GetOptions() *AnalyseOptions.AnalyseOptions {
 	output := flag.String(OptionOutput, "", OptionOutputUsage)
 	noProgress := flag.Bool(OptionNoProgress, false, OptionNoProgressUsage)
 
-	return &AnalyseOptions.AnalyseOptions{
+	return &command.AnalyseOptions{
 		ReportUncovered: *reportUncovered,
 		FailOnUncovered: *failOnUncovered,
 		ReportSkipped:   *reportSkipped,

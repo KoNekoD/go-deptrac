@@ -1,12 +1,14 @@
 package collector
 
-import "github.com/KoNekoD/go-deptrac/pkg/src/contract/Layer/CollectorInterface"
+import (
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/layer"
+)
 
 type Collectable struct {
-	Collector  CollectorInterface.CollectorInterface
+	Collector  layer.CollectorInterface
 	Attributes map[string]interface{}
 }
 
-func NewCollectable(collector CollectorInterface.CollectorInterface, attributes map[string]interface{}) *Collectable {
+func NewCollectable(collector layer.CollectorInterface, attributes map[string]interface{}) *Collectable {
 	return &Collectable{Collector: collector, Attributes: attributes}
 }

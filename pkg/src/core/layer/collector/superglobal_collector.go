@@ -1,8 +1,8 @@
 package collector
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Layer/InvalidCollectorDefinitionException"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/layer"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/util"
 )
@@ -34,7 +34,7 @@ func (c SuperglobalCollector) Satisfy(config map[string]interface{}, reference a
 
 func (c SuperglobalCollector) getNames(config map[string]interface{}) ([]string, error) {
 	if !util.MapKeyExists(config, "value") || !util.MapKeyIsArrayOfStrings(config, "value") {
-		return nil, InvalidCollectorDefinitionException.NewInvalidCollectorDefinitionExceptionInvalidCollectorConfiguration("SuperglobalCollector needs the names configuration.")
+		return nil, layer.NewInvalidCollectorDefinitionExceptionInvalidCollectorConfiguration("SuperglobalCollector needs the names configuration.")
 	}
 
 	return config["value"].([]string), nil

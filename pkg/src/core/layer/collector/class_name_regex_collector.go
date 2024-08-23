@@ -1,8 +1,8 @@
 package collector
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Layer/InvalidCollectorDefinitionException"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/layer"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/util"
 )
@@ -32,7 +32,7 @@ func (c ClassNameRegexCollector) Satisfy(config map[string]interface{}, referenc
 
 func (c ClassNameRegexCollector) GetPattern(config map[string]interface{}) (string, error) {
 	if !util.MapKeyExists(config, "value") || !util.MapKeyIsString(config, "value") {
-		return "", InvalidCollectorDefinitionException.NewInvalidCollectorDefinitionExceptionInvalidCollectorConfiguration("ClassNameRegexCollector needs the regex configuration.")
+		return "", layer.NewInvalidCollectorDefinitionExceptionInvalidCollectorConfiguration("ClassNameRegexCollector needs the regex configuration.")
 	}
 
 	return config["value"].(string), nil

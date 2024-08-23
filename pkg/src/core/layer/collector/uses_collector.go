@@ -1,8 +1,8 @@
 package collector
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Layer/InvalidCollectorDefinitionException"
 	astContract "github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/layer"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/util"
@@ -45,7 +45,7 @@ func (u *UsesCollector) Satisfy(config map[string]interface{}, reference astCont
 
 func (u *UsesCollector) getTraitName(config map[string]interface{}) (*ast_map.ClassLikeToken, error) {
 	if !util.MapKeyExists(config, "value") || !util.MapKeyIsString(config, "value") {
-		return nil, InvalidCollectorDefinitionException.NewInvalidCollectorDefinitionExceptionInvalidCollectorConfiguration("UsesCollector needs the trait name as a string.")
+		return nil, layer.NewInvalidCollectorDefinitionExceptionInvalidCollectorConfiguration("UsesCollector needs the trait name as a string.")
 	}
 
 	return ast_map.NewClassLikeTokenFromFQCN(config["value"].(string)), nil

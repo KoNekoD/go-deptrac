@@ -2,8 +2,8 @@ package collector
 
 import (
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Layer/InvalidCollectorDefinitionException"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/layer"
 	"github.com/KoNekoD/go-deptrac/pkg/util"
 	"regexp"
 )
@@ -42,7 +42,7 @@ func (c *DirectoryCollector) Satisfy(config map[string]interface{}, reference as
 func (c *DirectoryCollector) GetPattern(config map[string]interface{}) (string, error) {
 	if _, ok := config["value"]; !ok {
 		if _, ok2 := config["value"].(string); !ok2 {
-			return "", InvalidCollectorDefinitionException.NewInvalidCollectorDefinitionExceptionInvalidCollectorConfiguration("DirectoryCollector needs the regex configuration")
+			return "", layer.NewInvalidCollectorDefinitionExceptionInvalidCollectorConfiguration("DirectoryCollector needs the regex configuration")
 		}
 	}
 

@@ -2,9 +2,9 @@ package post_process_event
 
 import (
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Result/Error"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/analyser/event_helper"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/analyser/post_process_event"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/result"
 )
 
 type UnmatchedSkippedViolations struct {
@@ -21,7 +21,7 @@ func (u *UnmatchedSkippedViolations) InvokeEventSubscriber(rawEvent interface{},
 	ruleset := event.GetResult()
 	for tokenA, tokensB := range u.eventHelper.UnmatchedSkippedViolations() {
 		for _, tokenB := range tokensB {
-			ruleset.AddError(Error.NewError(fmt.Sprintf("Skipped violation \"%s\" for \"%s\" was not matched.", tokenB, tokenA)))
+			ruleset.AddError(result.NewError(fmt.Sprintf("Skipped violation \"%s\" for \"%s\" was not matched.", tokenB, tokenA)))
 		}
 	}
 	stopPropagation()

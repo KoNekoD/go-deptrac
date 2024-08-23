@@ -2,7 +2,7 @@ package simple_cleanarch
 
 import (
 	"flag"
-	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/Console/Application"
+	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/console/application"
 	_ "github.com/KoNekoD/go-deptrac/resources"
 	"os"
 	"testing"
@@ -21,7 +21,7 @@ func TestRun(t *testing.T) {
 	//	t.Fatal(err)
 	//}
 
-	Application.
+	application.
 		NewApplication().
 		Run()
 }

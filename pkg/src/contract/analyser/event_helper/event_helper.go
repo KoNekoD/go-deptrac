@@ -1,12 +1,11 @@
 package event_helper
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Layer/LayerProvider"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Result/SkippedViolation"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Result/Violation"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/analyser/analysis_result"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/analyser/process_event"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/analyser/violation_creating_interface"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/layer"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/result"
 	"github.com/KoNekoD/go-deptrac/pkg/util"
 )
 
@@ -14,10 +13,10 @@ import (
 type EventHelper struct {
 	UnmatchedSkippedViolation map[string][]string
 	SkippedViolations         map[string][]string
-	LayerProvider             *LayerProvider.LayerProvider
+	LayerProvider             *layer.LayerProvider
 }
 
-func NewEventHelper(skippedViolations map[string][]string, layerProvider *LayerProvider.LayerProvider) *EventHelper {
+func NewEventHelper(skippedViolations map[string][]string, layerProvider *layer.LayerProvider) *EventHelper {
 	return &EventHelper{
 		UnmatchedSkippedViolation: skippedViolations,
 		SkippedViolations:         skippedViolations,
@@ -58,8 +57,8 @@ func (e *EventHelper) UnmatchedSkippedViolations() map[string][]string {
 
 func (e *EventHelper) AddSkippableViolation(event *process_event.ProcessEvent, analysisResult *analysis_result.AnalysisResult, dependentLayer string, violationCreatingRule violation_creating_interface.ViolationCreatingInterface) {
 	if e.shouldViolationBeSkipped(event.Dependency.GetDepender().ToString(), event.Dependency.GetDependent().ToString()) {
-		analysisResult.AddRule(SkippedViolation.NewSkippedViolation(event.Dependency, event.DependerLayer, dependentLayer))
+		analysisResult.AddRule(result.NewSkippedViolation(event.Dependency, event.DependerLayer, dependentLayer))
 	} else {
-		analysisResult.AddRule(Violation.NewViolation(event.Dependency, event.DependerLayer, dependentLayer, violationCreatingRule))
+		analysisResult.AddRule(result.NewViolation(event.Dependency, event.DependerLayer, dependentLayer, violationCreatingRule))
 	}
 }

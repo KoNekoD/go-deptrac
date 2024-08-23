@@ -1,8 +1,8 @@
 package collector
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Layer/InvalidCollectorDefinitionException"
 	astContract "github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/layer"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/util"
@@ -32,7 +32,7 @@ func (c *InheritanceLevelCollector) Satisfy(config map[string]interface{}, refer
 	classInherits := c.astMap.GetClassInherits(reference.GetToken().(*ast_map.ClassLikeToken))
 
 	if !util.MapKeyExists(config, "value") || util.MapKeyIsInt(config, "value") {
-		return false, InvalidCollectorDefinitionException.NewInvalidCollectorDefinitionExceptionInvalidCollectorConfiguration("InheritanceLevelCollector needs inheritance depth as int.")
+		return false, layer.NewInvalidCollectorDefinitionExceptionInvalidCollectorConfiguration("InheritanceLevelCollector needs inheritance depth as int.")
 	}
 
 	depth := config["value"].(int)

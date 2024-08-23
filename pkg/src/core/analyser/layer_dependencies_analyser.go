@@ -1,7 +1,7 @@
 package analyser
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Result/Uncovered"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/result"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/dependency"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/dependency/dependency_resolver"
@@ -29,8 +29,8 @@ func NewLayerDependenciesAnalyser(
 	}
 }
 
-func (a *LayerDependenciesAnalyser) GetDependencies(layer string, targetLayer *string) (map[string][]*Uncovered.Uncovered, error) {
-	result := make(map[string][]*Uncovered.Uncovered)
+func (a *LayerDependenciesAnalyser) GetDependencies(layer string, targetLayer *string) (map[string][]*result.Uncovered, error) {
+	uncoveredResult := make(map[string][]*result.Uncovered)
 	astMap, err := a.astMapExtractor.Extract()
 	if err != nil {
 		return nil, err
@@ -53,10 +53,10 @@ func (a *LayerDependenciesAnalyser) GetDependencies(layer string, targetLayer *s
 				if layer == dependentLayerName || targetLayer != nil && *targetLayer != dependentLayerName {
 					continue
 				}
-				if _, ok := result[dependentLayerName]; !ok {
-					result[dependentLayerName] = make([]*Uncovered.Uncovered, 0)
+				if _, ok := uncoveredResult[dependentLayerName]; !ok {
+					uncoveredResult[dependentLayerName] = make([]*result.Uncovered, 0)
 				}
-				result[dependentLayerName] = append(result[dependentLayerName], Uncovered.NewUncovered(dependency, dependentLayerName))
+				uncoveredResult[dependentLayerName] = append(uncoveredResult[dependentLayerName], result.NewUncovered(dependency, dependentLayerName))
 			}
 		}
 	}
@@ -76,5 +76,5 @@ func (a *LayerDependenciesAnalyser) GetDependencies(layer string, targetLayer *s
 	//    throw \Qossmic\Deptrac\Core\SetAnalyser\AnalyserException::couldNotParseFile($e);
 	//}
 
-	return result, nil
+	return uncoveredResult, nil
 }

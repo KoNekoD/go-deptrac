@@ -1,6 +1,8 @@
 package analyser
 
-import "github.com/KoNekoD/go-deptrac/pkg/src/contract/Config/EmitterType"
+import (
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/config"
+)
 
 type TokenType string
 
@@ -10,8 +12,8 @@ const (
 	TokenTypeFile      TokenType = "file"
 )
 
-func NewTokenTypeTryFromEmitterType(emitterType EmitterType.EmitterType) *TokenType {
-	if emitterType == EmitterType.ClassToken {
+func NewTokenTypeTryFromEmitterType(emitterType config.EmitterType) *TokenType {
+	if emitterType == config.ClassToken {
 		classLikeTokenType := TokenTypeClassLike
 		return &classLikeTokenType
 	} else {

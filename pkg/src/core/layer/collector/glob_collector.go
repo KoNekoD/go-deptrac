@@ -1,8 +1,8 @@
 package collector
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Layer/InvalidCollectorDefinitionException"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/layer"
 	"github.com/KoNekoD/go-deptrac/pkg/util"
 	filepath2 "path/filepath"
 	"regexp"
@@ -49,7 +49,7 @@ func (c *GlobCollector) Satisfy(config map[string]interface{}, reference ast.Tok
 
 func (c *GlobCollector) GetPattern(config map[string]interface{}) (string, error) {
 	if !util.MapKeyExists(config, "value") || !util.MapKeyIsString(config, "value") {
-		return "", InvalidCollectorDefinitionException.NewInvalidCollectorDefinitionExceptionInvalidCollectorConfiguration("GlobCollector needs the glob pattern configuration.")
+		return "", layer.NewInvalidCollectorDefinitionExceptionInvalidCollectorConfiguration("GlobCollector needs the glob pattern configuration.")
 	}
 
 	return util.GlogToRegex(config["value"].(string)), nil

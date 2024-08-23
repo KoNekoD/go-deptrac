@@ -1,7 +1,7 @@
 package analyser
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Config/AnalyserConfig"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/config"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/dependency"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/layer/layer_resolver_interface"
@@ -10,7 +10,7 @@ import (
 
 type UnassignedTokenAnalyser struct {
 	tokenTypes      []TokenType
-	config          *AnalyserConfig.AnalyserConfig
+	config          *config.AnalyserConfig
 	astMapExtractor *ast.AstMapExtractor
 	tokenResolver   *dependency.TokenResolver
 	layerResolver   layer_resolver_interface.LayerResolverInterface
@@ -20,7 +20,7 @@ func NewUnassignedTokenAnalyser(
 	astMapExtractor *ast.AstMapExtractor,
 	tokenResolver *dependency.TokenResolver,
 	layerResolver layer_resolver_interface.LayerResolverInterface,
-	config *AnalyserConfig.AnalyserConfig,
+	config *config.AnalyserConfig,
 ) *UnassignedTokenAnalyser {
 	analyser := &UnassignedTokenAnalyser{
 		tokenTypes:      make([]TokenType, 0),

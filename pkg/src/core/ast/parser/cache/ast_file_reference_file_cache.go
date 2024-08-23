@@ -3,7 +3,7 @@ package cache
 import (
 	"encoding/json"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast/ast_map"
-	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/File/FileReader"
+	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/file"
 	"github.com/KoNekoD/go-deptrac/pkg/util"
 	"os"
 	"path/filepath"
@@ -82,7 +82,7 @@ func (c *AstFileReferenceFileCache) Load() error {
 	if !util.FileExists(c.cacheFile) || !util.IsReadable(c.cacheFile) {
 		return nil
 	}
-	contents, err := FileReader.FileReaderRead(c.cacheFile)
+	contents, err := file.FileReaderRead(c.cacheFile)
 	if err != nil {
 		return err
 	}

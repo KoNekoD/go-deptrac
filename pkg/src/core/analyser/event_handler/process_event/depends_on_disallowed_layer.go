@@ -1,9 +1,9 @@
 package process_event
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Result/Error"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/analyser/event_helper"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/analyser/process_event"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/result"
 	"github.com/KoNekoD/go-deptrac/pkg/util"
 )
 
@@ -21,7 +21,7 @@ func (d *DependsOnDisallowedLayer) InvokeEventSubscriber(rawEvent interface{}, s
 	ruleset := event.GetResult()
 	allowedLayers, err := d.eventHelper.LayerProvider.GetAllowedLayers(event.DependerLayer)
 	if err != nil {
-		ruleset.AddError(Error.NewError(err.Error()))
+		ruleset.AddError(result.NewError(err.Error()))
 		stopPropagation()
 		return nil
 	}

@@ -1,8 +1,8 @@
 package collector
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Layer/InvalidCollectorDefinitionException"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/layer"
 	"github.com/KoNekoD/go-deptrac/pkg/util"
 )
 
@@ -14,13 +14,13 @@ func NewComposerCollector() *ComposerCollector {
 
 func (c *ComposerCollector) Satisfy(config map[string]interface{}, reference ast.TokenReferenceInterface) (bool, error) {
 	if !util.MapKeyExists(config, "composerPath") || !util.MapKeyIsString(config, "composerPath") {
-		return false, InvalidCollectorDefinitionException.NewInvalidCollectorDefinitionExceptionInvalidCollectorConfiguration("ComposerCollector needs the path to the composer.json file as string.")
+		return false, layer.NewInvalidCollectorDefinitionExceptionInvalidCollectorConfiguration("ComposerCollector needs the path to the composer.json file as string.")
 	}
 	if !util.MapKeyExists(config, "composerLockPath") || !util.MapKeyIsString(config, "composerLockPath") {
-		return false, InvalidCollectorDefinitionException.NewInvalidCollectorDefinitionExceptionInvalidCollectorConfiguration("ComposerCollector needs the path to the composer.lock file as string.")
+		return false, layer.NewInvalidCollectorDefinitionExceptionInvalidCollectorConfiguration("ComposerCollector needs the path to the composer.lock file as string.")
 	}
 	if !util.MapKeyExists(config, "packages") || !util.MapKeyIsArrayOfStrings(config, "packages") {
-		return false, InvalidCollectorDefinitionException.NewInvalidCollectorDefinitionExceptionInvalidCollectorConfiguration("ComposerCollector needs the list of packages as strings.")
+		return false, layer.NewInvalidCollectorDefinitionExceptionInvalidCollectorConfiguration("ComposerCollector needs the list of packages as strings.")
 	}
 
 	// TODO: implement go.mod parsing

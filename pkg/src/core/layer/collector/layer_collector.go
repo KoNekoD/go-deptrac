@@ -2,9 +2,8 @@ package collector
 
 import (
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Layer/InvalidCollectorDefinitionException"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Layer/InvalidLayerDefinitionException"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/layer"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/layer/layer_resolver_interface"
 	"github.com/KoNekoD/go-deptrac/pkg/util"
 )
@@ -23,39 +22,39 @@ func NewLayerCollector(resolver layer_resolver_interface.LayerResolverInterface)
 func (c *LayerCollector) Satisfy(config map[string]interface{}, reference ast.TokenReferenceInterface) (bool, error) {
 	if _, ok := config["value"]; !ok {
 		if _, ok2 := config["value"].(string); !ok2 {
-			return false, InvalidCollectorDefinitionException.NewInvalidCollectorDefinitionExceptionInvalidCollectorConfiguration("LayerCollector needs the layer configuration, expected 'value' config is missing or invalid.")
+			return false, layer.NewInvalidCollectorDefinitionExceptionInvalidCollectorConfiguration("LayerCollector needs the layer configuration, expected 'value' config is missing or invalid.")
 		}
 	}
 
-	layer := config["value"].(string)
+	configValueLayer := config["value"].(string)
 
-	hasInResolver, err := c.resolver.Has(layer)
+	hasInResolver, err := c.resolver.Has(configValueLayer)
 	if err != nil {
 		return false, err
 	}
 	if !hasInResolver {
-		return false, InvalidCollectorDefinitionException.NewInvalidCollectorDefinitionExceptionInvalidCollectorConfiguration(fmt.Sprintf("Unknown layer \"%s\" specified in collector.", layer))
+		return false, layer.NewInvalidCollectorDefinitionExceptionInvalidCollectorConfiguration(fmt.Sprintf("Unknown layer \"%s\" specified in collector.", configValueLayer))
 	}
 
 	token := reference.GetToken().ToString()
 
-	if util.MapKeyExists(c.resolved, token) && util.MapKeyExists(c.resolved[token], layer) {
-		if c.resolved[token][layer] == nil {
-			return false, InvalidLayerDefinitionException.NewInvalidLayerDefinitionExceptionCircularTokenReference(token)
+	if util.MapKeyExists(c.resolved, token) && util.MapKeyExists(c.resolved[token], configValueLayer) {
+		if c.resolved[token][configValueLayer] == nil {
+			return false, layer.NewInvalidLayerDefinitionExceptionCircularTokenReference(token)
 		}
 
-		return *c.resolved[token][layer], nil
+		return *c.resolved[token][configValueLayer], nil
 	}
 
 	// Set resolved for current token to null in case resolver comes back to it (circular reference)
-	c.resolved[token][layer] = nil
+	c.resolved[token][configValueLayer] = nil
 
-	resolvedValue, err := c.resolver.IsReferenceInLayer(layer, reference)
+	resolvedValue, err := c.resolver.IsReferenceInLayer(configValueLayer, reference)
 
 	if err != nil {
 		return false, err
 	}
 
-	c.resolved[token][layer] = &resolvedValue
+	c.resolved[token][configValueLayer] = &resolvedValue
 	return resolvedValue, nil
 }

@@ -2,9 +2,9 @@ package process_event
 
 import (
 	"fmt"
-	Dependency2 "github.com/KoNekoD/go-deptrac/pkg/src/contract/Dependency/DependencyInterface"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/analyser/analysis_result"
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
+	Dependency2 "github.com/KoNekoD/go-deptrac/pkg/src/contract/dependency"
 )
 
 // ProcessEvent - Event that is triggered on every found dependency. Used to apply rules on the found dependencies.

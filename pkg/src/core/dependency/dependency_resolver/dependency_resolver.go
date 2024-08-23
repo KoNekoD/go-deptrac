@@ -1,27 +1,23 @@
 package dependency_resolver
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Config/AnalyserConfig"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Config/EmitterType"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Dependency/PostEmitEvent"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Dependency/PostFlattenEvent"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Dependency/PreEmitEvent"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Dependency/PreFlattenEvent"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/config"
+	contractDependency "github.com/KoNekoD/go-deptrac/pkg/src/contract/dependency"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/dependency"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/dependency/emitter"
-	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/DependencyInjection/EventDispatcher/EventDispatcherInterface"
+	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/dependency_injection/event_dispatcher/event_dispatcher_interface"
 	"reflect"
 )
 
 type DependencyResolver struct {
-	config               *AnalyserConfig.AnalyserConfig
+	config               *config.AnalyserConfig
 	inheritanceFlattener *dependency.InheritanceFlattener
-	emitterLocator       map[EmitterType.EmitterType]emitter.DependencyEmitterInterface
+	emitterLocator       map[config.EmitterType]emitter.DependencyEmitterInterface
 	eventDispatcher      util.EventDispatcherInterface
 }
 
-func NewDependencyResolver(typesConfig *AnalyserConfig.AnalyserConfig, emitterLocator map[EmitterType.EmitterType]emitter.DependencyEmitterInterface, inheritanceFlattener *dependency.InheritanceFlattener, eventDispatcher util.EventDispatcherInterface) *DependencyResolver {
+func NewDependencyResolver(typesConfig *config.AnalyserConfig, emitterLocator map[config.EmitterType]emitter.DependencyEmitterInterface, inheritanceFlattener *dependency.InheritanceFlattener, eventDispatcher util.EventDispatcherInterface) *DependencyResolver {
 	return &DependencyResolver{
 		config:               typesConfig,
 		emitterLocator:       emitterLocator,
@@ -44,27 +40,27 @@ func (r *DependencyResolver) Resolve(astMap *ast_map.AstMap) (*dependency.Depend
 			return nil, dependency.NewInvalidEmitterConfigurationExceptionIsNotEmitter(typeConfig, dependencyEmitterInterface)
 		}
 
-		err := r.eventDispatcher.DispatchEvent(PreEmitEvent.NewPreEmitEvent(dependencyEmitterInterface.GetName()))
+		err := r.eventDispatcher.DispatchEvent(contractDependency.NewPreEmitEvent(dependencyEmitterInterface.GetName()))
 		if err != nil {
 			return nil, err
 		}
 
 		dependencyEmitterInterface.ApplyDependencies(*astMap, result)
 
-		errDispatchPostEmit := r.eventDispatcher.DispatchEvent(PostEmitEvent.NewPostEmitEvent())
+		errDispatchPostEmit := r.eventDispatcher.DispatchEvent(contractDependency.NewPostEmitEvent())
 		if errDispatchPostEmit != nil {
 			return nil, errDispatchPostEmit
 		}
 	}
 
-	errDispatchPreFlatten := r.eventDispatcher.DispatchEvent(PreFlattenEvent.NewPreFlattenEvent())
+	errDispatchPreFlatten := r.eventDispatcher.DispatchEvent(contractDependency.NewPreFlattenEvent())
 	if errDispatchPreFlatten != nil {
 		return nil, errDispatchPreFlatten
 	}
 
 	r.inheritanceFlattener.FlattenDependencies(*astMap, result)
 
-	errDispatchPostFlatten := r.eventDispatcher.DispatchEvent(PostFlattenEvent.NewPostFlattenEvent())
+	errDispatchPostFlatten := r.eventDispatcher.DispatchEvent(contractDependency.NewPostFlattenEvent())
 	if errDispatchPostFlatten != nil {
 		return nil, errDispatchPostFlatten
 	}

@@ -1,8 +1,8 @@
 package input_collector
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ExceptionInterface"
-	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/File/Exception/InvalidPathException"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract"
+	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/file/exception"
 	"github.com/KoNekoD/go-deptrac/pkg/util"
 	"os"
 	"path/filepath"
@@ -20,7 +20,7 @@ func NewFileInputCollector(originalPaths []string, excludedFilePatterns []string
 		return nil, err
 	}
 	if !fileInfo.IsDir() || !util.IsReadable(basePath) {
-		return nil, InvalidPathException.NewInvalidPathExceptionUnreadablePath(fileInfo)
+		return nil, exception.NewInvalidPathExceptionUnreadablePath(fileInfo)
 	}
 	paths := make([]string, 0)
 	for _, originalPath := range originalPaths {
@@ -36,7 +36,7 @@ func NewFileInputCollector(originalPaths []string, excludedFilePatterns []string
 			if err != nil {
 				return nil, err
 			}
-			return nil, InvalidPathException.NewInvalidPathExceptionUnreadablePath(pathFileInfo)
+			return nil, exception.NewInvalidPathExceptionUnreadablePath(pathFileInfo)
 		}
 		paths = append(paths, util.PathCanonicalize(path))
 	}
@@ -46,7 +46,7 @@ func NewFileInputCollector(originalPaths []string, excludedFilePatterns []string
 
 func (c *FileInputCollector) Collect() ([]string, error) {
 	if len(c.paths) == 0 {
-		return nil, ExceptionInterface.NewException("No 'paths' defined in the depfile.")
+		return nil, contract.NewException("No 'paths' defined in the depfile.")
 	}
 
 	regex, err := regexp.Compile(".*\\.go")

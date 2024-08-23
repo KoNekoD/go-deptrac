@@ -1,7 +1,7 @@
 package collector
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Layer/InvalidCollectorDefinitionException"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/layer"
 	"regexp"
 )
 
@@ -18,7 +18,7 @@ func (c *RegexCollector) GetValidatedPattern(config map[string]interface{}, getP
 	}
 
 	if _, err = regexp.Compile(pattern); err != nil {
-		return "", InvalidCollectorDefinitionException.NewInvalidCollectorDefinitionExceptionInvalidCollectorConfiguration("Invalid regex pattern " + pattern)
+		return "", layer.NewInvalidCollectorDefinitionExceptionInvalidCollectorConfiguration("Invalid regex pattern " + pattern)
 	}
 
 	return pattern, nil

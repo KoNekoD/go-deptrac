@@ -4,7 +4,7 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/src/contract/ast"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/src/core/ast/parser"
-	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/DependencyInjection/EventDispatcher/EventDispatcherInterface"
+	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/dependency_injection/event_dispatcher/event_dispatcher_interface"
 )
 
 type AstLoader struct {

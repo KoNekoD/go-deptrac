@@ -1,64 +1,61 @@
 package analysis_result
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Result/Error"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Result/RuleInterface"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Result/RuleTypeEnum"
-	"github.com/KoNekoD/go-deptrac/pkg/src/contract/Result/Warning"
+	"github.com/KoNekoD/go-deptrac/pkg/src/contract/result"
 	"github.com/KoNekoD/go-deptrac/pkg/util"
 )
 
 // AnalysisResult - Describes the result of a source code analysis.
 type AnalysisResult struct {
-	rules map[RuleTypeEnum.RuleTypeEnum]map[string]RuleInterface.RuleInterface
+	rules map[result.RuleTypeEnum]map[string]result.RuleInterface
 
-	warnings []*Warning.Warning
+	warnings []*result.Warning
 
-	errors []*Error.Error
+	errors []*result.Error
 }
 
 func NewAnalysisResult() *AnalysisResult {
 	return &AnalysisResult{
-		rules:    make(map[RuleTypeEnum.RuleTypeEnum]map[string]RuleInterface.RuleInterface),
-		warnings: make([]*Warning.Warning, 0),
-		errors:   make([]*Error.Error, 0),
+		rules:    make(map[result.RuleTypeEnum]map[string]result.RuleInterface),
+		warnings: make([]*result.Warning, 0),
+		errors:   make([]*result.Error, 0),
 	}
 }
 
-func (r *AnalysisResult) AddRule(rule RuleInterface.RuleInterface) {
-	ruleType := RuleTypeEnum.NewRuleTypeEnumByRule(rule)
+func (r *AnalysisResult) AddRule(rule result.RuleInterface) {
+	ruleType := result.NewRuleTypeEnumByRule(rule)
 	id := util.SplObjectID(rule)
 
 	if _, ok := r.rules[ruleType]; !ok {
-		r.rules[ruleType] = make(map[string]RuleInterface.RuleInterface)
+		r.rules[ruleType] = make(map[string]result.RuleInterface)
 	}
 
 	r.rules[ruleType][id] = rule
 }
 
-func (r *AnalysisResult) RemoveRule(rule RuleInterface.RuleInterface) {
-	ruleType := RuleTypeEnum.NewRuleTypeEnumByRule(rule)
+func (r *AnalysisResult) RemoveRule(rule result.RuleInterface) {
+	ruleType := result.NewRuleTypeEnumByRule(rule)
 	id := util.SplObjectID(rule)
 
 	delete(r.rules[ruleType], id)
 }
 
-func (r *AnalysisResult) Rules() map[RuleTypeEnum.RuleTypeEnum]map[string]RuleInterface.RuleInterface {
+func (r *AnalysisResult) Rules() map[result.RuleTypeEnum]map[string]result.RuleInterface {
 	return r.rules
 }
 
-func (r *AnalysisResult) AddWarning(warning *Warning.Warning) {
+func (r *AnalysisResult) AddWarning(warning *result.Warning) {
 	r.warnings = append(r.warnings, warning)
 }
 
-func (r *AnalysisResult) Warnings() []*Warning.Warning {
+func (r *AnalysisResult) Warnings() []*result.Warning {
 	return r.warnings
 }
 
-func (r *AnalysisResult) AddError(error *Error.Error) {
+func (r *AnalysisResult) AddError(error *result.Error) {
 	r.errors = append(r.errors, error)
 }
 
-func (r *AnalysisResult) Errors() []*Error.Error {
+func (r *AnalysisResult) Errors() []*result.Error {
 	return r.errors
 }
