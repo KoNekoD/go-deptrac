@@ -12,6 +12,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/schollz/progressbar/v3 v3.14.6
 	golang.org/x/exp v0.0.0-20240719175910-8a7402abbf56
+	golang.org/x/mod v0.19.0
 	golang.org/x/sys v0.23.0
 	gopkg.in/yaml.v3 v3.0.1
 )

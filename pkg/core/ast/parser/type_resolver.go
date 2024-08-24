@@ -1,14 +1,22 @@
 package parser
 
 import (
+	"github.com/KoNekoD/go-deptrac/pkg/core/ast/parser/nikic_php_parser/node_namer"
 	"go/ast"
+	"go/parser"
+	"go/token"
+	"golang.org/x/exp/maps"
+	"strings"
 )
 
 type TypeResolver struct {
+	nodeNamer *node_namer.NodeNamer
 }
 
-func NewTypeResolver() *TypeResolver {
-	return &TypeResolver{}
+func NewTypeResolver(nodeNamer *node_namer.NodeNamer) *TypeResolver {
+	return &TypeResolver{
+		nodeNamer: nodeNamer,
+	}
 }
 
 func (r *TypeResolver) ResolvePHPParserTypes(typeScope *TypeScope, nodes ...ast.Expr) []string {
@@ -59,7 +67,8 @@ func (r *TypeResolver) resolveIdent(scope *TypeScope, v *ast.Ident) []string {
 	resolved := scope.GetUse(v.Name)
 
 	if resolved == nil {
-		return make([]string, 0)
+		// TODO: Добавить проверку, что такой модуль есть в go.mod или давать ошибку
+		return make([]string, 0) // Костыль
 	}
 
 	return []string{*resolved}
@@ -67,7 +76,52 @@ func (r *TypeResolver) resolveIdent(scope *TypeScope, v *ast.Ident) []string {
 
 func (r *TypeResolver) resolveSelectorExpr(scope *TypeScope, v *ast.SelectorExpr) []string {
 	if ident, ok := v.X.(*ast.Ident); ok {
-		return r.resolveIdent(scope, ident)
+		xResolved := r.resolveIdent(scope, ident)
+
+		if len(xResolved) == 0 {
+			// TODO: Добавить проверку на наличие в go.mod
+			return make([]string, 0) // TODO: ВАЖНО! Сейчас ПОЛНОСТЬЮ исключены ВСЕ внешние пакеты, нужно это исправить
+		}
+
+		if len(xResolved) != 1 {
+			panic("impossible") // TODO: Possible when by import declared another package name
+		}
+
+		selResolved := v.Sel.Name
+
+		xResolvedZero := xResolved[0]
+
+		pathValidate := strings.Replace(xResolvedZero, "github.com/KoNekoD/go-deptrac/", "/home/mizuki/Documents/dev/KoNekoD/go-deptrac/", 1)
+		parseDir, err := parser.ParseDir(token.NewFileSet(), pathValidate, nil, 0)
+		if len(maps.Keys(parseDir)) != 1 {
+			// TODO: Add checking in go.mod, если там нет такого модуля - ошибка
+			return make([]string, 0) // Костыль
+		}
+		if err != nil {
+			panic(err)
+		}
+		foundFileName := ""
+		firstKey := maps.Keys(parseDir)[0]
+		for filename, file := range parseDir[firstKey].Files {
+			if file.Scope.Lookup(selResolved) != nil {
+				foundFileName = filename
+				break
+			}
+		}
+
+		if foundFileName == "" {
+			r.resolveIdent(scope, ident)
+			panic("2")
+		}
+
+		// Validate
+		pkgstrctnme, err := r.nodeNamer.GetPackageStructName(foundFileName, selResolved)
+
+		if err != nil {
+			panic(err)
+		}
+
+		return []string{pkgstrctnme} // TODO: Rework to Namer
 	}
 
 	return r.resolvePHPParserType(scope, v.X)

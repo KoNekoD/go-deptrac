@@ -1,7 +1,7 @@
 package infrastructure
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/test_projects/examples/simple-cleanarch/domain"
+	"simple-cleanarch/domain"
 )
 
 type kvStore struct {

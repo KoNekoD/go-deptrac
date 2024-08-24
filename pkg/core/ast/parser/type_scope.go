@@ -48,7 +48,10 @@ func (s *TypeScope) GetUse(classNameOrAlias string) *string {
 	}
 
 	for key, value := range s.Uses {
-		if strings.HasSuffix(key, classNameOrAlias) {
+		// split by / and check last element
+		splittedKeys := strings.Split(key, "/")
+		lastSplittedKey := splittedKeys[len(splittedKeys)-1]
+		if lastSplittedKey == classNameOrAlias {
 			return &value
 		}
 	}

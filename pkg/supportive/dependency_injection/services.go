@@ -17,6 +17,7 @@ import (
 	Cache2 "github.com/KoNekoD/go-deptrac/pkg/core/ast/parser/cache"
 	"github.com/KoNekoD/go-deptrac/pkg/core/ast/parser/extractors"
 	"github.com/KoNekoD/go-deptrac/pkg/core/ast/parser/nikic_php_parser"
+	"github.com/KoNekoD/go-deptrac/pkg/core/ast/parser/nikic_php_parser/node_namer"
 	"github.com/KoNekoD/go-deptrac/pkg/core/dependency"
 	"github.com/KoNekoD/go-deptrac/pkg/core/dependency/dependency_resolver"
 	"github.com/KoNekoD/go-deptrac/pkg/core/dependency/emitter"
@@ -53,6 +54,8 @@ func Services(builder *container_builder.ContainerBuilder) error {
 
 	timeStopwatch := time_stopwatch.NewStopwatch()
 
+	nodeNamer := node_namer.NewNodeNamer(projectDirectory)
+
 	/*
 	 * Utilities
 	 */
@@ -77,7 +80,7 @@ func Services(builder *container_builder.ContainerBuilder) error {
 	if builder.AstFileReferenceCacheInterface == nil {
 		builder.AstFileReferenceCacheInterface = astFileReferenceInMemoryCache
 	}
-	typeResolver := parser.NewTypeResolver()
+	typeResolver := parser.NewTypeResolver(nodeNamer)
 	referenceExtractors := []extractors.ReferenceExtractorInterface{
 		/**
 
@@ -94,7 +97,7 @@ func Services(builder *container_builder.ContainerBuilder) error {
 
 		*/
 	}
-	nikicPhpParser := nikic_php_parser.NewNikicPhpParser(builder.AstFileReferenceCacheInterface, typeResolver, referenceExtractors)
+	nikicPhpParser := nikic_php_parser.NewNikicPhpParser(builder.AstFileReferenceCacheInterface, typeResolver, nodeNamer, referenceExtractors)
 	parserInterface := nikicPhpParser
 	astLoader := ast.NewAstLoader(parserInterface, eventDispatcher)
 
@@ -295,6 +298,7 @@ func Services(builder *container_builder.ContainerBuilder) error {
 	builder.FormatterConfiguration = formatterConfiguration
 	builder.AnalyseRunner = analyseRunner
 	builder.AnalyseCommand = analyseCommand
+	builder.NodeNamer = nodeNamer
 
 	return nil
 }

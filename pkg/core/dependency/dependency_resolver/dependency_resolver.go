@@ -14,10 +14,10 @@ type DependencyResolver struct {
 	config               *config.AnalyserConfig
 	inheritanceFlattener *dependency.InheritanceFlattener
 	emitterLocator       map[config.EmitterType]emitter.DependencyEmitterInterface
-	eventDispatcher      util.EventDispatcherInterface
+	eventDispatcher      event_dispatcher_interface.EventDispatcherInterface
 }
 
-func NewDependencyResolver(typesConfig *config.AnalyserConfig, emitterLocator map[config.EmitterType]emitter.DependencyEmitterInterface, inheritanceFlattener *dependency.InheritanceFlattener, eventDispatcher util.EventDispatcherInterface) *DependencyResolver {
+func NewDependencyResolver(typesConfig *config.AnalyserConfig, emitterLocator map[config.EmitterType]emitter.DependencyEmitterInterface, inheritanceFlattener *dependency.InheritanceFlattener, eventDispatcher event_dispatcher_interface.EventDispatcherInterface) *DependencyResolver {
 	return &DependencyResolver{
 		config:               typesConfig,
 		emitterLocator:       emitterLocator,

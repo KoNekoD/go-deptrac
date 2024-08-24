@@ -19,7 +19,7 @@ type DependencyLayersAnalyser struct {
 	dependencyResolver *dependency_resolver.DependencyResolver
 	tokenResolver      *dependency.TokenResolver
 	layerResolver      layer_resolver_interface.LayerResolverInterface
-	eventDispatcher    util.EventDispatcherInterface
+	eventDispatcher    event_dispatcher_interface.EventDispatcherInterface
 }
 
 func NewDependencyLayersAnalyser(
@@ -27,7 +27,7 @@ func NewDependencyLayersAnalyser(
 	dependencyResolver *dependency_resolver.DependencyResolver,
 	tokenResolver *dependency.TokenResolver,
 	layerResolver layer_resolver_interface.LayerResolverInterface,
-	eventDispatcher util.EventDispatcherInterface) *DependencyLayersAnalyser {
+	eventDispatcher event_dispatcher_interface.EventDispatcherInterface) *DependencyLayersAnalyser {
 	return &DependencyLayersAnalyser{
 		astMapExtractor:    astMapExtractor,
 		dependencyResolver: dependencyResolver,

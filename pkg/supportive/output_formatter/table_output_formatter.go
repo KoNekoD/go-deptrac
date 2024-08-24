@@ -94,7 +94,7 @@ func (t *TableOutputFormatter) skippedViolationRow(rule *result.SkippedViolation
 func (t *TableOutputFormatter) violationRow(rule *result.Violation) []string {
 	gotDependency := rule.GetDependency()
 	message := color.Sprintf("<info>%s</> must not depend on <info>%s</>", gotDependency.GetDepender().ToString(), gotDependency.GetDependent().ToString())
-	message += fmt.Sprintf("\n%s (%s -> %s)", rule.RuleDescription(), rule.GetDependerLayer(), rule.GetDependentLayer())
+	message += fmt.Sprintf("\n%s (To fix %s(You need to add to the array by this key) -> %s(That value needs to be added to that array))", rule.RuleDescription(), rule.GetDependerLayer(), rule.GetDependentLayer())
 	if len(gotDependency.Serialize()) > 1 {
 		message += "\n" + t.formatMultilinePath(gotDependency)
 	}

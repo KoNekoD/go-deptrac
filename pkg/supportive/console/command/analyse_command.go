@@ -16,7 +16,7 @@ import (
 // AnalyseCommand - Analyses your project using the provided depfile
 type AnalyseCommand struct {
 	runner             *AnalyseRunner
-	dispatcher         util.EventDispatcherInterface
+	dispatcher         event_dispatcher_interface.EventDispatcherInterface
 	formatterProvider  *output_formatter2.FormatterProvider
 	verboseBoolFlag    bool
 	debugBoolFlag      bool
@@ -24,7 +24,7 @@ type AnalyseCommand struct {
 	progressSubscriber *subscriber.ProgressSubscriber
 }
 
-func NewAnalyseCommand(runner *AnalyseRunner, dispatcher util.EventDispatcherInterface, formatterProvider *output_formatter2.FormatterProvider, verboseBoolFlag bool, debugBoolFlag bool, consoleSubscriber *subscriber.ConsoleSubscriber, progressSubscriber *subscriber.ProgressSubscriber) *AnalyseCommand {
+func NewAnalyseCommand(runner *AnalyseRunner, dispatcher event_dispatcher_interface.EventDispatcherInterface, formatterProvider *output_formatter2.FormatterProvider, verboseBoolFlag bool, debugBoolFlag bool, consoleSubscriber *subscriber.ConsoleSubscriber, progressSubscriber *subscriber.ProgressSubscriber) *AnalyseCommand {
 	return &AnalyseCommand{
 		runner:             runner,
 		dispatcher:         dispatcher,

@@ -1,10 +1,10 @@
 package nikic_php_parser
 
 import (
-	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/core/ast/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/core/ast/parser"
 	"github.com/KoNekoD/go-deptrac/pkg/core/ast/parser/extractors"
+	"github.com/KoNekoD/go-deptrac/pkg/core/ast/parser/nikic_php_parser/node_namer"
 	"github.com/KoNekoD/go-deptrac/pkg/util"
 	"go/ast"
 	"go/token"
@@ -16,14 +16,18 @@ type FileReferenceVisitor struct {
 	currentReference     ast_map.ReferenceBuilderInterface
 	fileReferenceBuilder *ast_map.FileReferenceBuilder
 	typeResolver         *parser.TypeResolver
+	nodeNamer            *node_namer.NodeNamer
+	errors               []error
 	nestingStack         []ast.Node
 }
 
-func NewFileReferenceVisitor(fileReferenceBuilder *ast_map.FileReferenceBuilder, resolver *parser.TypeResolver, extractors ...extractors.ReferenceExtractorInterface) *FileReferenceVisitor {
+func NewFileReferenceVisitor(fileReferenceBuilder *ast_map.FileReferenceBuilder, resolver *parser.TypeResolver, nodeNamer *node_namer.NodeNamer, extractors ...extractors.ReferenceExtractorInterface) *FileReferenceVisitor {
 	return &FileReferenceVisitor{
 		currentReference:     fileReferenceBuilder,
 		fileReferenceBuilder: fileReferenceBuilder,
 		typeResolver:         resolver,
+		nodeNamer:            nodeNamer,
+		errors:               make([]error, 0),
 		dependencyResolvers:  extractors,
 		currentTypeScope:     parser.NewTypeScope(""),
 	}
@@ -62,7 +66,10 @@ func (f *FileReferenceVisitor) Visit(node ast.Node) (w ast.Visitor) {
 func (f *FileReferenceVisitor) enterNode(node ast.Node) {
 	switch typedNode := node.(type) {
 	case *ast.File:
-		f.currentTypeScope = parser.NewTypeScope(typedNode.Name.Name).SetFileNode(typedNode)
+		packageFileName, err := f.nodeNamer.GetPackageFilename(f.fileReferenceBuilder.Filepath) // TODO: Possible bug when file dir  != package declared in file
+		f.addErrIfNeeded(err)
+
+		f.currentTypeScope = parser.NewTypeScope(packageFileName).SetFileNode(typedNode)
 	case *ast.FuncDecl:
 		f.enterFunction(typedNode)
 	case *ast.GenDecl:
@@ -89,12 +96,15 @@ func (f *FileReferenceVisitor) leaveNode(node ast.Node) {
 }
 
 func (f *FileReferenceVisitor) enterFunction(node *ast.FuncDecl) {
-	var fullName *string
-	if node.Recv != nil {
+	var (
+		fullName string
+		err      error
+	)
+
+	if node.Recv != nil { // Function is a method
 		if len(node.Recv.List) > 1 {
 			panic("No way")
 		}
-		methodFile := f.fileReferenceBuilder.Filepath
 		methodOwner := ""
 		switch t := node.Recv.List[0].Type.(type) {
 		case *ast.Ident:
@@ -104,17 +114,18 @@ func (f *FileReferenceVisitor) enterFunction(node *ast.FuncDecl) {
 		default:
 			panic("No way")
 		}
-		name := node.Name.String()
+		methodName := node.Name.String()
 
-		fn := fmt.Sprintf("%s %s::%s", methodFile, methodOwner, name)
-		fullName = &fn
-	} else {
+		fullName, err = f.nodeNamer.GetPackageStructFunctionName(f.fileReferenceBuilder.Filepath, methodOwner, methodName)
+		f.addErrIfNeeded(err)
+	} else { // Function is a function
 		methodFile := f.fileReferenceBuilder.Filepath
 		name := node.Name.String()
-		fn := fmt.Sprintf("%s %s", methodFile, name)
-		fullName = &fn
+		fullName, err = f.nodeNamer.GetPackageFunctionName(methodFile, name)
+		f.addErrIfNeeded(err)
 	}
-	f.currentReference = f.fileReferenceBuilder.NewFunction(*fullName, make([]string, 0), make(map[string][]string))
+
+	f.currentReference = f.fileReferenceBuilder.NewFunction(fullName, make([]string, 0), make(map[string][]string))
 
 	for _, param := range node.Type.Params.List {
 		if param.Type != nil {
@@ -135,9 +146,17 @@ func (f *FileReferenceVisitor) enterFunction(node *ast.FuncDecl) {
 	}
 }
 
+func (f *FileReferenceVisitor) addErrIfNeeded(errToAdd error) {
+	if errToAdd != nil {
+		f.errors = append(f.errors, errToAdd)
+	}
+}
+
 func (f *FileReferenceVisitor) getClassReferenceName(node *ast.GenDecl) *string {
 	if node.Tok == token.TYPE {
-		name := node.Specs[0].(*ast.TypeSpec).Name.Name
+		structName := node.Specs[0].(*ast.TypeSpec).Name.Name
+		name, err := f.nodeNamer.GetPackageStructName(f.fileReferenceBuilder.Filepath, structName)
+		f.addErrIfNeeded(err)
 		return &name
 	}
 	panic("1")
@@ -153,11 +172,20 @@ func (f *FileReferenceVisitor) enterGenDecl(node *ast.GenDecl) {
 
 		switch typeSpec.Type.(type) {
 		case *ast.StructType:
-			f.enterClass(typeSpec.Name.Name, make(map[string][]string)) // type T struct {}
+			structName := typeSpec.Name.Name
+			packaeStructName, err := f.nodeNamer.GetPackageStructName(f.fileReferenceBuilder.Filepath, structName)
+			f.addErrIfNeeded(err)
+			f.enterClass(packaeStructName, make(map[string][]string)) // type T struct {}
 		case *ast.Ident:
-			f.enterClass(typeSpec.Name.Name, make(map[string][]string)) // type T string
+			structName := typeSpec.Name.Name
+			packaeStructName, err := f.nodeNamer.GetPackageStructName(f.fileReferenceBuilder.Filepath, structName)
+			f.addErrIfNeeded(err)
+			f.enterClass(packaeStructName, make(map[string][]string)) // type T string
 		case *ast.InterfaceType:
-			f.enterInterface(typeSpec.Name.Name, make(map[string][]string))
+			structName := typeSpec.Name.Name
+			packaeStructName, err := f.nodeNamer.GetPackageStructName(f.fileReferenceBuilder.Filepath, structName)
+			f.addErrIfNeeded(err)
+			f.enterInterface(packaeStructName, make(map[string][]string))
 		default:
 			panic("2")
 		}

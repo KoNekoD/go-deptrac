@@ -136,12 +136,14 @@ deptrac:
     Dependency:
       - Ast
       - Contract
+      - DependencyInjection
     Analyser:
       - Layer
       - Dependency
       - Ast
       - Symfony
       - Contract
+      - DependencyInjection
     OutputFormatter:
       - DependencyInjection
       - Symfony
@@ -151,6 +153,7 @@ deptrac:
       - InputCollector
       - Symfony
       - Contract
+      - DependencyInjection
     InputCollector:
       - File
       - Symfony

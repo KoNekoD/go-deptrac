@@ -1,6 +1,9 @@
 package ast_map
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 type AstMap struct {
 	ClassReferences    map[string]*ClassLikeReference
@@ -53,10 +56,23 @@ func (a *AstMap) GetFunctionReferences() []*FunctionReference {
 func (a *AstMap) GetClassReferenceForToken(structName *ClassLikeToken) *ClassLikeReference {
 	// TODO: Rework to full package path
 	name := structName.ToString()
-	name = name[strings.LastIndex(name, "/")+1:]
 
 	v, ok := a.ClassReferences[name]
 	if !ok {
+
+		// TODO: debug
+		for refName, reference := range a.ClassReferences {
+			refNameFile := strings.Split(refName, " ")[0]
+			nameFile := strings.Split(name, " ")[0]
+
+			if refNameFile == nameFile {
+				fmt.Println(reference)
+				//panic("1")
+				//fmt.Println(reference)
+				// todo почему то есть файлы которых он не находит... и они пападают в этот кейс
+			}
+		}
+
 		// TODO: Possible external package
 		return nil
 	}
@@ -147,6 +163,17 @@ func (a *AstMap) recursivelyResolveDependencies(inheritDependency *AstInherit, a
 
 func (a *AstMap) addClassLike(astStructReference ClassLikeReference) {
 	token := astStructReference.GetToken()
+
+	// If token.ToString() contains :: then panic
+	if strings.Contains(token.ToString(), "::") {
+		panic(token.ToString())
+	}
+
+	// github.com/KoNekoD/go-deptrac/pkg/core/ast/ast_map/emitter.go AstMap
+	if strings.Contains(token.ToString(), "github.com/KoNekoD/go-deptrac/pkg/core/ast/ast_map/emitter.go AstMap") {
+		panic(token.ToString())
+	}
+
 	a.ClassReferences[token.ToString()] = &astStructReference
 }
 

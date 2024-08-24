@@ -1,4 +1,4 @@
-package simple_cleanarch
+package examples
 
 import (
 	"flag"
@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestRun(t *testing.T) {
+func TestRunSimpleCleanarch(t *testing.T) {
 	os.Args = []string{
 		"",
 		"--config-file=pkg/test_projects/examples/simple-cleanarch/depfile.yaml",

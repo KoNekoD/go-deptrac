@@ -40,7 +40,10 @@ func TestAstMapExtractorExtractWorkedFine(t *testing.T) {
 	astLoader := NewAstLoader(
 		nikic_php_parser.NewNikicPhpParser(
 			cache.NewAstFileReferenceInMemoryCache(),
-			parser.NewTypeResolver(),
+			parser.NewTypeResolver(
+				nil,
+			),
+			nil,
 			[]extractors.ReferenceExtractorInterface{},
 		),
 		nil,

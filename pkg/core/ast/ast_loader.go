@@ -9,10 +9,10 @@ import (
 
 type AstLoader struct {
 	parser          parser.ParserInterface
-	eventDispatcher util.EventDispatcherInterface
+	eventDispatcher event_dispatcher_interface.EventDispatcherInterface
 }
 
-func NewAstLoader(parser parser.ParserInterface, eventDispatcher util.EventDispatcherInterface) *AstLoader {
+func NewAstLoader(parser parser.ParserInterface, eventDispatcher event_dispatcher_interface.EventDispatcherInterface) *AstLoader {
 	return &AstLoader{
 		parser:          parser,
 		eventDispatcher: eventDispatcher,

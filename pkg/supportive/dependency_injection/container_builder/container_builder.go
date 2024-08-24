@@ -12,6 +12,7 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/core/ast/parser/cache"
 	"github.com/KoNekoD/go-deptrac/pkg/core/ast/parser/extractors"
 	"github.com/KoNekoD/go-deptrac/pkg/core/ast/parser/nikic_php_parser"
+	"github.com/KoNekoD/go-deptrac/pkg/core/ast/parser/nikic_php_parser/node_namer"
 	"github.com/KoNekoD/go-deptrac/pkg/core/dependency"
 	"github.com/KoNekoD/go-deptrac/pkg/core/dependency/dependency_resolver"
 	"github.com/KoNekoD/go-deptrac/pkg/core/input_collector"
@@ -31,7 +32,7 @@ type ContainerBuilder struct {
 	ProjectDirectory                       string
 	CacheFile                              *string
 	Configuration                          *deptrac_config.DeptracConfig
-	EventDispatcher                        util.EventDispatcherInterface
+	EventDispatcher                        event_dispatcher_interface.EventDispatcherInterface
 	FileInputCollector                     input_collector.InputCollectorInterface
 	YmlFileLoader                          *file.YmlFileLoader
 	Dumper                                 *file.Dumper
@@ -78,6 +79,7 @@ type ContainerBuilder struct {
 	FormatterConfiguration                 *configuration.FormatterConfiguration
 	AnalyseRunner                          *command.AnalyseRunner
 	AnalyseCommand                         *command.AnalyseCommand
+	NodeNamer                              *node_namer.NodeNamer
 }
 
 func NewContainerBuilder(workingDirectory string) *ContainerBuilder {
