@@ -1,8 +1,8 @@
 package symfony
 
 import (
-	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/contract/output_formatter"
+	"github.com/gookit/color"
 )
 
 type SymfonyOutput struct {
@@ -16,15 +16,15 @@ func NewSymfonyOutput(style output_formatter.OutputStyleInterface) *SymfonyOutpu
 }
 
 func (o *SymfonyOutput) WriteFormatted(message string) {
-	fmt.Print(message)
+	color.Print(message)
 }
 
 func (o *SymfonyOutput) WriteLineFormatted(message output_formatter.StringOrArrayOfStrings) {
-	fmt.Println(message.ToString())
+	color.Println(message.ToString())
 }
 
 func (o *SymfonyOutput) WriteRaw(message string) {
-	fmt.Println(message)
+	color.Println(message)
 }
 
 func (o *SymfonyOutput) GetStyle() output_formatter.OutputStyleInterface {

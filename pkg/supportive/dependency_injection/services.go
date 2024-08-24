@@ -2,6 +2,7 @@ package dependency_injection
 
 import (
 	"flag"
+	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/contract/analyser/event_helper"
 	post_process_event2 "github.com/KoNekoD/go-deptrac/pkg/contract/analyser/post_process_event"
 	process_event2 "github.com/KoNekoD/go-deptrac/pkg/contract/analyser/process_event"
@@ -24,6 +25,7 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/core/input_collector"
 	"github.com/KoNekoD/go-deptrac/pkg/core/layer"
 	"github.com/KoNekoD/go-deptrac/pkg/core/layer/collector"
+	"github.com/KoNekoD/go-deptrac/pkg/supportive/console"
 	"github.com/KoNekoD/go-deptrac/pkg/supportive/console/command"
 	"github.com/KoNekoD/go-deptrac/pkg/supportive/console/subscriber"
 	"github.com/KoNekoD/go-deptrac/pkg/supportive/console/symfony"
@@ -38,13 +40,22 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/supportive/output_formatter/configuration"
 	"github.com/KoNekoD/go-deptrac/pkg/supportive/time_stopwatch"
 	"github.com/elliotchance/orderedmap/v2"
+	"strings"
 )
 
+func getDefaultFormatter() output_formatter.OutputFormatterType {
+	if console.NewEnv().GetEnv("GITHUB_ACTIONS") != "" {
+		return output_formatter2.NewGithubActionsOutputFormatter().GetName()
+	}
+	return output_formatter2.NewTableOutputFormatter().GetName()
+}
+
 func Services(builder *container_builder.ContainerBuilder) error {
+
 	cacheableFileSubscriber := builder.CacheableFileSubscriber
 	builderConfiguration := builder.Configuration
 	projectDirectory := builder.ProjectDirectory
-	verboseBoolFlag := flag.Bool("verbose", false, "Verbose mode")
+	verboseBoolFlag := flag.Bool("verbose", true, "Verbose mode")
 	debugBoolFlag := flag.Bool("debug", false, "Debug mode")
 	style := symfony.NewStyle(
 		verboseBoolFlag != nil && *verboseBoolFlag == true,
@@ -160,6 +171,60 @@ func Services(builder *container_builder.ContainerBuilder) error {
 	}
 
 	/*
+	 * OutputFormatter
+	 */
+	outputFormatter := map[output_formatter.OutputFormatterType]output_formatter.OutputFormatterInterface{
+		output_formatter.Table:         output_formatter2.NewTableOutputFormatter(),
+		output_formatter.GithubActions: output_formatter2.NewGithubActionsOutputFormatter(),
+		// TODO:
+		// $services->set(ConsoleOutputFormatter::class)->tag('output_formatter');
+		// $services->set(JUnitOutputFormatter::class)->tag('output_formatter');
+		// $services->set(XMLOutputFormatter::class)->tag('output_formatter');
+		// $services->set(BaselineOutputFormatter::class)->tag('output_formatter');
+		// $services->set(JsonOutputFormatter::class)->tag('output_formatter');
+		// $services->set(GraphVizOutputDisplayFormatter::class)->tag('output_formatter');
+		// $services->set(GraphVizOutputImageFormatter::class)->tag('output_formatter');
+		// $services->set(GraphVizOutputDotFormatter::class)->tag('output_formatter');
+		// $services->set(GraphVizOutputHtmlFormatter::class)->tag('output_formatter');
+		// $services->set(CodeclimateOutputFormatter::class)->tag('output_formatter');
+		// $services->set(MermaidJSOutputFormatter::class)->tag('output_formatter');
+	}
+	formatterProvider := output_formatter2.NewFormatterProvider(outputFormatter)
+	formatterConfiguration := configuration.NewFormatterConfiguration(builderConfiguration.Formatters)
+
+	//
+	knownFormattersStr := make([]string, 0)
+	for _, formatterType := range formatterProvider.GetKnownFormatters() {
+		knownFormattersStr = append(knownFormattersStr, fmt.Sprintf("\"%s\"", formatterType))
+	}
+	var (
+		formatterUsagePossible = strings.Join(knownFormattersStr, ", ")
+		formatterUsage         = fmt.Sprintf("Format in which to print the result of the analysis. Possible: [\"%s\"]", formatterUsagePossible)
+		formatter              = flag.String("formatter", string(output_formatter.Table), formatterUsage)
+		output                 = flag.String("output", "", "Output file path for formatter (if applicable)")
+		noProgress             = flag.Bool("no-progress", false, "Do not show progress bar")
+		reportSkipped          = flag.Bool("report-skipped", false, "Report skipped violations")
+		reportUncovered        = flag.Bool("report-uncovered", false, "Report uncovered dependencies")
+		failOnUncovered        = flag.Bool("fail-on-uncovered", false, "Fails if any uncovered dependency is found")
+	)
+
+	if formatter == nil {
+		formatterTmp := string(getDefaultFormatter())
+		formatter = &formatterTmp
+	}
+
+	analyseOptions := command.NewAnalyseOptions(
+		nil != noProgress && *noProgress == true,
+		*formatter,
+		output,
+		nil != reportSkipped && *reportSkipped == true,
+		nil != reportUncovered && *reportUncovered == true,
+		nil != failOnUncovered && *failOnUncovered == true,
+	)
+	event_subscriber_interface_map_reg.RegForAnalyseCommand(consoleSubscriber, progressSubscriber, !analyseOptions.NoProgress)
+	//
+
+	/*
 	 * Layer
 	 */
 	inheritanceLevelCollector, err := collector.NewInheritanceLevelCollector(astMapExtractor)
@@ -213,32 +278,10 @@ func Services(builder *container_builder.ContainerBuilder) error {
 	rulesetUsageAnalyser := analyser.NewRulesetUsageAnalyser(layerProvider, layerResolver, astMapExtractor, dependencyResolver, tokenResolver, builderConfiguration.Layers)
 
 	/*
-	 * OutputFormatter
-	 */
-	outputFormatter := map[output_formatter.OutputFormatterType]output_formatter.OutputFormatterInterface{
-		output_formatter.Table:         output_formatter2.NewTableOutputFormatter(),
-		output_formatter.GithubActions: output_formatter2.NewGithubActionsOutputFormatter(),
-		// TODO:
-		// $services->set(ConsoleOutputFormatter::class)->tag('output_formatter');
-		// $services->set(JUnitOutputFormatter::class)->tag('output_formatter');
-		// $services->set(XMLOutputFormatter::class)->tag('output_formatter');
-		// $services->set(BaselineOutputFormatter::class)->tag('output_formatter');
-		// $services->set(JsonOutputFormatter::class)->tag('output_formatter');
-		// $services->set(GraphVizOutputDisplayFormatter::class)->tag('output_formatter');
-		// $services->set(GraphVizOutputImageFormatter::class)->tag('output_formatter');
-		// $services->set(GraphVizOutputDotFormatter::class)->tag('output_formatter');
-		// $services->set(GraphVizOutputHtmlFormatter::class)->tag('output_formatter');
-		// $services->set(CodeclimateOutputFormatter::class)->tag('output_formatter');
-		// $services->set(MermaidJSOutputFormatter::class)->tag('output_formatter');
-	}
-	formatterProvider := output_formatter2.NewFormatterProvider(outputFormatter)
-	formatterConfiguration := configuration.NewFormatterConfiguration(builderConfiguration.Formatters)
-
-	/*
 	 * Console
 	 */
 	analyseRunner := command.NewAnalyseRunner(dependencyLayersAnalyser, formatterProvider)
-	analyseCommand := command.NewAnalyseCommand(analyseRunner, eventDispatcher, formatterProvider, *verboseBoolFlag, *debugBoolFlag, consoleSubscriber, progressSubscriber)
+	analyseCommand := command.NewAnalyseCommand(analyseRunner, eventDispatcher, formatterProvider, *verboseBoolFlag, *debugBoolFlag, consoleSubscriber, progressSubscriber, analyseOptions)
 
 	// TODO: other commands
 	// $services->set(InitCommand::class)->autowire()->tag('console.command');
@@ -299,6 +342,7 @@ func Services(builder *container_builder.ContainerBuilder) error {
 	builder.AnalyseRunner = analyseRunner
 	builder.AnalyseCommand = analyseCommand
 	builder.NodeNamer = nodeNamer
+	builder.AnalyseOptions = analyseOptions
 
 	return nil
 }

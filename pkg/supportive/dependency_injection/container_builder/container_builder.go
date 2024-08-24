@@ -80,6 +80,7 @@ type ContainerBuilder struct {
 	AnalyseRunner                          *command.AnalyseRunner
 	AnalyseCommand                         *command.AnalyseCommand
 	NodeNamer                              *node_namer.NodeNamer
+	AnalyseOptions                         *command.AnalyseOptions
 }
 
 func NewContainerBuilder(workingDirectory string) *ContainerBuilder {

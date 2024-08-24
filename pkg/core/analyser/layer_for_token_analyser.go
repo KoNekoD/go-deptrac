@@ -35,19 +35,6 @@ func (a *LayerForTokenAnalyser) FindLayerForToken(tokenName string, tokenType To
 		return nil, err
 	}
 
-	// TODO: Add
-	// } catch (UnrecognizedTokenException $e) {
-	//     throw \Qossmic\Deptrac\Core\SetAnalyser\AnalyserException::unrecognizedToken($e);
-	// } catch (InvalidLayerDefinitionException $e) {
-	//     throw \Qossmic\Deptrac\Core\SetAnalyser\AnalyserException::invalidLayerDefinition($e);
-	// } catch (InvalidCollectorDefinitionException $e) {
-	//     throw \Qossmic\Deptrac\Core\SetAnalyser\AnalyserException::invalidCollectorDefinition($e);
-	// } catch (AstException $e) {
-	//     throw \Qossmic\Deptrac\Core\SetAnalyser\AnalyserException::failedAstParsing($e);
-	// } catch (CouldNotParseFileException $e) {
-	//     throw \Qossmic\Deptrac\Core\SetAnalyser\AnalyserException::couldNotParseFile($e);
-	// }
-
 	switch tokenType {
 	case TokenTypeClassLike:
 		return a.findLayersForReferences(astMap.GetClassLikeReferences(), tokenName, astMap)

@@ -61,20 +61,5 @@ func (a *LayerDependenciesAnalyser) GetDependencies(layer string, targetLayer *s
 		}
 	}
 
-	// TODO: Add
-	//} catch (InvalidEmitterConfigurationException $e) {
-	//    throw \Qossmic\Deptrac\Core\SetAnalyser\AnalyserException::invalidEmitterConfiguration($e);
-	//} catch (UnrecognizedTokenException $e) {
-	//    throw \Qossmic\Deptrac\Core\SetAnalyser\AnalyserException::unrecognizedToken($e);
-	//} catch (InvalidLayerDefinitionException $e) {
-	//    throw \Qossmic\Deptrac\Core\SetAnalyser\AnalyserException::invalidLayerDefinition($e);
-	//} catch (InvalidCollectorDefinitionException $e) {
-	//    throw \Qossmic\Deptrac\Core\SetAnalyser\AnalyserException::invalidCollectorDefinition($e);
-	//} catch (AstException $e) {
-	//    throw \Qossmic\Deptrac\Core\SetAnalyser\AnalyserException::failedAstParsing($e);
-	//} catch (CouldNotParseFileException $e) {
-	//    throw \Qossmic\Deptrac\Core\SetAnalyser\AnalyserException::couldNotParseFile($e);
-	//}
-
 	return uncoveredResult, nil
 }
