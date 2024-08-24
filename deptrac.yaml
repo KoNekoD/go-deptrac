@@ -5,7 +5,7 @@ services:
 
 deptrac:
   paths:
-    - ./pkg/src
+    - ./pkg
 
   analyser:
     internal_tag: "@internal"
@@ -42,11 +42,11 @@ deptrac:
     - name: Analyser
       collectors:
         - type: directory
-          value: pkg/src/core/analyser/.*
+          value: pkg/core/analyser/.*
     - name: Ast
       collectors:
         - type: directory
-          value: pkg/src/core/ast/.*
+          value: pkg/core/ast/.*
         - type: composer
           private: true
           composerPath: composer.json
@@ -58,31 +58,31 @@ deptrac:
     - name: Console
       collectors:
         - type: directory
-          value: pkg/src/supportive/console/.*
+          value: pkg/supportive/console/.*
     - name: Dependency
       collectors:
         - type: directory
-          value: pkg/src/core/dependency/.*
+          value: pkg/core/dependency/.*
     - name: DependencyInjection
       collectors:
         - type: directory
-          value: pkg/src/supportive/dependency_injection/.*
+          value: pkg/supportive/dependency_injection/.*
     - name: Contract
       collectors:
         - type: directory
-          value: pkg/src/contract/.*
+          value: pkg/contract/.*
     - name: InputCollector
       collectors:
         - type: directory
-          value: pkg/src/core/input_collector/.*
+          value: pkg/core/input_collector/.*
     - name: Layer
       collectors:
         - type: directory
-          value: pkg/src/core/layer/.*
+          value: pkg/core/layer/.*
     - name: OutputFormatter
       collectors:
         - type: directory
-          value: pkg/src/supportive/output_formatter/.*
+          value: pkg/supportive/output_formatter/.*
         - type: composer
           private: true
           composerPath: composer.json
@@ -92,20 +92,20 @@ deptrac:
     - name: File
       collectors:
         - type: directory
-          value: pkg/src/supportive/file/.*
+          value: pkg/supportive/file/.*
     - name: Time
       collectors:
         - type: directory
-          value: pkg/src/supportive/time/.*
+          value: pkg/supportive/time/.*
     - name: Supportive
       collectors:
         - type: bool
           must_not:
             - type: directory
-              value: pkg/src/supportive/.*/.*
+              value: pkg/supportive/.*/.*
           must:
             - type: directory
-              value: pkg/src/supportive/.*
+              value: pkg/supportive/.*
     - name: Symfony
       collectors:
         - type: composer

@@ -2,7 +2,7 @@ package config
 
 import (
 	"flag"
-	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/console/command"
+	"github.com/KoNekoD/go-deptrac/pkg/supportive/console/command"
 )
 
 type analyseOptionsHook struct{}

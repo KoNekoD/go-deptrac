@@ -2,7 +2,7 @@ package simple_cleanarch
 
 import (
 	"flag"
-	"github.com/KoNekoD/go-deptrac/pkg/src/supportive/console/application"
+	"github.com/KoNekoD/go-deptrac/pkg/supportive/console/application"
 	_ "github.com/KoNekoD/go-deptrac/resources"
 	"os"
 	"testing"
