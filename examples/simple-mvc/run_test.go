@@ -2,7 +2,7 @@ package simple_cleanarch
 
 import (
 	"flag"
-	"github.com/KoNekoD/go-deptrac/pkg/supportive/console/application"
+	"github.com/KoNekoD/go-deptrac/pkg/console_supportive/application"
 	_ "github.com/KoNekoD/go-deptrac/resources"
 	"os"
 	"testing"
@@ -11,7 +11,7 @@ import (
 func TestRun(t *testing.T) {
 	os.Args = []string{
 		"",
-		"--config-file=pkg/test_projects/examples/simple-mvc/depfile.yaml",
+		"--config_contract-file_supportive=pkg/test_projects/examples/simple-mvc/depfile.yaml",
 		"analyse",
 	}
 
@@ -21,7 +21,6 @@ func TestRun(t *testing.T) {
 	//	t.Fatal(err)
 	//}
 
-	application.
-		NewApplication().
+	application.NewApplication().
 		Run()
 }

@@ -14,6 +14,6 @@ func TestParseYamlFile(t *testing.T) {
 
 	_, ok := data["test"]
 	if !ok {
-		panic("Key 'test' not found in the yaml file")
+		panic("Key 'test' not found in the yaml file_supportive")
 	}
 }

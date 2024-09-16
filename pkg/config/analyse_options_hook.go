@@ -2,7 +2,7 @@ package config
 
 import (
 	"flag"
-	"github.com/KoNekoD/go-deptrac/pkg/supportive/console/command"
+	"github.com/KoNekoD/go-deptrac/pkg/console_supportive/command"
 )
 
 type analyseOptionsHook struct{}
@@ -19,13 +19,13 @@ const (
 	OptionReportUncovered      = "report-uncovered"
 	OptionReportUncoveredUsage = "Report uncovered dependencies"
 	OptionFailOnUncovered      = "fail-on-uncovered"
-	OptionFailOnUncoveredUsage = "Fails if any uncovered dependency is found"
+	OptionFailOnUncoveredUsage = "Fails if any uncovered dependency_contract is found"
 	OptionReportSkipped        = "report-skipped"
 	OptionReportSkippedUsage   = "Report skipped violations"
 	OptionFormatter            = "formatter"
-	OptionFormatterUsage       = "Format in which to print the result of the analysis"
+	OptionFormatterUsage       = "Format in which to print the result_contract of the analysis"
 	OptionOutput               = "output"
-	OptionOutputUsage          = "Output file path for formatter (if applicable)"
+	OptionOutputUsage          = "Output file_supportive path for formatter (if applicable)"
 	OptionNoProgress           = "no-progress"
 	OptionNoProgressUsage      = "Do not show progress bar"
 )

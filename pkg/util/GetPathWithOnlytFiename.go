@@ -13,7 +13,7 @@ func GetPathWithOnlyFilename(path string) (string, error) {
 	}
 
 	if pathStat.IsDir() {
-		return "", errors.New("required path is a file")
+		return "", errors.New("required path is a file_supportive")
 	}
 
 	path = filepath.Base(path)

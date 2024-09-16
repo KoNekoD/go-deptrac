@@ -1,0 +1,292 @@
+package deptrac_config
+
+import (
+	"errors"
+	config_contract2 "github.com/KoNekoD/go-deptrac/pkg/config_contract"
+	formatter2 "github.com/KoNekoD/go-deptrac/pkg/config_contract/formatter"
+	Layer2 "github.com/KoNekoD/go-deptrac/pkg/layer_contract"
+	"github.com/KoNekoD/go-deptrac/pkg/util"
+)
+
+type DeptracConfig struct {
+	Paths                          []string
+	Analyser                       *config_contract2.AnalyserConfig
+	Formatters                     map[formatter2.FormatterType]formatter2.FormatterConfigInterface
+	Layers                         []*config_contract2.Layer
+	Rulesets                       map[string]*config_contract2.Ruleset
+	IgnoreUncoveredInternalStructs bool
+	SkipViolations                 map[string][]string
+	ExcludeFiles                   []string
+	CacheFile                      *string
+}
+
+func NewDeptracConfig(parsed map[string]interface{}) (*DeptracConfig, error) {
+	parsedDeptrac := parsed["deptrac"].(map[string]interface{})
+
+	formatters := make(map[formatter2.FormatterType]formatter2.FormatterConfigInterface)
+	layers := make([]*config_contract2.Layer, 0)
+
+	for _, layerRawRaw := range parsedDeptrac["layers"].([]interface{}) {
+		layerRaw := layerRawRaw.(map[string]interface{})
+		collectorConfigs := make([]*config_contract2.CollectorConfig, 0)
+
+		for _, collectorRawRaw := range layerRaw["collectors"].([]interface{}) {
+			collectorRaw := collectorRawRaw.(map[string]interface{})
+
+			if !util.MapKeyExists(collectorRaw, "type") || !util.MapKeyIsString(collectorRaw, "type") {
+				return nil, Layer2.NewInvalidCollectorDefinitionExceptionMissingType()
+			}
+
+			collectorType, err := config_contract2.NewCollectorTypeFromString(collectorRaw["type"].(string))
+
+			if err != nil {
+				return nil, err
+			}
+
+			privateValue, ok := collectorRaw["private"].(bool)
+			private := false
+			if ok {
+				private = privateValue
+			}
+			payload := collectorRaw
+
+			// Delete private and type
+			delete(payload, "private")
+			delete(payload, "type")
+
+			collectorConfig := config_contract2.NewCollectorConfig(
+				collectorType,
+				payload,
+				private,
+			)
+
+			collectorConfigs = append(collectorConfigs, collectorConfig)
+		}
+
+		layerName, ok := layerRaw["name"]
+		if !ok {
+			return nil, errors.New("invalid layer_contract definition: missing name")
+		}
+		layerNameStr, ok := layerName.(string)
+		if !ok {
+			return nil, errors.New("invalid layer_contract definition: name must be a string")
+		}
+
+		layer := config_contract2.NewLayer(
+			layerNameStr,
+			collectorConfigs,
+		)
+
+		layers = append(layers, layer)
+	}
+
+	if parsedDeptracFormatters, ok := parsedDeptrac["formatters"]; ok {
+		for formatterKey, formatterRawRaw := range parsedDeptracFormatters.(map[string]interface{}) {
+			formatterRaw := formatterRawRaw.(map[string]interface{})
+			switch formatterKey {
+			case string(formatter2.FormatterTypeCodeclimateConfig):
+				formatters[formatter2.FormatterTypeCodeclimateConfig] = formatter2.CreateCodeclimateConfig(
+					formatterRaw["failure"].(*config_contract2.CodeclimateLevelEnum),
+					formatterRaw["skipped"].(*config_contract2.CodeclimateLevelEnum),
+					formatterRaw["uncovered"].(*config_contract2.CodeclimateLevelEnum),
+				)
+			case string(formatter2.FormatterTypeGraphvizConfig):
+				hiddenLayers := make([]*config_contract2.Layer, 0)
+
+				for _, hiddenLayer := range formatterRaw["hiddenLayers"].([]string) {
+					for _, layer := range layers {
+						if layer.Name == hiddenLayer {
+							hiddenLayers = append(hiddenLayers, layer)
+							break
+						}
+					}
+				}
+
+				formatterGraphvizConfig := formatter2.CreateGraphvizConfig().
+					SetPointToGroups(formatterRaw["point_to_groups"].(*bool)).
+					SetHiddenLayers(hiddenLayers...)
+
+				formatters[formatter2.FormatterTypeGraphvizConfig] = formatterGraphvizConfig
+
+				for groupLayerName, groupRaw := range formatterRaw["groups"].(map[string][]string) {
+					groupLayer := make([]*config_contract2.Layer, 0)
+
+					for _, layerName := range groupRaw {
+						for _, layer := range layers {
+							if layer.Name == layerName {
+								groupLayer = append(groupLayer, layer)
+								break
+							}
+						}
+					}
+
+					formatterGraphvizConfig.SetGroups(groupLayerName, groupLayer...)
+				}
+			case string(formatter2.FormatterTypeMermaidJsConfig):
+				formatterMermaidJsConfig := formatter2.CreateMermaidJsConfig().
+					SetDirection(formatterRaw["direction"].(string))
+
+				formatters[formatter2.FormatterTypeMermaidJsConfig] = formatterMermaidJsConfig
+
+				for groupLayerName, groupRaw := range formatterRaw["groups"].(map[string][]string) {
+					groupLayer := make([]*config_contract2.Layer, 0)
+
+					for _, layerName := range groupRaw {
+						for _, layer := range layers {
+							if layer.Name == layerName {
+								groupLayer = append(groupLayer, layer)
+								break
+							}
+						}
+					}
+
+					formatterMermaidJsConfig.SetGroups(groupLayerName, groupLayer...)
+				}
+			}
+		}
+	}
+
+	rulesets := make(map[string]*config_contract2.Ruleset)
+
+	for rulesetLayerName, rulesetLayersNames := range parsedDeptrac["ruleset"].(map[string]interface{}) {
+		var rulesetOwningLayer *config_contract2.Layer
+
+		for _, layer := range layers {
+			if layer.Name == rulesetLayerName {
+				rulesetOwningLayer = layer
+				break
+			}
+		}
+
+		rulesetLayers := make([]*config_contract2.Layer, 0)
+
+		if rulesetLayersNames != nil { // If not ~
+			for _, layerNameRaw := range rulesetLayersNames.([]interface{}) {
+				layerName := layerNameRaw.(string)
+				for _, layer := range layers {
+					if layer.Name == layerName {
+						rulesetLayers = append(rulesetLayers, layer)
+						break
+					}
+				}
+			}
+		}
+
+		ruleset := config_contract2.NewRuleset(rulesetOwningLayer, rulesetLayers)
+
+		rulesets[rulesetLayerName] = ruleset
+	}
+
+	analyzerTypesDefault := []config_contract2.EmitterType{config_contract2.ClassToken, config_contract2.FunctionToken}
+	analyzerTypes := make([]config_contract2.EmitterType, 0)
+	internalTag := "@internal"
+	if parsedDeptracAnalyzer, ok := parsedDeptrac["analyzer"]; ok {
+		analyzerRaw := parsedDeptracAnalyzer.(map[string]interface{})
+		for _, typeRaw := range analyzerRaw["types"].([]interface{}) {
+			analyzerType, err := config_contract2.NewEmitterTypeFromString(typeRaw.(string))
+
+			if err != nil {
+				return nil, err
+			}
+
+			analyzerTypes = append(analyzerTypes, analyzerType)
+		}
+		internalTag = analyzerRaw["internal_tag"].(string)
+	} else {
+		analyzerTypes = analyzerTypesDefault
+	}
+
+	analyser := config_contract2.Create(analyzerTypes, &internalTag)
+
+	paths := make([]string, 0)
+	for _, path := range parsedDeptrac["paths"].([]interface{}) {
+		paths = append(paths, path.(string))
+	}
+
+	ignoreUncoveredInternalStructs := true
+	if v, ok := parsedDeptrac["ignore_uncovered_internal_structs"]; ok {
+		ignoreUncoveredInternalStructs = v.(bool)
+	}
+
+	skipViolations := make(map[string][]string)
+	if v, ok := parsedDeptrac["skip_violations"]; ok {
+		skipViolations = v.(map[string][]string)
+	}
+
+	excludeFiles := make([]string, 0)
+	if v, ok := parsedDeptrac["exclude_files"]; ok {
+		excludeFiles = v.([]string)
+	}
+
+	var cacheFile *string
+	if v, ok := parsedDeptrac["cache_file"]; ok {
+		vStr := v.(string)
+		cacheFile = &vStr
+	}
+
+	return &DeptracConfig{
+		Paths:                          paths,
+		Analyser:                       analyser,
+		Formatters:                     formatters,
+		Layers:                         layers,
+		Rulesets:                       rulesets,
+		IgnoreUncoveredInternalStructs: ignoreUncoveredInternalStructs,
+		SkipViolations:                 skipViolations,
+		ExcludeFiles:                   excludeFiles,
+		CacheFile:                      cacheFile,
+	}, nil
+}
+
+func (c *DeptracConfig) SetRulesets(rulesets ...*config_contract2.Ruleset) *DeptracConfig {
+	for _, ruleset := range rulesets {
+		c.Rulesets[ruleset.LayerConfig.Name] = ruleset
+	}
+	return c
+}
+
+func (c *DeptracConfig) ToArray() map[string]interface{} {
+	config := make(map[string]interface{})
+
+	if len(c.Paths) > 0 {
+		config["paths"] = c.Paths
+	}
+	if c.Analyser != nil {
+		config["analyser_contract"] = c.Analyser.ToArray()
+	}
+	if len(c.Formatters) > 0 {
+		formatters := make([]map[string]interface{}, len(c.Formatters))
+		i := 0
+		for _, formatter := range c.Formatters {
+			formatters[i] = formatter.ToArray()
+			i++
+		}
+		config["formatters"] = formatters
+	}
+	if len(c.ExcludeFiles) > 0 {
+		config["exclude_files"] = c.ExcludeFiles
+	}
+	if len(c.Layers) > 0 {
+		layers := make([]map[string]interface{}, len(c.Layers))
+		i := 0
+		for _, layer := range c.Layers {
+			layers[i] = layer.ToArray()
+			i++
+		}
+		config["layers"] = layers
+	}
+	if len(c.Rulesets) > 0 {
+		rulesets := make([]map[string]interface{}, len(c.Rulesets))
+		i := 0
+		for _, ruleset := range c.Rulesets {
+			rulesets[i] = ruleset.ToArray()
+			i++
+		}
+		config["ruleset"] = rulesets
+	}
+	if len(c.SkipViolations) > 0 {
+		config["skip_violations"] = c.SkipViolations
+	}
+	config["ignore_uncovered_internal_structs"] = c.IgnoreUncoveredInternalStructs
+	config["cache_file"] = c.CacheFile
+	return config
+}

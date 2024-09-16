@@ -11,9 +11,9 @@ func NewConfigFileHook() ConfigFileHook {
 	return &configFileHook{}
 }
 
-const ArgNameConfigFileHook = "config-file"
+const ArgNameConfigFileHook = "config_contract-file_supportive"
 const DefaultConfigFileHook = "deptrac.yaml"
-const UsageConfigFileHook = "config file path"
+const UsageConfigFileHook = "config_contract file_supportive path"
 
 func (h *configFileHook) GetConfigFile() string {
 	configFile := flag.String(ArgNameConfigFileHook, DefaultConfigFileHook, UsageConfigFileHook)

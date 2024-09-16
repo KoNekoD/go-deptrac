@@ -12,7 +12,7 @@ deptrac:
     types:
       - class
       - class_superglobal
-      - file
+      - file_supportive
       - function
       - function_superglobal
       - function_call
@@ -42,11 +42,11 @@ deptrac:
     - name: Analyser
       collectors:
         - type: directory
-          value: pkg/core/analyser/.*
+          value: pkg/core/analyser_contract/.*
     - name: Ast
       collectors:
         - type: directory
-          value: pkg/core/ast/.*
+          value: pkg/core/ast_contract/.*
         - type: composer
           private: true
           composerPath: composer.json
@@ -58,15 +58,15 @@ deptrac:
     - name: Console
       collectors:
         - type: directory
-          value: pkg/supportive/console/.*
+          value: pkg/supportive/console_supportive/.*
     - name: Dependency
       collectors:
         - type: directory
-          value: pkg/core/dependency/.*
+          value: pkg/core/dependency_contract/.*
     - name: DependencyInjection
       collectors:
         - type: directory
-          value: pkg/supportive/dependency_injection/.*
+          value: pkg/supportive/dependency_injection_supportive/.*
     - name: Contract
       collectors:
         - type: directory
@@ -74,15 +74,15 @@ deptrac:
     - name: InputCollector
       collectors:
         - type: directory
-          value: pkg/core/input_collector/.*
+          value: pkg/core/input_collector_core/.*
     - name: Layer
       collectors:
         - type: directory
-          value: pkg/core/layer/.*
+          value: pkg/core/layer_contract/.*
     - name: OutputFormatter
       collectors:
         - type: directory
-          value: pkg/supportive/output_formatter/.*
+          value: pkg/supportive/output_formatter_contract/.*
         - type: composer
           private: true
           composerPath: composer.json
@@ -92,7 +92,7 @@ deptrac:
     - name: File
       collectors:
         - type: directory
-          value: pkg/supportive/file/.*
+          value: pkg/supportive/file_supportive/.*
     - name: Time
       collectors:
         - type: directory
@@ -112,9 +112,9 @@ deptrac:
           composerPath: composer.json
           composerLockPath: composer.lock
           packages:
-            - symfony/config
-            - symfony/console
-            - symfony/dependency-injection
+            - symfony/config_contract
+            - symfony/console_supportive
+            - symfony/dependency_contract-injection
             - symfony/event-dispatcher
             - symfony/filesystem
             - symfony/finder

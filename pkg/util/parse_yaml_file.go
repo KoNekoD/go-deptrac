@@ -12,11 +12,11 @@ func ParseYamlFile(file string) (map[string]interface{}, error) {
 
 	yamlFile, err := os.ReadFile(file)
 	if err != nil {
-		return nil, errors.Wrap(err, "could not read yaml file")
+		return nil, errors.Wrap(err, "could not read yaml file_supportive")
 	}
 	err = yaml.Unmarshal(yamlFile, &output)
 	if err != nil {
-		return nil, errors.Wrap(err, "could not unmarshal yaml file")
+		return nil, errors.Wrap(err, "could not unmarshal yaml file_supportive")
 	}
 
 	return output, nil

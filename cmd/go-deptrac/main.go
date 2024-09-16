@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/supportive/console/application"
+	"github.com/KoNekoD/go-deptrac/pkg/console_supportive/application"
 )
 
 func main() {
