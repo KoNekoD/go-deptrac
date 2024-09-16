@@ -12,6 +12,7 @@ import (
 type FileInputCollector struct {
 	paths                []string
 	excludedFilePatterns []string
+	// todo: типы не берутся из типов полей структур
 }
 
 func NewFileInputCollector(originalPaths []string, excludedFilePatterns []string, basePath string) (InputCollectorInterface, error) {

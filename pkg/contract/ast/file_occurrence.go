@@ -2,10 +2,10 @@ package ast
 
 // FileOccurrence - Where in the file has the dependency occurred.
 type FileOccurrence struct {
-	Filepath string
+	FilePath string
 	Line     int
 }
 
 func NewFileOccurrence(filepath string, line int) *FileOccurrence {
-	return &FileOccurrence{Filepath: filepath, Line: line}
+	return &FileOccurrence{FilePath: filepath, Line: line}
 }

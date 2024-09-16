@@ -1,34 +1,34 @@
 package configuration
 
-type severityType string
+type SeverityType string
 
 const (
-	Failure   severityType = "failure"
-	Skipped   severityType = "skipped"
-	Uncovered severityType = "uncovered"
+	Failure   SeverityType = "failure"
+	Skipped   SeverityType = "skipped"
+	Uncovered SeverityType = "uncovered"
 )
 
 type ConfigurationCodeclimate struct {
-	severityMap map[severityType]string
+	severityMap map[SeverityType]string
 }
 
-func NewConfigurationCodeclimateFromArray(array map[severityType]interface{}) *ConfigurationCodeclimate {
+func NewConfigurationCodeclimateFromArray(array map[SeverityType]interface{}) *ConfigurationCodeclimate {
 	severityUntyped, ok := array["severityType"]
 
-	severity := make(map[severityType]string)
+	severity := make(map[SeverityType]string)
 
 	if !ok {
 		return newConfigurationCodeclimate(severity)
 	}
 
-	return newConfigurationCodeclimate(severityUntyped.(map[severityType]string))
+	return newConfigurationCodeclimate(severityUntyped.(map[SeverityType]string))
 }
 
-func newConfigurationCodeclimate(severityMap map[severityType]string) *ConfigurationCodeclimate {
+func newConfigurationCodeclimate(severityMap map[SeverityType]string) *ConfigurationCodeclimate {
 	return &ConfigurationCodeclimate{severityMap: severityMap}
 }
 
-func (c *ConfigurationCodeclimate) getSeverity(key severityType) *string {
+func (c *ConfigurationCodeclimate) GetSeverity(key SeverityType) *string {
 	v, ok := c.severityMap[key]
 	if !ok {
 		return nil

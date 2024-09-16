@@ -6,17 +6,27 @@ import (
 
 type GraphvizConfig struct {
 	name          string
-	pointsToGroup bool
-	hiddenLayers  []*config.Layer
-	groups        map[string][]*config.Layer
+	PointToGroups bool
+	HiddenLayers  []*config.Layer
+	Groups        map[string][]*config.Layer
+}
+
+func (g *GraphvizConfig) HiddenLayersNames() []string {
+	names := make([]string, 0)
+
+	for _, layer := range g.HiddenLayers {
+		names = append(names, layer.Name)
+	}
+
+	return names
 }
 
 func newGraphvizConfig() *GraphvizConfig {
 	return &GraphvizConfig{
 		name:          "graphviz",
-		pointsToGroup: false,
-		hiddenLayers:  make([]*config.Layer, 0),
-		groups:        make(map[string][]*config.Layer),
+		PointToGroups: false,
+		HiddenLayers:  make([]*config.Layer, 0),
+		Groups:        make(map[string][]*config.Layer),
 	}
 }
 
@@ -24,39 +34,39 @@ func CreateGraphvizConfig() *GraphvizConfig {
 	return newGraphvizConfig()
 }
 
-func (g *GraphvizConfig) PointsToGroup(pointsToGroup *bool) *GraphvizConfig {
-	if pointsToGroup == nil {
+func (g *GraphvizConfig) SetPointToGroups(pointToGroups *bool) *GraphvizConfig {
+	if pointToGroups == nil {
 		pointsToGroupTmp := true
-		pointsToGroup = &pointsToGroupTmp
+		pointToGroups = &pointsToGroupTmp
 	}
-	g.pointsToGroup = *pointsToGroup
+	g.PointToGroups = *pointToGroups
 	return g
 }
 
-func (g *GraphvizConfig) HiddenLayers(layerConfigs ...*config.Layer) *GraphvizConfig {
-	g.hiddenLayers = append(g.hiddenLayers, layerConfigs...)
+func (g *GraphvizConfig) SetHiddenLayers(layerConfigs ...*config.Layer) *GraphvizConfig {
+	g.HiddenLayers = append(g.HiddenLayers, layerConfigs...)
 	return g
 }
 
-func (g *GraphvizConfig) Groups(name string, layerConfigs ...*config.Layer) *GraphvizConfig {
-	g.groups[name] = append(g.groups[name], layerConfigs...)
+func (g *GraphvizConfig) SetGroups(name string, layerConfigs ...*config.Layer) *GraphvizConfig {
+	g.Groups[name] = append(g.Groups[name], layerConfigs...)
 	return g
 }
 
 func (g *GraphvizConfig) ToArray() map[string]interface{} {
 	output := make(map[string]interface{})
-	if len(g.hiddenLayers) > 0 {
-		hiddenLayers := make([]string, len(g.hiddenLayers))
+	if len(g.HiddenLayers) > 0 {
+		hiddenLayers := make([]string, len(g.HiddenLayers))
 		i := 0
-		for _, config := range g.hiddenLayers {
+		for _, config := range g.HiddenLayers {
 			hiddenLayers[i] = config.Name
 			i++
 		}
 		output["hidden_layers"] = hiddenLayers
 	}
-	if len(g.groups) > 0 {
+	if len(g.Groups) > 0 {
 		groups := make(map[string][]string)
-		for key, configs := range g.groups {
+		for key, configs := range g.Groups {
 			layerNames := make([]string, len(configs))
 			i := 0
 			for _, layer := range configs {
@@ -67,7 +77,7 @@ func (g *GraphvizConfig) ToArray() map[string]interface{} {
 		}
 		output["groups"] = groups
 	}
-	output["point_to_groups"] = g.pointsToGroup
+	output["point_to_groups"] = g.PointToGroups
 	return output
 }
 

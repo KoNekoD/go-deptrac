@@ -7,6 +7,7 @@ type OutputFormatterType string
 const (
 	GithubActions OutputFormatterType = "github-actions"
 	Table         OutputFormatterType = "table"
+	Baseline      OutputFormatterType = "baseline"
 )
 
 var availableOutputFormatters = []OutputFormatterType{

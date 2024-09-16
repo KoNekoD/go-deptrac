@@ -1,9 +1,9 @@
 package configuration
 
 type ConfigurationGraphViz struct {
-	hiddenLayers   []string
-	groupsLayerMap map[string][]string
-	pointToGroups  bool
+	HiddenLayers   []string
+	GroupsLayerMap map[string][]string
+	PointToGroups  bool
 }
 
 func NewConfigurationGraphVizFromArray(array map[string]interface{}) *ConfigurationGraphViz {
@@ -15,5 +15,5 @@ func NewConfigurationGraphVizFromArray(array map[string]interface{}) *Configurat
 }
 
 func newConfigurationGraphViz(hiddenLayers []string, groupsLayerMap map[string][]string, pointToGroups bool) *ConfigurationGraphViz {
-	return &ConfigurationGraphViz{hiddenLayers: hiddenLayers, groupsLayerMap: groupsLayerMap, pointToGroups: pointToGroups}
+	return &ConfigurationGraphViz{HiddenLayers: hiddenLayers, GroupsLayerMap: groupsLayerMap, PointToGroups: pointToGroups}
 }

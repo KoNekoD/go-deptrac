@@ -103,8 +103,8 @@ func NewDeptracConfig(parsed map[string]interface{}) (*DeptracConfig, error) {
 				}
 
 				formatterGraphvizConfig := formatter.CreateGraphvizConfig().
-					PointsToGroup(formatterRaw["pointsToGroup"].(*bool)).
-					HiddenLayers(hiddenLayers...)
+					SetPointToGroups(formatterRaw["point_to_groups"].(*bool)).
+					SetHiddenLayers(hiddenLayers...)
 
 				formatters[formatter.FormatterTypeGraphvizConfig] = formatterGraphvizConfig
 
@@ -120,11 +120,11 @@ func NewDeptracConfig(parsed map[string]interface{}) (*DeptracConfig, error) {
 						}
 					}
 
-					formatterGraphvizConfig.Groups(groupLayerName, groupLayer...)
+					formatterGraphvizConfig.SetGroups(groupLayerName, groupLayer...)
 				}
 			case string(formatter.FormatterTypeMermaidJsConfig):
 				formatterMermaidJsConfig := formatter.CreateMermaidJsConfig().
-					Direction(formatterRaw["direction"].(string))
+					SetDirection(formatterRaw["direction"].(string))
 
 				formatters[formatter.FormatterTypeMermaidJsConfig] = formatterMermaidJsConfig
 
@@ -140,7 +140,7 @@ func NewDeptracConfig(parsed map[string]interface{}) (*DeptracConfig, error) {
 						}
 					}
 
-					formatterMermaidJsConfig.Groups(groupLayerName, groupLayer...)
+					formatterMermaidJsConfig.SetGroups(groupLayerName, groupLayer...)
 				}
 			}
 		}

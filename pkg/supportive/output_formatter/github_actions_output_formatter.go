@@ -66,7 +66,7 @@ func (g *GithubActionsOutputFormatter) printUncovered(result *output_result.Outp
 				String: fmt.Sprintf(
 					"::%s file=%s,line=%d::%s has uncovered dependency on %s (%s)",
 					reportAs,
-					dependency.GetContext().FileOccurrence.Filepath,
+					dependency.GetContext().FileOccurrence.FilePath,
 					dependency.GetContext().FileOccurrence.Line,
 					dependency.GetDepender().ToString(),
 					dependency.GetDependent().ToString(),
@@ -116,5 +116,5 @@ func (g *GithubActionsOutputFormatter) printViolation(rule result.RuleInterface,
 		message += "%0A" + g.multilinePathMessage(dependency)
 
 	}
-	output.WriteLineFormatted(output_formatter.StringOrArrayOfStrings{String: fmt.Sprintf("::%s file=%s,line=%d::%s", g.determineLogLevel(rule), dependency.GetContext().FileOccurrence.Filepath, dependency.GetContext().FileOccurrence.Line, message)})
+	output.WriteLineFormatted(output_formatter.StringOrArrayOfStrings{String: fmt.Sprintf("::%s file=%s,line=%d::%s", g.determineLogLevel(rule), dependency.GetContext().FileOccurrence.FilePath, dependency.GetContext().FileOccurrence.Line, message)})
 }

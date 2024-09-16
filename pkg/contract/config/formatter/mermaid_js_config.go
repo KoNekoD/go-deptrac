@@ -6,15 +6,15 @@ import (
 
 type MermaidJsConfig struct {
 	name      string
-	direction string
-	groups    map[string][]*config.Layer
+	Direction string
+	Groups    map[string][]*config.Layer
 }
 
 func CreateMermaidJsConfig() *MermaidJsConfig {
 	return &MermaidJsConfig{
 		name:      "mermaidjs",
-		direction: "TD",
-		groups:    make(map[string][]*config.Layer),
+		Direction: "TD",
+		Groups:    make(map[string][]*config.Layer),
 	}
 }
 
@@ -22,23 +22,23 @@ func (m *MermaidJsConfig) GetName() FormatterType {
 	return FormatterTypeMermaidJsConfig
 }
 
-func (m *MermaidJsConfig) Direction(direction string) *MermaidJsConfig {
-	m.direction = direction
+func (m *MermaidJsConfig) SetDirection(direction string) *MermaidJsConfig {
+	m.Direction = direction
 	return m
 }
 
-func (m *MermaidJsConfig) Groups(name string, layerConfigs ...*config.Layer) *MermaidJsConfig {
+func (m *MermaidJsConfig) SetGroups(name string, layerConfigs ...*config.Layer) *MermaidJsConfig {
 	for _, config := range layerConfigs {
-		m.groups[name] = append(m.groups[name], config)
+		m.Groups[name] = append(m.Groups[name], config)
 	}
 	return m
 }
 
 func (m *MermaidJsConfig) ToArray() map[string]interface{} {
 	output := make(map[string]interface{})
-	if len(m.groups) > 0 {
+	if len(m.Groups) > 0 {
 		groups := make(map[string][]string)
-		for key, configs := range m.groups {
+		for key, configs := range m.Groups {
 			layerNames := make([]string, len(configs))
 			i := 0
 			for _, layer := range configs {
@@ -49,6 +49,6 @@ func (m *MermaidJsConfig) ToArray() map[string]interface{} {
 		}
 		output["groups"] = groups
 	}
-	output["direction"] = m.direction
+	output["direction"] = m.Direction
 	return output
 }

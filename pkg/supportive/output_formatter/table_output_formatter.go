@@ -86,7 +86,7 @@ func (t *TableOutputFormatter) skippedViolationRow(rule *result.SkippedViolation
 		message += "\n" + t.formatMultilinePath(gotDependency)
 	}
 	fileOccurrence := rule.GetDependency().GetContext().FileOccurrence
-	message += fmt.Sprintf("\n%s:%d", fileOccurrence.Filepath, fileOccurrence.Line)
+	message += fmt.Sprintf("\n%s:%d", fileOccurrence.FilePath, fileOccurrence.Line)
 	return []string{color.Sprint("<fg=yellow>Skipped</>"), message}
 
 }
@@ -99,7 +99,7 @@ func (t *TableOutputFormatter) violationRow(rule *result.Violation) []string {
 		message += "\n" + t.formatMultilinePath(gotDependency)
 	}
 	fileOccurrence := rule.GetDependency().GetContext().FileOccurrence
-	message += fmt.Sprintf("\n%s:%d", fileOccurrence.Filepath, fileOccurrence.Line)
+	message += fmt.Sprintf("\n%s:%d", fileOccurrence.FilePath, fileOccurrence.Line)
 	return []string{color.Sprint("<fg=red>Violation</>"), message}
 }
 func (t *TableOutputFormatter) formatMultilinePath(dep dependency.DependencyInterface) string {
@@ -171,7 +171,7 @@ func (t *TableOutputFormatter) uncoveredRow(rule *result.Uncovered, reportAsErro
 		message += "\n" + t.formatMultilinePath(gotDependency)
 	}
 	fileOccurrence := rule.GetDependency().GetContext().FileOccurrence
-	message += fmt.Sprintf("\n%s:%d", fileOccurrence.Filepath, fileOccurrence.Line)
+	message += fmt.Sprintf("\n%s:%d", fileOccurrence.FilePath, fileOccurrence.Line)
 	uncoveredFg := "yellow"
 	if reportAsError {
 		uncoveredFg = "red"
