@@ -1,8 +1,8 @@
 package subscribers
 
 import (
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/violations"
 	"github.com/KoNekoD/go-deptrac/pkg/events"
 )
 
@@ -27,7 +27,7 @@ func (h *UncoveredDependentHandler) InvokeEventSubscriber(rawEvent interface{}, 
 
 	if dependentClassLike, ok := dependent.(*tokens.ClassLikeToken); ok {
 		if !h.isIgnoreUncoveredInternalClasses(dependentClassLike) {
-			ruleset.AddRule(violations.NewUncovered(event.Dependency, event.DependerLayer))
+			ruleset.AddRule(violations_rules.NewUncovered(event.Dependency, event.DependerLayer))
 		}
 	}
 

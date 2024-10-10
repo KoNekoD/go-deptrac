@@ -3,7 +3,7 @@ package formatters
 import (
 	"encoding/json"
 	"fmt"
-	violations2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/violations"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"os"
@@ -73,7 +73,7 @@ func (f *JsonOutputFormatter) Finish(outputResult results.OutputResult, output r
 	return nil
 }
 
-func (f *JsonOutputFormatter) addFailure(violations map[string]FileViolations, violation *violations2.Violation) {
+func (f *JsonOutputFormatter) addFailure(violations map[string]FileViolations, violation *violations_rules.Violation) {
 	className := violation.GetDependency().GetContext().FileOccurrence.FilePath
 	violations[className] = appendViolation(violations[className], Message{
 		Message: f.getFailureMessage(violation),
@@ -82,7 +82,7 @@ func (f *JsonOutputFormatter) addFailure(violations map[string]FileViolations, v
 	})
 }
 
-func (f *JsonOutputFormatter) getFailureMessage(violation *violations2.Violation) string {
+func (f *JsonOutputFormatter) getFailureMessage(violation *violations_rules.Violation) string {
 	dependency := violation.GetDependency()
 	return fmt.Sprintf("%s must not depend on %s (%s on %s)",
 		dependency.GetDepender().ToString(),
@@ -92,7 +92,7 @@ func (f *JsonOutputFormatter) getFailureMessage(violation *violations2.Violation
 	)
 }
 
-func (f *JsonOutputFormatter) addSkipped(violations map[string]FileViolations, violation *violations2.SkippedViolation) {
+func (f *JsonOutputFormatter) addSkipped(violations map[string]FileViolations, violation *violations_rules.SkippedViolation) {
 	className := violation.GetDependency().GetContext().FileOccurrence.FilePath
 	violations[className] = appendViolation(violations[className], Message{
 		Message: f.getWarningMessage(violation),
@@ -101,7 +101,7 @@ func (f *JsonOutputFormatter) addSkipped(violations map[string]FileViolations, v
 	})
 }
 
-func (f *JsonOutputFormatter) getWarningMessage(violation *violations2.SkippedViolation) string {
+func (f *JsonOutputFormatter) getWarningMessage(violation *violations_rules.SkippedViolation) string {
 	dependency := violation.GetDependency()
 	return fmt.Sprintf("%s should not depend on %s (%s on %s)",
 		dependency.GetDepender().ToString(),
@@ -111,7 +111,7 @@ func (f *JsonOutputFormatter) getWarningMessage(violation *violations2.SkippedVi
 	)
 }
 
-func (f *JsonOutputFormatter) addUncovered(violations map[string]FileViolations, violation *violations2.Uncovered) {
+func (f *JsonOutputFormatter) addUncovered(violations map[string]FileViolations, violation *violations_rules.Uncovered) {
 	className := violation.GetDependency().GetContext().FileOccurrence.FilePath
 	violations[className] = appendViolation(violations[className], Message{
 		Message: f.getUncoveredMessage(violation),
@@ -120,7 +120,7 @@ func (f *JsonOutputFormatter) addUncovered(violations map[string]FileViolations,
 	})
 }
 
-func (f *JsonOutputFormatter) getUncoveredMessage(violation *violations2.Uncovered) string {
+func (f *JsonOutputFormatter) getUncoveredMessage(violation *violations_rules.Uncovered) string {
 	dependency := violation.GetDependency()
 	return fmt.Sprintf("%s has uncovered dependency_contract on %s (%s)",
 		dependency.GetDepender().ToString(),

@@ -3,7 +3,7 @@ package subscribers
 import (
 	"github.com/KoNekoD/go-deptrac/pkg"
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/violations"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/layers"
 	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 )
@@ -29,8 +29,8 @@ func NewLayerDependenciesAnalyser(
 	}
 }
 
-func (a *LayerDependenciesAnalyser) GetDependencies(layer string, targetLayer *string) (map[string][]*violations.Uncovered, error) {
-	uncoveredResult := make(map[string][]*violations.Uncovered)
+func (a *LayerDependenciesAnalyser) GetDependencies(layer string, targetLayer *string) (map[string][]*violations_rules.Uncovered, error) {
+	uncoveredResult := make(map[string][]*violations_rules.Uncovered)
 	astMap, err := a.astMapExtractor.Extract()
 	if err != nil {
 		return nil, err
@@ -54,9 +54,9 @@ func (a *LayerDependenciesAnalyser) GetDependencies(layer string, targetLayer *s
 					continue
 				}
 				if _, ok := uncoveredResult[dependentLayerName]; !ok {
-					uncoveredResult[dependentLayerName] = make([]*violations.Uncovered, 0)
+					uncoveredResult[dependentLayerName] = make([]*violations_rules.Uncovered, 0)
 				}
-				uncoveredResult[dependentLayerName] = append(uncoveredResult[dependentLayerName], violations.NewUncovered(dependency, dependentLayerName))
+				uncoveredResult[dependentLayerName] = append(uncoveredResult[dependentLayerName], violations_rules.NewUncovered(dependency, dependentLayerName))
 			}
 		}
 	}

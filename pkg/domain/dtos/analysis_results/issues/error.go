@@ -1,4 +1,4 @@
-package violations
+package issues
 
 type Error struct {
 	Message string

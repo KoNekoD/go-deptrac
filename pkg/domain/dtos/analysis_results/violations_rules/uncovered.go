@@ -1,4 +1,4 @@
-package violations
+package violations_rules
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"

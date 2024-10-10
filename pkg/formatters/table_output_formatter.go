@@ -2,11 +2,10 @@ package formatters
 
 import (
 	"fmt"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
-	violations2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/violations"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
-	"github.com/KoNekoD/go-deptrac/pkg/rules"
 	"github.com/gookit/color"
 	"golang.org/x/exp/maps"
 	"slices"
@@ -24,7 +23,7 @@ func (t *TableOutputFormatter) GetName() enums.OutputFormatterType {
 }
 
 func (t *TableOutputFormatter) Finish(outputResult *results.OutputResult, output results.OutputInterface, outputFormatterInput *OutputFormatterInput) error {
-	groupedRules := make(map[string][]rules.RuleInterface)
+	groupedRules := make(map[string][]violations_rules.RuleInterface)
 
 	for _, ruleItem := range outputResult.Violations() {
 		groupedRules[ruleItem.GetDependerLayer()] = append(groupedRules[ruleItem.GetDependerLayer()], ruleItem)
@@ -49,7 +48,7 @@ func (t *TableOutputFormatter) Finish(outputResult *results.OutputResult, output
 	for _, layer := range groupedRulesLayers {
 		rulesList := groupedRules[layer]
 
-		slices.SortFunc(rulesList, func(a, b rules.RuleInterface) int {
+		slices.SortFunc(rulesList, func(a, b violations_rules.RuleInterface) int {
 			if a.GetDependency().GetDepender().ToString() < b.GetDependency().GetDepender().ToString() {
 				return -1
 			}
@@ -59,11 +58,11 @@ func (t *TableOutputFormatter) Finish(outputResult *results.OutputResult, output
 		rows := make([][]string, 0)
 		for _, ruleItem := range rulesList {
 			switch item := ruleItem.(type) {
-			case *violations2.Uncovered:
+			case *violations_rules.Uncovered:
 				rows = append(rows, t.uncoveredRow(item, outputFormatterInput.FailOnUncovered))
-			case *violations2.Violation:
+			case *violations_rules.Violation:
 				rows = append(rows, t.violationRow(item))
-			case *violations2.SkippedViolation:
+			case *violations_rules.SkippedViolation:
 				rows = append(rows, t.skippedViolationRow(item))
 			}
 		}
@@ -80,7 +79,7 @@ func (t *TableOutputFormatter) Finish(outputResult *results.OutputResult, output
 	return nil
 }
 
-func (t *TableOutputFormatter) skippedViolationRow(rule *violations2.SkippedViolation) []string {
+func (t *TableOutputFormatter) skippedViolationRow(rule *violations_rules.SkippedViolation) []string {
 	gotDependency := rule.GetDependency()
 	message := color.Sprintf("<info>%s</> must not depend on <info>%s</> (%s)", gotDependency.GetDepender().ToString(), gotDependency.GetDependent().ToString(), rule.GetDependentLayer())
 	if len(gotDependency.Serialize()) > 1 {
@@ -92,7 +91,7 @@ func (t *TableOutputFormatter) skippedViolationRow(rule *violations2.SkippedViol
 
 }
 
-func (t *TableOutputFormatter) violationRow(rule *violations2.Violation) []string {
+func (t *TableOutputFormatter) violationRow(rule *violations_rules.Violation) []string {
 	gotDependency := rule.GetDependency()
 	message := color.Sprintf("<info>%s</> must not depend on <info>%s</>", gotDependency.GetDepender().ToString(), gotDependency.GetDependent().ToString())
 	message += fmt.Sprintf("\n%s (To fix %s(You need to add to the array by this key) -> %s(That value needs to be added to that array))", rule.RuleDescription(), rule.GetDependerLayer(), rule.GetDependentLayer())
@@ -165,7 +164,7 @@ func (t *TableOutputFormatter) printSummary(result *results.OutputResult, output
 	)
 }
 
-func (t *TableOutputFormatter) uncoveredRow(rule *violations2.Uncovered, reportAsError bool) []string {
+func (t *TableOutputFormatter) uncoveredRow(rule *violations_rules.Uncovered, reportAsError bool) []string {
 	gotDependency := rule.GetDependency()
 	message := color.Sprintf("<info>%s</> has uncovered dependency_contract on <info>%s</>", gotDependency.GetDepender().ToString(), gotDependency.GetDependent().ToString())
 	if len(gotDependency.Serialize()) > 1 {

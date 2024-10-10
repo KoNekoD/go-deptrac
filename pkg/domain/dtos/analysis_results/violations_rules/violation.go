@@ -1,4 +1,4 @@
-package violations
+package violations_rules
 
 import (
 	"fmt"

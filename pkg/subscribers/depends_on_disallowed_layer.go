@@ -2,7 +2,7 @@ package subscribers
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/violations"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results/issues"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
 	"github.com/KoNekoD/go-deptrac/pkg/events"
 )
@@ -21,7 +21,7 @@ func (d *DependsOnDisallowedLayer) InvokeEventSubscriber(rawEvent interface{}, s
 	ruleset := event.GetResult()
 	allowedLayers, err := d.eventHelper.LayerProvider.GetAllowedLayers(event.DependerLayer)
 	if err != nil {
-		ruleset.AddError(violations.NewError(err.Error()))
+		ruleset.AddError(issues.NewError(err.Error()))
 		stopPropagation()
 		return nil
 	}

@@ -1,8 +1,8 @@
 package subscribers
 
 import (
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/events"
-	"github.com/KoNekoD/go-deptrac/pkg/rules"
 )
 
 type AllowDependencyHandler struct{}
@@ -16,7 +16,7 @@ func (AllowDependencyHandler) InvokeEventSubscriber(rawEvent interface{}, stopPr
 
 	ruleset := event.GetResult()
 	for dependentLayer := range event.DependentLayers {
-		ruleset.AddRule(rules.NewAllowed(event.Dependency, event.DependerLayer, dependentLayer))
+		ruleset.AddRule(violations_rules.NewAllowed(event.Dependency, event.DependerLayer, dependentLayer))
 		stopPropagation()
 	}
 

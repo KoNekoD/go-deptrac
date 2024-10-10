@@ -4,11 +4,10 @@ import (
 	"crypto/sha1"
 	"encoding/json"
 	"fmt"
-	violations2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/violations"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results/violations_rules"
 	enums2 "github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
-	"github.com/KoNekoD/go-deptrac/pkg/rules"
 	"os"
 )
 
@@ -63,34 +62,34 @@ func (f *CodeclimateOutputFormatter) Finish(outputResult results.OutputResult, o
 	return nil
 }
 
-func (f *CodeclimateOutputFormatter) addFailure(violations *[]map[string]interface{}, violation *violations2.Violation, config *enums2.ConfigurationCodeclimate) {
+func (f *CodeclimateOutputFormatter) addFailure(violations *[]map[string]interface{}, violation *violations_rules.Violation, config *enums2.ConfigurationCodeclimate) {
 	*violations = append(*violations, f.buildRuleArray(violation, f.getFailureMessage(violation), config.GetSeverity("failure")))
 }
 
-func (f *CodeclimateOutputFormatter) getFailureMessage(violation *violations2.Violation) *string {
+func (f *CodeclimateOutputFormatter) getFailureMessage(violation *violations_rules.Violation) *string {
 	dependency := violation.GetDependency()
 	return utils.AsPtr(fmt.Sprintf("%s must not depend on %s (%s on %s)", dependency.GetDepender(), dependency.GetDependent(), violation.GetDependerLayer(), violation.GetDependentLayer()))
 }
 
-func (f *CodeclimateOutputFormatter) addSkipped(violations *[]map[string]interface{}, violation *violations2.SkippedViolation, config *enums2.ConfigurationCodeclimate) {
+func (f *CodeclimateOutputFormatter) addSkipped(violations *[]map[string]interface{}, violation *violations_rules.SkippedViolation, config *enums2.ConfigurationCodeclimate) {
 	*violations = append(*violations, f.buildRuleArray(violation, f.getWarningMessage(violation), config.GetSeverity("skipped")))
 }
 
-func (f *CodeclimateOutputFormatter) getWarningMessage(violation *violations2.SkippedViolation) *string {
+func (f *CodeclimateOutputFormatter) getWarningMessage(violation *violations_rules.SkippedViolation) *string {
 	dependency := violation.GetDependency()
 	return utils.AsPtr(fmt.Sprintf("%s should not depend on %s (%s on %s)", dependency.GetDepender(), dependency.GetDependent(), violation.GetDependerLayer(), violation.GetDependentLayer()))
 }
 
-func (f *CodeclimateOutputFormatter) addUncovered(violations *[]map[string]interface{}, violation *violations2.Uncovered, config *enums2.ConfigurationCodeclimate) {
+func (f *CodeclimateOutputFormatter) addUncovered(violations *[]map[string]interface{}, violation *violations_rules.Uncovered, config *enums2.ConfigurationCodeclimate) {
 	*violations = append(*violations, f.buildRuleArray(violation, f.getUncoveredMessage(violation), config.GetSeverity("uncovered")))
 }
 
-func (f *CodeclimateOutputFormatter) getUncoveredMessage(violation *violations2.Uncovered) *string {
+func (f *CodeclimateOutputFormatter) getUncoveredMessage(violation *violations_rules.Uncovered) *string {
 	dependency := violation.GetDependency()
 	return utils.AsPtr(fmt.Sprintf("%s has uncovered dependency_contract on %s (%s)", dependency.GetDepender(), dependency.GetDependent(), violation.Layer))
 }
 
-func (f *CodeclimateOutputFormatter) buildRuleArray(rule rules.RuleInterface, message, severity *string) map[string]interface{} {
+func (f *CodeclimateOutputFormatter) buildRuleArray(rule violations_rules.RuleInterface, message, severity *string) map[string]interface{} {
 	return map[string]interface{}{
 		"type":        "issue",
 		"check_name":  "Dependency violation",
@@ -107,7 +106,7 @@ func (f *CodeclimateOutputFormatter) buildRuleArray(rule rules.RuleInterface, me
 	}
 }
 
-func (f *CodeclimateOutputFormatter) buildFingerprint(rule rules.RuleInterface) string {
+func (f *CodeclimateOutputFormatter) buildFingerprint(rule violations_rules.RuleInterface) string {
 	data := fmt.Sprintf("%s,%s,%s,%s,%d",
 		rule,
 		rule.GetDependency().GetDepender(),

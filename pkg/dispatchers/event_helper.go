@@ -1,11 +1,11 @@
 package dispatchers
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/violations"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results"
+	violations2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
 	"github.com/KoNekoD/go-deptrac/pkg/events"
 	"github.com/KoNekoD/go-deptrac/pkg/layers"
-	"github.com/KoNekoD/go-deptrac/pkg/rules"
 )
 
 // EventHelper - Utility class for managing adding violations that could be skipped.
@@ -54,10 +54,10 @@ func (e *EventHelper) UnmatchedSkippedViolations() map[string][]string {
 	return e.UnmatchedSkippedViolation
 }
 
-func (e *EventHelper) AddSkippableViolation(event *events.ProcessEvent, analysisResult *rules.AnalysisResult, dependentLayer string, violationCreatingRule violations.ViolationCreatingInterface) {
+func (e *EventHelper) AddSkippableViolation(event *events.ProcessEvent, analysisResult *analysis_results.AnalysisResult, dependentLayer string, violationCreatingRule violations2.ViolationCreatingInterface) {
 	if e.shouldViolationBeSkipped(event.Dependency.GetDepender().ToString(), event.Dependency.GetDependent().ToString()) {
-		analysisResult.AddRule(violations.NewSkippedViolation(event.Dependency, event.DependerLayer, dependentLayer))
+		analysisResult.AddRule(violations2.NewSkippedViolation(event.Dependency, event.DependerLayer, dependentLayer))
 	} else {
-		analysisResult.AddRule(violations.NewViolation(event.Dependency, event.DependerLayer, dependentLayer, violationCreatingRule))
+		analysisResult.AddRule(violations2.NewViolation(event.Dependency, event.DependerLayer, dependentLayer, violationCreatingRule))
 	}
 }

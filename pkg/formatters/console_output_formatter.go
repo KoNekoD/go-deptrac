@@ -3,11 +3,10 @@ package formatters
 import (
 	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
-	violations2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/violations"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
-	"github.com/KoNekoD/go-deptrac/pkg/rules"
 	"strings"
 )
 
@@ -23,12 +22,12 @@ func (f *ConsoleOutputFormatter) GetName() string {
 
 func (f *ConsoleOutputFormatter) Finish(outputResult results.OutputResult, output results.OutputInterface, input OutputFormatterInput) {
 	for _, rule := range outputResult.AllOf(enums.TypeViolation) {
-		f.printViolation(rule.(*violations2.Violation), output)
+		f.printViolation(rule.(*violations_rules.Violation), output)
 	}
 
 	if input.ReportSkipped {
 		for _, rule := range outputResult.AllOf(enums.TypeSkippedViolation) {
-			f.printViolation(rule.(*violations2.SkippedViolation), output)
+			f.printViolation(rule.(*violations_rules.SkippedViolation), output)
 		}
 	}
 
@@ -47,18 +46,18 @@ func (f *ConsoleOutputFormatter) Finish(outputResult results.OutputResult, outpu
 	f.printSummary(outputResult, output)
 }
 
-func (f *ConsoleOutputFormatter) printViolation(rule rules.RuleInterface, output results.OutputInterface) {
+func (f *ConsoleOutputFormatter) printViolation(rule violations_rules.RuleInterface, output results.OutputInterface) {
 	dep := rule.GetDependency()
 	skippedText := ""
 
 	dependerLayer := ""
 	dependentLayer := ""
 
-	if ruleAsserted, ok := rule.(*violations2.SkippedViolation); ok {
+	if ruleAsserted, ok := rule.(*violations_rules.SkippedViolation); ok {
 		skippedText = "[SKIPPED] "
 		dependerLayer = ruleAsserted.GetDependerLayer()
 		dependentLayer = ruleAsserted.GetDependentLayer()
-	} else if ruleAsserted, ok := rule.(*violations2.Violation); ok {
+	} else if ruleAsserted, ok := rule.(*violations_rules.Violation); ok {
 		dependerLayer = ruleAsserted.GetDependerLayer()
 		dependentLayer = ruleAsserted.GetDependentLayer()
 	} else {

@@ -2,11 +2,10 @@ package formatters
 
 import (
 	"fmt"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
-	violations2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/violations"
 	enums2 "github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
-	"github.com/KoNekoD/go-deptrac/pkg/rules"
 	"strings"
 )
 
@@ -42,11 +41,11 @@ func (g *GithubActionsOutputFormatter) Finish(outputResult *results.OutputResult
 	return nil
 }
 
-func (g *GithubActionsOutputFormatter) determineLogLevel(rule rules.RuleInterface) string {
+func (g *GithubActionsOutputFormatter) determineLogLevel(rule violations_rules.RuleInterface) string {
 	switch rule.(type) {
-	case *violations2.Violation:
+	case *violations_rules.Violation:
 		return "error"
-	case *violations2.SkippedViolation:
+	case *violations_rules.SkippedViolation:
 		return "warning"
 	default:
 		return "debug"
@@ -98,17 +97,17 @@ func (g *GithubActionsOutputFormatter) printWarnings(result *results.OutputResul
 	}
 }
 
-func (g *GithubActionsOutputFormatter) printViolation(rule rules.RuleInterface, output results.OutputInterface) {
+func (g *GithubActionsOutputFormatter) printViolation(rule violations_rules.RuleInterface, output results.OutputInterface) {
 	dependency := rule.GetDependency()
 	prefix := ""
 	dependerLayer := ""
 	dependentLayer := ""
 	switch v := rule.(type) {
-	case *violations2.SkippedViolation:
+	case *violations_rules.SkippedViolation:
 		prefix = "[SKIPPED] "
 		dependerLayer = v.GetDependerLayer()
 		dependentLayer = v.GetDependentLayer()
-	case *violations2.Violation:
+	case *violations_rules.Violation:
 		dependerLayer = v.GetDependerLayer()
 		dependentLayer = v.GetDependentLayer()
 	}

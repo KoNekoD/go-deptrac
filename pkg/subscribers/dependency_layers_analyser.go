@@ -5,12 +5,12 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg"
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results/issues"
 	tokens2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/violations"
 	"github.com/KoNekoD/go-deptrac/pkg/events"
 	"github.com/KoNekoD/go-deptrac/pkg/layers"
-	"github.com/KoNekoD/go-deptrac/pkg/rules"
 	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 )
 
@@ -37,7 +37,7 @@ func NewDependencyLayersAnalyser(
 	}
 }
 
-func (a *DependencyLayersAnalyser) Analyse() (*rules.AnalysisResult, error) {
+func (a *DependencyLayersAnalyser) Analyse() (*analysis_results.AnalysisResult, error) {
 	astMap, err := a.astMapExtractor.Extract()
 	if err != nil {
 		return nil, err
@@ -46,8 +46,8 @@ func (a *DependencyLayersAnalyser) Analyse() (*rules.AnalysisResult, error) {
 	if err != nil {
 		return nil, err
 	}
-	analysisResult := rules.NewAnalysisResult()
-	warnings := make(map[string]*violations.Warning)
+	analysisResult := analysis_results.NewAnalysisResult()
+	warnings := make(map[string]*issues.Warning)
 	for _, dependency := range dependencies.GetDependenciesAndInheritDependencies() {
 		depender := dependency.GetDepender()
 		dependerRef := a.tokenResolver.Resolve(depender, astMap)
@@ -72,7 +72,7 @@ func (a *DependencyLayersAnalyser) Analyse() (*rules.AnalysisResult, error) {
 
 		_, ok := warnings[depender.ToString()]
 		if !ok && len(dependerLayers) > 1 {
-			warnings[depender.ToString()] = violations.NewWarningTokenIsInMoreThanOneLayer(depender.ToString(), dependerLayers)
+			warnings[depender.ToString()] = issues.NewWarningTokenIsInMoreThanOneLayer(depender.ToString(), dependerLayers)
 		}
 
 		dependent := dependency.GetDependent()

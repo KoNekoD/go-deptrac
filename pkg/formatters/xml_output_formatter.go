@@ -3,7 +3,7 @@ package formatters
 import (
 	"encoding/xml"
 	"fmt"
-	violations2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/violations"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"os"
@@ -65,7 +65,7 @@ func (f *XMLOutputFormatter) addRule(ruleType string, entries *Entries, rule int
 	var line int
 
 	switch r := rule.(type) {
-	case violations2.Violation:
+	case violations_rules.Violation:
 		layerA = r.GetDependerLayer()
 		layerB = r.GetDependentLayer()
 		dependency := r.GetDependency()
@@ -75,7 +75,7 @@ func (f *XMLOutputFormatter) addRule(ruleType string, entries *Entries, rule int
 		file = fileOccurrence.FilePath
 		line = fileOccurrence.Line
 
-	case violations2.SkippedViolation:
+	case violations_rules.SkippedViolation:
 		layerA = r.GetDependerLayer()
 		layerB = r.GetDependentLayer()
 		dependency := r.GetDependency()

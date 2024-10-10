@@ -2,6 +2,7 @@ package app
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
@@ -64,7 +65,7 @@ func (r *ChangedFilesRunner) Run(files []string, withDependencies bool, output r
 	return nil
 }
 
-func (r *ChangedFilesRunner) calculateLayerDependencies(rulesList []rules.RuleInterface) map[string]map[string]string {
+func (r *ChangedFilesRunner) calculateLayerDependencies(rulesList []violations_rules.RuleInterface) map[string]map[string]string {
 	layersDependOnLayers := make(map[string]map[string]string)
 	for _, rule := range rulesList {
 		if _, ok := rule.(rules.CoveredRuleInterface); !ok {
