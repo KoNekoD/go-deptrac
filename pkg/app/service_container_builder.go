@@ -6,7 +6,6 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
 	"github.com/KoNekoD/go-deptrac/pkg/subscribers"
-	"github.com/KoNekoD/go-deptrac/pkg/violations"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -108,7 +107,7 @@ func (b *ServiceContainerBuilder) GetContainer() *ContainerBuilder {
 func loadServices(container *ContainerBuilder, cacheFile *string) error {
 	if cacheFile != nil {
 		container.CacheFile = cacheFile
-		violations.Cache(container)
+		Cache(container)
 	}
 
 	err := Services(container)

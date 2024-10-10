@@ -2,14 +2,14 @@ package formatters
 
 import (
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/configs"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/formatters_configs"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"os"
 	"strings"
 )
 
 type MermaidJSOutputFormatter struct {
-	config *configs.MermaidJsConfig
+	config *formatters_configs.MermaidJsConfig
 }
 
 const (
@@ -23,7 +23,7 @@ const (
 )
 
 func NewMermaidJSOutputFormatter(config FormatterConfiguration) *MermaidJSOutputFormatter {
-	extractedConfig := config.GetConfigFor("mermaidjs").(interface{}).(*configs.MermaidJsConfig)
+	extractedConfig := config.GetConfigFor("mermaidjs").(interface{}).(*formatters_configs.MermaidJsConfig)
 	return &MermaidJSOutputFormatter{config: extractedConfig}
 }
 

@@ -1,14 +1,15 @@
 package subscribers
 
 import (
+	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
 	"github.com/KoNekoD/go-deptrac/pkg/events"
 )
 
 type DependsOnPrivateLayer struct {
-	eventHelper *events.EventHelper
+	eventHelper *dispatchers.EventHelper
 }
 
-func NewDependsOnPrivateLayer(eventHelper *events.EventHelper) *DependsOnPrivateLayer {
+func NewDependsOnPrivateLayer(eventHelper *dispatchers.EventHelper) *DependsOnPrivateLayer {
 	return &DependsOnPrivateLayer{eventHelper: eventHelper}
 }
 

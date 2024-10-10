@@ -1,15 +1,15 @@
 package commands
 
 import (
+	"github.com/KoNekoD/go-deptrac/pkg/app"
 	"github.com/KoNekoD/go-deptrac/pkg/formatters"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
-	"github.com/KoNekoD/go-deptrac/pkg/runners"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
 type ChangedFilesCommand struct {
-	runner *runners.ChangedFilesRunner
+	runner *app.ChangedFilesRunner
 }
 
 const (
@@ -17,7 +17,7 @@ const (
 	argFiles            = "files"
 )
 
-func NewChangedFilesCommand(runner *runners.ChangedFilesRunner) *cobra.Command {
+func NewChangedFilesCommand(runner *app.ChangedFilesRunner) *cobra.Command {
 	cmd := &ChangedFilesCommand{runner: runner}
 
 	cobraCmd := &cobra.Command{

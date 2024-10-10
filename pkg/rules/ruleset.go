@@ -1,13 +1,15 @@
 package rules
 
-import "github.com/KoNekoD/go-deptrac/pkg/layers"
+import (
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos"
+)
 
 type Ruleset struct {
-	LayerConfig      *layers.Layer
-	AccessableLayers []*layers.Layer
+	LayerConfig      *dtos.LayerConfig
+	AccessableLayers []*dtos.LayerConfig
 }
 
-func NewRuleset(layerConfig *layers.Layer, layerConfigs []*layers.Layer) *Ruleset {
+func NewRuleset(layerConfig *dtos.LayerConfig, layerConfigs []*dtos.LayerConfig) *Ruleset {
 	r := &Ruleset{LayerConfig: layerConfig}
 
 	r.Accesses(layerConfigs...)
@@ -15,11 +17,11 @@ func NewRuleset(layerConfig *layers.Layer, layerConfigs []*layers.Layer) *Rulese
 	return r
 }
 
-func NewForLayer(layerConfig *layers.Layer) *Ruleset {
-	return &Ruleset{LayerConfig: layerConfig, AccessableLayers: make([]*layers.Layer, 0)}
+func NewForLayer(layerConfig *dtos.LayerConfig) *Ruleset {
+	return &Ruleset{LayerConfig: layerConfig, AccessableLayers: make([]*dtos.LayerConfig, 0)}
 }
 
-func (r *Ruleset) Accesses(layerConfigs ...*layers.Layer) *Ruleset {
+func (r *Ruleset) Accesses(layerConfigs ...*dtos.LayerConfig) *Ruleset {
 	for _, config := range layerConfigs {
 		r.AccessableLayers = append(r.AccessableLayers, config)
 	}

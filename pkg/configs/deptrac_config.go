@@ -1,21 +1,21 @@
 package configs
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/collectors"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
-	enums2 "github.com/KoNekoD/go-deptrac/pkg/domain/enums"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/collectors_configs"
+	formatters_configs2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/formatters_configs"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
-	"github.com/KoNekoD/go-deptrac/pkg/formatters"
-	"github.com/KoNekoD/go-deptrac/pkg/layers"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
 	"github.com/pkg/errors"
 )
 
 type DeptracConfig struct {
 	Paths                          []string
-	Analyser                       *AnalyserConfig
-	Formatters                     map[enums2.FormatterType]formatters.FormatterConfigInterface
-	Layers                         []*layers.Layer
+	Analyser                       *dtos.AnalyserConfig
+	Formatters                     map[enums.FormatterType]formatters_configs2.FormatterConfigInterface
+	Layers                         []*dtos.LayerConfig
 	Rulesets                       map[string]*rules.Ruleset
 	IgnoreUncoveredInternalStructs bool
 	SkipViolations                 map[string][]string
@@ -99,19 +99,19 @@ func (c *DeptracConfig) SetupDeptracMapData(data map[string]interface{}) error {
 	}
 	layersList := c.Layers
 
-	formattersList := make(map[enums2.FormatterType]formatters.FormatterConfigInterface)
+	formattersList := make(map[enums.FormatterType]formatters_configs2.FormatterConfigInterface)
 	if parsedDeptracFormatters, ok := data["formatters"]; ok {
 		for formatterKey, formatterRawRaw := range parsedDeptracFormatters.(map[string]interface{}) {
 			formatterRaw := formatterRawRaw.(map[string]interface{})
 			switch formatterKey {
-			case string(enums2.FormatterTypeCodeclimateConfig):
-				formattersList[enums2.FormatterTypeCodeclimateConfig] = CreateCodeclimateConfig(
-					formatterRaw["failure"].(*enums2.CodeclimateLevelEnum),
-					formatterRaw["skipped"].(*enums2.CodeclimateLevelEnum),
-					formatterRaw["uncovered"].(*enums2.CodeclimateLevelEnum),
+			case string(enums.FormatterTypeCodeclimateConfig):
+				formattersList[enums.FormatterTypeCodeclimateConfig] = formatters_configs2.CreateCodeclimateConfig(
+					formatterRaw["failure"].(*enums.CodeclimateLevelEnum),
+					formatterRaw["skipped"].(*enums.CodeclimateLevelEnum),
+					formatterRaw["uncovered"].(*enums.CodeclimateLevelEnum),
 				)
-			case string(enums2.FormatterTypeGraphvizConfig):
-				hiddenLayers := make([]*layers.Layer, 0)
+			case string(enums.FormatterTypeGraphvizConfig):
+				hiddenLayers := make([]*dtos.LayerConfig, 0)
 
 				for _, hiddenLayer := range formatterRaw["hiddenLayers"].([]string) {
 					for _, layer := range layersList {
@@ -122,14 +122,14 @@ func (c *DeptracConfig) SetupDeptracMapData(data map[string]interface{}) error {
 					}
 				}
 
-				formatterGraphvizConfig := CreateGraphvizConfig().
+				formatterGraphvizConfig := formatters_configs2.CreateGraphvizConfig().
 					SetPointToGroups(formatterRaw["point_to_groups"].(*bool)).
 					SetHiddenLayers(hiddenLayers...)
 
-				formattersList[enums2.FormatterTypeGraphvizConfig] = formatterGraphvizConfig
+				formattersList[enums.FormatterTypeGraphvizConfig] = formatterGraphvizConfig
 
 				for groupLayerName, groupRaw := range formatterRaw["groups"].(map[string][]string) {
-					groupLayer := make([]*layers.Layer, 0)
+					groupLayer := make([]*dtos.LayerConfig, 0)
 
 					for _, layerName := range groupRaw {
 						for _, layer := range layersList {
@@ -142,14 +142,14 @@ func (c *DeptracConfig) SetupDeptracMapData(data map[string]interface{}) error {
 
 					formatterGraphvizConfig.SetGroups(groupLayerName, groupLayer...)
 				}
-			case string(enums2.FormatterTypeMermaidJsConfig):
-				formatterMermaidJsConfig := CreateMermaidJsConfig().
+			case string(enums.FormatterTypeMermaidJsConfig):
+				formatterMermaidJsConfig := formatters_configs2.CreateMermaidJsConfig().
 					SetDirection(formatterRaw["direction"].(string))
 
-				formattersList[enums2.FormatterTypeMermaidJsConfig] = formatterMermaidJsConfig
+				formattersList[enums.FormatterTypeMermaidJsConfig] = formatterMermaidJsConfig
 
 				for groupLayerName, groupRaw := range formatterRaw["groups"].(map[string][]string) {
-					groupLayer := make([]*layers.Layer, 0)
+					groupLayer := make([]*dtos.LayerConfig, 0)
 
 					for _, layerName := range groupRaw {
 						for _, layer := range layersList {
@@ -170,7 +170,7 @@ func (c *DeptracConfig) SetupDeptracMapData(data map[string]interface{}) error {
 
 	if rulesetsData, ok := data["ruleset"]; ok {
 		for rulesetLayerName, rulesetLayersNames := range rulesetsData.(map[string]interface{}) {
-			var rulesetOwningLayer *layers.Layer
+			var rulesetOwningLayer *dtos.LayerConfig
 
 			for _, layer := range layersList {
 				if layer.Name == rulesetLayerName {
@@ -179,7 +179,7 @@ func (c *DeptracConfig) SetupDeptracMapData(data map[string]interface{}) error {
 				}
 			}
 
-			rulesetLayers := make([]*layers.Layer, 0)
+			rulesetLayers := make([]*dtos.LayerConfig, 0)
 
 			if rulesetLayersNames != nil { // If not ~
 				for _, layerNameRaw := range rulesetLayersNames.([]interface{}) {
@@ -199,13 +199,13 @@ func (c *DeptracConfig) SetupDeptracMapData(data map[string]interface{}) error {
 		}
 	}
 
-	analyzerTypesDefault := []enums2.EmitterType{enums2.EmitterTypeClassToken, enums2.EmitterTypeFunctionToken}
-	analyzerTypes := make([]enums2.EmitterType, 0)
+	analyzerTypesDefault := []enums.EmitterType{enums.EmitterTypeClassToken, enums.EmitterTypeFunctionToken}
+	analyzerTypes := make([]enums.EmitterType, 0)
 	internalTag := "@internal"
 	if parsedDeptracAnalyzer, ok := data["analyzer"]; ok {
 		analyzerRaw := parsedDeptracAnalyzer.(map[string]interface{})
 		for _, typeRaw := range analyzerRaw["types"].([]interface{}) {
-			analyzerType, err := enums2.NewEmitterTypeFromString(typeRaw.(string))
+			analyzerType, err := enums.NewEmitterTypeFromString(typeRaw.(string))
 			if err != nil {
 				return errors.WithStack(err)
 			}
@@ -217,7 +217,7 @@ func (c *DeptracConfig) SetupDeptracMapData(data map[string]interface{}) error {
 		analyzerTypes = analyzerTypesDefault
 	}
 
-	analyser := Create(analyzerTypes, &internalTag)
+	analyser := dtos.Create(analyzerTypes, &internalTag)
 
 	paths := make([]string, 0)
 	if dataPaths, ok := data["paths"]; ok {
@@ -270,11 +270,11 @@ func (c *DeptracConfig) SetupLayersData(layers interface{}) error {
 }
 
 func (c *DeptracConfig) SetupLayersListData(list []interface{}) error {
-	layersList := make([]*layers.Layer, 0)
+	layersList := make([]*dtos.LayerConfig, 0)
 
 	for _, layerRawRaw := range list {
 		layerRaw := layerRawRaw.(map[string]interface{})
-		collectorConfigs := make([]*collectors.CollectorConfig, 0)
+		collectorConfigs := make([]*collectors_configs.CollectorConfig, 0)
 
 		for _, collectorRawRaw := range layerRaw["collectors"].([]interface{}) {
 			collectorRaw := collectorRawRaw.(map[string]interface{})
@@ -283,7 +283,7 @@ func (c *DeptracConfig) SetupLayersListData(list []interface{}) error {
 				return apperrors.NewInvalidCollectorDefinitionMissingType()
 			}
 
-			collectorType, err := enums2.NewCollectorTypeFromString(collectorRaw["type"].(string))
+			collectorType, err := enums.NewCollectorTypeFromString(collectorRaw["type"].(string))
 			if err != nil {
 				return errors.WithStack(err)
 			}
@@ -299,7 +299,7 @@ func (c *DeptracConfig) SetupLayersListData(list []interface{}) error {
 			delete(payload, "private")
 			delete(payload, "type")
 
-			collectorConfig := collectors.NewCollectorConfig(collectorType, payload, private)
+			collectorConfig := collectors_configs.NewCollectorConfig(collectorType, payload, private)
 
 			collectorConfigs = append(collectorConfigs, collectorConfig)
 		}
@@ -313,7 +313,7 @@ func (c *DeptracConfig) SetupLayersListData(list []interface{}) error {
 			return errors.New("invalid layer definition: name must be a string")
 		}
 
-		layer := layers.NewLayer(layerNameStr, collectorConfigs)
+		layer := dtos.NewLayer(layerNameStr, collectorConfigs)
 
 		layersList = append(layersList, layer)
 	}

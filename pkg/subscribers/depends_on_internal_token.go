@@ -1,17 +1,18 @@
 package subscribers
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/configs"
+	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos"
 	"github.com/KoNekoD/go-deptrac/pkg/events"
 	"github.com/KoNekoD/go-deptrac/pkg/references"
 )
 
 type DependsOnInternalToken struct {
-	eventHelper *events.EventHelper
+	eventHelper *dispatchers.EventHelper
 	internalTag *string
 }
 
-func NewDependsOnInternalToken(eventHelper *events.EventHelper, analyser *configs.AnalyserConfig) *DependsOnInternalToken {
+func NewDependsOnInternalToken(eventHelper *dispatchers.EventHelper, analyser *dtos.AnalyserConfig) *DependsOnInternalToken {
 	return &DependsOnInternalToken{eventHelper: eventHelper, internalTag: analyser.InternalTag}
 }
 

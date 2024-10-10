@@ -2,7 +2,7 @@ package tokens
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
-	"github.com/KoNekoD/go-deptrac/pkg/configs"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/layers"
 	"slices"
@@ -10,7 +10,7 @@ import (
 
 type UnassignedTokenAnalyser struct {
 	tokenTypes      []enums.TokenType
-	config          *configs.AnalyserConfig
+	config          *dtos.AnalyserConfig
 	astMapExtractor *ast_map.AstMapExtractor
 	tokenResolver   *TokenResolver
 	layerResolver   layers.LayerResolverInterface
@@ -20,7 +20,7 @@ func NewUnassignedTokenAnalyser(
 	astMapExtractor *ast_map.AstMapExtractor,
 	tokenResolver *TokenResolver,
 	layerResolver layers.LayerResolverInterface,
-	config *configs.AnalyserConfig,
+	config *dtos.AnalyserConfig,
 ) *UnassignedTokenAnalyser {
 	analyser := &UnassignedTokenAnalyser{
 		tokenTypes:      make([]enums.TokenType, 0),

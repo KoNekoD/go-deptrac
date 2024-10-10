@@ -2,22 +2,21 @@ package formatters
 
 import (
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/configs"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/formatters_configs"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
 	"github.com/goccy/go-graphviz"
 	"github.com/goccy/go-graphviz/cgraph"
 	"os"
 	"path/filepath"
-	"slices"
 )
 
 type GraphVizOutputFormatter struct {
-	config configs.ConfigurationGraphViz
+	config formatters_configs.GraphvizConfig
 }
 
 func NewGraphVizOutputFormatter(config FormatterConfiguration) *GraphVizOutputFormatter {
-	extractedConfig := config.GetConfigFor("graphviz").(interface{}).(configs.ConfigurationGraphViz)
+	extractedConfig := config.GetConfigFor("graphviz").(interface{}).(formatters_configs.GraphvizConfig)
 	return &GraphVizOutputFormatter{config: extractedConfig}
 }
 
@@ -85,17 +84,17 @@ func (f *GraphVizOutputFormatter) calculateLayerDependencies(rulesList []rules.R
 	return layersDependOnLayers
 }
 
-func (f *GraphVizOutputFormatter) createNodes(outputConfig configs.ConfigurationGraphViz, layersDependOnLayers map[string]map[string]int, graph *cgraph.Graph) map[string]*cgraph.Node {
+func (f *GraphVizOutputFormatter) createNodes(outputConfig formatters_configs.GraphvizConfig, layersDependOnLayers map[string]map[string]int, graph *cgraph.Graph) map[string]*cgraph.Node {
 	nodes := make(map[string]*cgraph.Node)
 	for layer, layersDependOn := range layersDependOnLayers {
-		if slices.Contains(outputConfig.HiddenLayers, layer) {
+		if outputConfig.HasHiddenLayer(layer) {
 			continue
 		}
 		if nodes[layer] == nil {
 			nodes[layer], _ = graph.CreateNode(layer)
 		}
 		for layerDependOn := range layersDependOn {
-			if slices.Contains(outputConfig.HiddenLayers, layerDependOn) {
+			if outputConfig.HasHiddenLayer(layerDependOn) {
 				continue
 			}
 			if nodes[layerDependOn] == nil {
@@ -106,13 +105,13 @@ func (f *GraphVizOutputFormatter) createNodes(outputConfig configs.Configuration
 	return nodes
 }
 
-func (f *GraphVizOutputFormatter) connectEdges(graph *cgraph.Graph, nodes map[string]*cgraph.Node, outputConfig configs.ConfigurationGraphViz, layersDependOnLayers, layerViolations map[string]map[string]int) {
+func (f *GraphVizOutputFormatter) connectEdges(graph *cgraph.Graph, nodes map[string]*cgraph.Node, outputConfig formatters_configs.GraphvizConfig, layersDependOnLayers, layerViolations map[string]map[string]int) {
 	for layer, layersDependOn := range layersDependOnLayers {
-		if slices.Contains(outputConfig.HiddenLayers, layer) {
+		if outputConfig.HasHiddenLayer(layer) {
 			continue
 		}
 		for layerDependOn, layerDependOnCount := range layersDependOn {
-			if slices.Contains(outputConfig.HiddenLayers, layerDependOn) {
+			if outputConfig.HasHiddenLayer(layerDependOn) {
 				continue
 			}
 			edge, _ := graph.CreateEdge(fmt.Sprintf("%s->%s", layer, layerDependOn), nodes[layer], nodes[layerDependOn])
@@ -129,15 +128,15 @@ func (f *GraphVizOutputFormatter) connectEdges(graph *cgraph.Graph, nodes map[st
 	}
 }
 
-func (f *GraphVizOutputFormatter) addNodesToGraph(graph *cgraph.Graph, nodes map[string]*cgraph.Node, outputConfig configs.ConfigurationGraphViz) {
-	for groupName, groupLayerNames := range outputConfig.GroupsLayerMap {
+func (f *GraphVizOutputFormatter) addNodesToGraph(graph *cgraph.Graph, nodes map[string]*cgraph.Node, outputConfig formatters_configs.GraphvizConfig) {
+	for groupName, groupLayerNames := range outputConfig.Groups {
 		subgraph := graph.SubGraph(f.getSubgraphName(groupName), 1)
 		subgraph.SetLabel(groupName)
-		for _, groupLayerName := range groupLayerNames {
-			if node, exists := nodes[groupLayerName]; exists {
+		for _, groupLayer := range groupLayerNames {
+			if node, exists := nodes[groupLayer.Name]; exists {
 				subgraph.NextNode(node)
 				node.Set("group", groupName)
-				delete(nodes, groupLayerName)
+				delete(nodes, groupLayer.Name)
 			}
 		}
 	}

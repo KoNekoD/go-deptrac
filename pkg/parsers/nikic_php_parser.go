@@ -2,7 +2,7 @@ package parsers
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
-	"github.com/KoNekoD/go-deptrac/pkg/nodes"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/services"
 	"github.com/KoNekoD/go-deptrac/pkg/references"
 	"github.com/KoNekoD/go-deptrac/pkg/types"
 	"github.com/pkg/errors"
@@ -49,11 +49,11 @@ type NikicPhpParser struct {
 	classAstMap  map[string]*ast.Ident
 	cache        ast_map.AstFileReferenceCacheInterface
 	typeResolver *types.TypeResolver
-	nodeNamer    *nodes.NodeNamer
+	nodeNamer    *services.NodeNamer
 	extractors   []references.ReferenceExtractorInterface
 }
 
-func NewNikicPhpParser(cache ast_map.AstFileReferenceCacheInterface, typeResolver *types.TypeResolver, nodeNamer *nodes.NodeNamer, extractors []references.ReferenceExtractorInterface) *NikicPhpParser {
+func NewNikicPhpParser(cache ast_map.AstFileReferenceCacheInterface, typeResolver *types.TypeResolver, nodeNamer *services.NodeNamer, extractors []references.ReferenceExtractorInterface) *NikicPhpParser {
 	return &NikicPhpParser{
 		classAstMap:  make(map[string]*ast.Ident),
 		cache:        cache,

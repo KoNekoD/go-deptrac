@@ -2,15 +2,16 @@ package violations
 
 import (
 	"fmt"
+	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
 	"github.com/KoNekoD/go-deptrac/pkg/events"
 )
 
 type UnmatchedSkippedViolations struct {
-	eventHelper *events.EventHelper
+	eventHelper *dispatchers.EventHelper
 }
 
-func NewUnmatchedSkippedViolations(eventHelper *events.EventHelper) *UnmatchedSkippedViolations {
+func NewUnmatchedSkippedViolations(eventHelper *dispatchers.EventHelper) *UnmatchedSkippedViolations {
 	return &UnmatchedSkippedViolations{eventHelper: eventHelper}
 }
 

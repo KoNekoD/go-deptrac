@@ -1,16 +1,17 @@
 package subscribers
 
 import (
+	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
 	"github.com/KoNekoD/go-deptrac/pkg/events"
 )
 
 type DependsOnDisallowedLayer struct {
-	eventHelper *events.EventHelper
+	eventHelper *dispatchers.EventHelper
 }
 
-func NewDependsOnDisallowedLayer(eventHelper *events.EventHelper) *DependsOnDisallowedLayer {
+func NewDependsOnDisallowedLayer(eventHelper *dispatchers.EventHelper) *DependsOnDisallowedLayer {
 	return &DependsOnDisallowedLayer{eventHelper: eventHelper}
 }
 

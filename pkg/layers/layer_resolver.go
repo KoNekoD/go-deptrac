@@ -2,7 +2,8 @@ package layers
 
 import (
 	"errors"
-	"github.com/KoNekoD/go-deptrac/pkg/collectors"
+	"github.com/KoNekoD/go-deptrac/pkg/collectors_shared"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos"
 	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 	"github.com/KoNekoD/go-deptrac/pkg/violations"
 	"reflect"
@@ -11,8 +12,8 @@ import (
 
 // LayerResolver - LayerResolverInterface defines the structure for a layer_contract resolver
 type LayerResolver struct {
-	collectorResolver collectors.CollectorResolverInterface
-	layersConfig      []*Layer
+	collectorResolver collectors_shared.CollectorResolverInterface
+	layersConfig      []*dtos.LayerConfig
 	layers            map[string][]*violations.Collectable
 	initialized       bool
 	resolved          map[string]map[string]bool
@@ -20,7 +21,7 @@ type LayerResolver struct {
 }
 
 // NewLayerResolver creates a new LayerResolverInterface
-func NewLayerResolver(collectorResolver collectors.CollectorResolverInterface, layersConfig []*Layer) LayerResolverInterface {
+func NewLayerResolver(collectorResolver collectors_shared.CollectorResolverInterface, layersConfig []*dtos.LayerConfig) LayerResolverInterface {
 	return &LayerResolver{
 		collectorResolver: collectorResolver,
 		layersConfig:      layersConfig,

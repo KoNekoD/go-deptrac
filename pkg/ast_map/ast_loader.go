@@ -1,6 +1,7 @@
 package ast_map
 
 import (
+	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
 	"github.com/KoNekoD/go-deptrac/pkg/events"
 	"github.com/KoNekoD/go-deptrac/pkg/parsers"
 	"github.com/KoNekoD/go-deptrac/pkg/references"
@@ -8,10 +9,10 @@ import (
 
 type AstLoader struct {
 	parser          parsers.ParserInterface
-	eventDispatcher events.EventDispatcherInterface
+	eventDispatcher dispatchers.EventDispatcherInterface
 }
 
-func NewAstLoader(parser parsers.ParserInterface, eventDispatcher events.EventDispatcherInterface) *AstLoader {
+func NewAstLoader(parser parsers.ParserInterface, eventDispatcher dispatchers.EventDispatcherInterface) *AstLoader {
 	return &AstLoader{
 		parser:          parser,
 		eventDispatcher: eventDispatcher,
@@ -39,7 +40,7 @@ func (l *AstLoader) CreateAstMap(files []string) (*AstMap, error) {
 
 		references = append(references, reference)
 
-		errDispatchAnalysed := l.eventDispatcher.DispatchEvent(NewAstFileAnalysedEvent(file))
+		errDispatchAnalysed := l.eventDispatcher.DispatchEvent(events.NewAstFileAnalysedEvent(file))
 		if errDispatchAnalysed != nil {
 			return nil, errDispatchAnalysed
 		}

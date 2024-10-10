@@ -4,7 +4,6 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/emitters"
 	"github.com/KoNekoD/go-deptrac/pkg/events"
-	"github.com/KoNekoD/go-deptrac/pkg/flatteners"
 	"github.com/elliotchance/orderedmap/v2"
 	"reflect"
 )
@@ -14,12 +13,12 @@ func RegForAnalyseCommand(consoleSubscriber *ConsoleSubscriber, progressSubscrib
 	postProcessEvent := &events.PostProcessEvent{}
 	preCreateAstMapEvent := &ast_map.PreCreateAstMapEvent{}
 	postCreateAstMapEvent := &ast_map.PostCreateAstMapEvent{}
-	astFileAnalysedEvent := &ast_map.AstFileAnalysedEvent{}
+	astFileAnalysedEvent := &events.AstFileAnalysedEvent{}
 	astFileSyntaxErrorEvent := &ast_map.AstFileSyntaxErrorEvent{}
 	preEmitEvent := &emitters.PreEmitEvent{}
 	postEmitEvent := &emitters.PostEmitEvent{}
-	preFlattenEvent := &flatteners.PreFlattenEvent{}
-	postFlattenEvent := &flatteners.PostFlattenEvent{}
+	preFlattenEvent := &events.PreFlattenEvent{}
+	postFlattenEvent := &events.PostFlattenEvent{}
 
 	Reg(preCreateAstMapEvent, consoleSubscriber, DefaultPriority)
 	Reg(postCreateAstMapEvent, consoleSubscriber, DefaultPriority)

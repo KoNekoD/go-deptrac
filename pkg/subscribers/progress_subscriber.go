@@ -2,6 +2,7 @@ package subscribers
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
+	"github.com/KoNekoD/go-deptrac/pkg/events"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 )
 
@@ -24,7 +25,7 @@ func (s *ProgressSubscriber) InvokeEventSubscriber(rawEvent interface{}, stopPro
 		if err != nil {
 			return err
 		}
-	case *ast_map.AstFileAnalysedEvent:
+	case *events.AstFileAnalysedEvent:
 		err := s.output.GetStyle().ProgressAdvance(results.ProgressAdvanceDefault)
 		if err != nil {
 			return err

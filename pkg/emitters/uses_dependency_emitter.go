@@ -3,8 +3,8 @@ package emitters
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/dependencies"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
-	"github.com/KoNekoD/go-deptrac/pkg/nodes"
 	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 	"strings"
 )
@@ -33,7 +33,7 @@ func (u *UsesDependencyEmitter) ApplyDependencies(astMap ast_map.AstMap, depende
 		referencesFQDN = append(referencesFQDN, reference.GetToken().ToString())
 	}
 
-	FQDNIndex := nodes.FQDNIndexNode{}
+	FQDNIndex := dtos.NewFQDNIndexNode()
 
 	for _, reference := range referencesFQDN {
 		pathSplit := strings.Split(reference, "\\")
@@ -51,7 +51,7 @@ func (u *UsesDependencyEmitter) ApplyDependencies(astMap ast_map.AstMap, depende
 	}
 
 }
-func (u *UsesDependencyEmitter) IsFQDN(dependency *tokens.DependencyToken, FQDNIndex nodes.FQDNIndexNode) bool {
+func (u *UsesDependencyEmitter) IsFQDN(dependency *tokens.DependencyToken, FQDNIndex *dtos.FQDNIndexNode) bool {
 	dependencyFQDN := dependency.Token.ToString()
 	pathSplit := strings.Split(dependencyFQDN, "\\")
 	value := FQDNIndex.GetNestedNode(pathSplit)

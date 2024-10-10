@@ -3,6 +3,7 @@ package dependencies
 import (
 	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
+	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
 	"github.com/KoNekoD/go-deptrac/pkg/events"
 	"github.com/KoNekoD/go-deptrac/pkg/layers"
 	"github.com/KoNekoD/go-deptrac/pkg/references"
@@ -15,7 +16,7 @@ type DependencyLayersAnalyser struct {
 	dependencyResolver *DependencyResolver
 	tokenResolver      *tokens.TokenResolver
 	layerResolver      layers.LayerResolverInterface
-	eventDispatcher    events.EventDispatcherInterface
+	eventDispatcher    dispatchers.EventDispatcherInterface
 }
 
 func NewDependencyLayersAnalyser(
@@ -23,7 +24,7 @@ func NewDependencyLayersAnalyser(
 	dependencyResolver *DependencyResolver,
 	tokenResolver *tokens.TokenResolver,
 	layerResolver layers.LayerResolverInterface,
-	eventDispatcher events.EventDispatcherInterface) *DependencyLayersAnalyser {
+	eventDispatcher dispatchers.EventDispatcherInterface) *DependencyLayersAnalyser {
 	return &DependencyLayersAnalyser{
 		astMapExtractor:    astMapExtractor,
 		dependencyResolver: dependencyResolver,

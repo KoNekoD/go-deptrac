@@ -4,10 +4,12 @@ import (
 	"flag"
 	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
-	"github.com/KoNekoD/go-deptrac/pkg/collectors"
+	"github.com/KoNekoD/go-deptrac/pkg/collectors_shared"
 	"github.com/KoNekoD/go-deptrac/pkg/commands"
 	"github.com/KoNekoD/go-deptrac/pkg/dependencies"
+	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
 	enums2 "github.com/KoNekoD/go-deptrac/pkg/domain/enums"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/services"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/stopwatch"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
 	"github.com/KoNekoD/go-deptrac/pkg/emitters"
@@ -16,12 +18,10 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/formatters"
 	"github.com/KoNekoD/go-deptrac/pkg/hooks"
 	"github.com/KoNekoD/go-deptrac/pkg/layers"
-	"github.com/KoNekoD/go-deptrac/pkg/nodes"
 	"github.com/KoNekoD/go-deptrac/pkg/parsers"
 	"github.com/KoNekoD/go-deptrac/pkg/references"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
-	"github.com/KoNekoD/go-deptrac/pkg/runners"
 	"github.com/KoNekoD/go-deptrac/pkg/subscribers"
 	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 	"github.com/KoNekoD/go-deptrac/pkg/types"
@@ -53,14 +53,14 @@ func Services(builder *ContainerBuilder) error {
 
 	timeStopwatch := stopwatch.NewStopwatch()
 
-	nodeNamer := nodes.NewNodeNamer(projectDirectory)
+	nodeNamer := services.NewNodeNamer(projectDirectory)
 
 	/*
 	 * Utilities
 	 */
-	eventDispatcher := events.NewEventDispatcher(debugBoolFlag != nil && *debugBoolFlag == true)
+	eventDispatcher := dispatchers.NewEventDispatcher(debugBoolFlag != nil && *debugBoolFlag == true)
 
-	fileInputCollector, err := collectors.NewFileInputCollector(
+	fileInputCollector, err := collectors_shared.NewFileInputCollector(
 		builderConfiguration.Paths,
 		builderConfiguration.ExcludeFiles,
 		projectDirectory,
@@ -119,7 +119,7 @@ func Services(builder *ContainerBuilder) error {
 	astMapExtractor := ast_map.NewAstMapExtractor(fileInputCollector, astLoader)
 
 	layerProvider := layers.NewLayerProvider(builderConfiguration.Rulesets)
-	eventHelper := events.NewEventHelper(builderConfiguration.SkipViolations, layerProvider)
+	eventHelper := dispatchers.NewEventHelper(builderConfiguration.SkipViolations, layerProvider)
 
 	/*
 	 * Events (before first possible event)
@@ -213,45 +213,45 @@ func Services(builder *ContainerBuilder) error {
 	//
 
 	/*
-	 * Layer
+	 * LayerConfig
 	 */
-	inheritanceLevelCollector, err := collectors.NewInheritanceLevelCollector(astMapExtractor)
+	inheritanceLevelCollector, err := collectors_shared.NewInheritanceLevelCollector(astMapExtractor)
 	if err != nil {
 		return err
 	}
-	inheritsCollector, err := collectors.NewInheritsCollector(astMapExtractor)
+	inheritsCollector, err := collectors_shared.NewInheritsCollector(astMapExtractor)
 	if err != nil {
 		return err
 	}
-	usesCollector, err := collectors.NewUsesCollector(astMapExtractor)
+	usesCollector, err := collectors_shared.NewUsesCollector(astMapExtractor)
 	if err != nil {
 		return err
 	}
-	collectorProvider := collectors.NewCollectorProvider()
-	collectorResolver := collectors.NewCollectorResolver(collectorProvider)
+	collectorProvider := collectors_shared.NewCollectorProvider()
+	collectorResolver := collectors_shared.NewCollectorResolver(collectorProvider)
 	layerResolver := layers.NewLayerResolver(collectorResolver, builderConfiguration.Layers)
-	collectors := map[enums2.CollectorType]collectors.CollectorInterface{
+	collectors := map[enums2.CollectorType]collectors_shared.CollectorInterface{
 		//AttributeCollector
-		enums2.CollectorTypeTypeBool:           collectors.NewBoolCollector(collectorResolver),
-		enums2.CollectorTypeTypeClass:          collectors.NewClassCollector(),
-		enums2.CollectorTypeTypeClasslike:      collectors.NewClassLikeCollector(),
-		enums2.CollectorTypeTypeClassNameRegex: collectors.NewClassNameRegexCollector(),
+		enums2.CollectorTypeTypeBool:           collectors_shared.NewBoolCollector(collectorResolver),
+		enums2.CollectorTypeTypeClass:          collectors_shared.NewClassCollector(),
+		enums2.CollectorTypeTypeClasslike:      collectors_shared.NewClassLikeCollector(),
+		enums2.CollectorTypeTypeClassNameRegex: collectors_shared.NewClassNameRegexCollector(),
 		//CollectorType.TypeTagValueRegex: TagValueRegexCollector.NewTagValueRegexCollector(),
-		enums2.CollectorTypeTypeDirectory: collectors.NewDirectoryCollector(),
+		enums2.CollectorTypeTypeDirectory: collectors_shared.NewDirectoryCollector(),
 		//CollectorType.TypeExtends: ExtendsCollector.NewExtendsCollector(collectorResolver),
-		enums2.CollectorTypeTypeFunctionName: collectors.NewFunctionNameCollector(),
-		enums2.CollectorTypeTypeGlob:         collectors.NewGlobCollector(projectDirectory),
+		enums2.CollectorTypeTypeFunctionName: collectors_shared.NewFunctionNameCollector(),
+		enums2.CollectorTypeTypeGlob:         collectors_shared.NewGlobCollector(projectDirectory),
 		//ImplementsCollector
 		enums2.CollectorTypeTypeInheritance: inheritanceLevelCollector,
-		enums2.CollectorTypeTypeInterface:   collectors.NewInterfaceCollector(),
+		enums2.CollectorTypeTypeInterface:   collectors_shared.NewInterfaceCollector(),
 		enums2.CollectorTypeTypeInherits:    inheritsCollector,
-		enums2.CollectorTypeTypeLayer:       collectors.NewLayerCollector(layerResolver),
-		enums2.CollectorTypeTypeMethod:      collectors.NewMethodCollector(nikicPhpParser),
-		enums2.CollectorTypeTypeSuperGlobal: collectors.NewSuperglobalCollector(),
-		enums2.CollectorTypeTypeTrait:       collectors.NewTraitCollector(),
+		enums2.CollectorTypeTypeLayer:       collectors_shared.NewLayerCollector(layerResolver),
+		enums2.CollectorTypeTypeMethod:      collectors_shared.NewMethodCollector(nikicPhpParser),
+		enums2.CollectorTypeTypeSuperGlobal: collectors_shared.NewSuperglobalCollector(),
+		enums2.CollectorTypeTypeTrait:       collectors_shared.NewTraitCollector(),
 		enums2.CollectorTypeTypeUses:        usesCollector,
 		//CollectorType.TypePhpInternal: PhpInternalCollector
-		enums2.CollectorTypeTypeComposer: collectors.NewComposerCollector(),
+		enums2.CollectorTypeTypeComposer: collectors_shared.NewComposerCollector(),
 	}
 	collectorProvider.Set(collectors)
 
@@ -268,7 +268,7 @@ func Services(builder *ContainerBuilder) error {
 	/*
 	 * Console
 	 */
-	analyseRunner := runners.NewAnalyseRunner(dependencyLayersAnalyser, formatterProvider)
+	analyseRunner := NewAnalyseRunner(dependencyLayersAnalyser, formatterProvider)
 	analyseCommand := commands.NewAnalyseCommand(analyseRunner, eventDispatcher, formatterProvider, *verboseBoolFlag, *debugBoolFlag, consoleSubscriber, progressSubscriber, analyseOptions)
 
 	// TODO: other commands

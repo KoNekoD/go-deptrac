@@ -2,8 +2,9 @@ package dependencies
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
-	"github.com/KoNekoD/go-deptrac/pkg/configs"
+	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/emitters"
 	"github.com/KoNekoD/go-deptrac/pkg/events"
@@ -12,13 +13,13 @@ import (
 )
 
 type DependencyResolver struct {
-	config               *configs.AnalyserConfig
+	config               *dtos.AnalyserConfig
 	inheritanceFlattener *flatteners.InheritanceFlattener
 	emitterLocator       map[enums.EmitterType]emitters.DependencyEmitterInterface
-	eventDispatcher      events.EventDispatcherInterface
+	eventDispatcher      dispatchers.EventDispatcherInterface
 }
 
-func NewDependencyResolver(typesConfig *configs.AnalyserConfig, emitterLocator map[enums.EmitterType]emitters.DependencyEmitterInterface, inheritanceFlattener *flatteners.InheritanceFlattener, eventDispatcher events.EventDispatcherInterface) *DependencyResolver {
+func NewDependencyResolver(typesConfig *dtos.AnalyserConfig, emitterLocator map[enums.EmitterType]emitters.DependencyEmitterInterface, inheritanceFlattener *flatteners.InheritanceFlattener, eventDispatcher dispatchers.EventDispatcherInterface) *DependencyResolver {
 	return &DependencyResolver{
 		config:               typesConfig,
 		emitterLocator:       emitterLocator,
@@ -53,14 +54,14 @@ func (r *DependencyResolver) Resolve(astMap *ast_map.AstMap) (*DependencyList, e
 		}
 	}
 
-	errDispatchPreFlatten := r.eventDispatcher.DispatchEvent(flatteners.NewPreFlattenEvent())
+	errDispatchPreFlatten := r.eventDispatcher.DispatchEvent(events.NewPreFlattenEvent())
 	if errDispatchPreFlatten != nil {
 		return nil, errDispatchPreFlatten
 	}
 
 	r.inheritanceFlattener.FlattenDependencies(*astMap, result)
 
-	errDispatchPostFlatten := r.eventDispatcher.DispatchEvent(flatteners.NewPostFlattenEvent())
+	errDispatchPostFlatten := r.eventDispatcher.DispatchEvent(events.NewPostFlattenEvent())
 	if errDispatchPostFlatten != nil {
 		return nil, errDispatchPostFlatten
 	}

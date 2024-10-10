@@ -1,7 +1,7 @@
 package types
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/nodes"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/services"
 	"go/ast"
 	"go/parser"
 	"go/token"
@@ -10,10 +10,10 @@ import (
 )
 
 type TypeResolver struct {
-	nodeNamer *nodes.NodeNamer
+	nodeNamer *services.NodeNamer
 }
 
-func NewTypeResolver(nodeNamer *nodes.NodeNamer) *TypeResolver {
+func NewTypeResolver(nodeNamer *services.NodeNamer) *TypeResolver {
 	return &TypeResolver{
 		nodeNamer: nodeNamer,
 	}

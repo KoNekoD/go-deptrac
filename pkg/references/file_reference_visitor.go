@@ -1,8 +1,8 @@
 package references
 
 import (
+	"github.com/KoNekoD/go-deptrac/pkg/domain/services"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
-	"github.com/KoNekoD/go-deptrac/pkg/nodes"
 	"github.com/KoNekoD/go-deptrac/pkg/types"
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
@@ -16,12 +16,12 @@ type FileReferenceVisitor struct {
 	currentReference     ReferenceBuilderInterface
 	fileReferenceBuilder *FileReferenceBuilder
 	typeResolver         *types.TypeResolver
-	nodeNamer            *nodes.NodeNamer
+	nodeNamer            *services.NodeNamer
 	errors               []error
 	nestingStack         []ast.Node
 }
 
-func NewFileReferenceVisitor(fileReferenceBuilder *FileReferenceBuilder, resolver *types.TypeResolver, nodeNamer *nodes.NodeNamer, extractors ...ReferenceExtractorInterface) *FileReferenceVisitor {
+func NewFileReferenceVisitor(fileReferenceBuilder *FileReferenceBuilder, resolver *types.TypeResolver, nodeNamer *services.NodeNamer, extractors ...ReferenceExtractorInterface) *FileReferenceVisitor {
 	return &FileReferenceVisitor{
 		currentReference:     fileReferenceBuilder,
 		fileReferenceBuilder: fileReferenceBuilder,

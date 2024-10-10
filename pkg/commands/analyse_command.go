@@ -1,18 +1,18 @@
 package commands
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/events"
+	"github.com/KoNekoD/go-deptrac/pkg/app"
+	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
 	"github.com/KoNekoD/go-deptrac/pkg/formatters"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
-	"github.com/KoNekoD/go-deptrac/pkg/runners"
 	"github.com/KoNekoD/go-deptrac/pkg/subscribers"
 )
 
 // AnalyseCommand - Analyses your project using the provided depfile
 type AnalyseCommand struct {
-	runner             *runners.AnalyseRunner
-	dispatcher         events.EventDispatcherInterface
+	runner             *app.AnalyseRunner
+	dispatcher         dispatchers.EventDispatcherInterface
 	formatterProvider  *formatters.FormatterProvider
 	verboseBoolFlag    bool
 	debugBoolFlag      bool
@@ -21,7 +21,7 @@ type AnalyseCommand struct {
 	analyseOptions     *rules.AnalyseOptions
 }
 
-func NewAnalyseCommand(runner *runners.AnalyseRunner, dispatcher events.EventDispatcherInterface, formatterProvider *formatters.FormatterProvider, verboseBoolFlag bool, debugBoolFlag bool, consoleSubscriber *subscribers.ConsoleSubscriber, progressSubscriber *subscribers.ProgressSubscriber, analyseOptions *rules.AnalyseOptions) *AnalyseCommand {
+func NewAnalyseCommand(runner *app.AnalyseRunner, dispatcher dispatchers.EventDispatcherInterface, formatterProvider *formatters.FormatterProvider, verboseBoolFlag bool, debugBoolFlag bool, consoleSubscriber *subscribers.ConsoleSubscriber, progressSubscriber *subscribers.ProgressSubscriber, analyseOptions *rules.AnalyseOptions) *AnalyseCommand {
 	return &AnalyseCommand{
 		runner:             runner,
 		dispatcher:         dispatcher,

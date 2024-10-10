@@ -1,16 +1,16 @@
 package ast_map
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/collectors"
+	"github.com/KoNekoD/go-deptrac/pkg/collectors_shared"
 )
 
 type AstMapExtractor struct {
-	inputCollector collectors.InputCollectorInterface
+	inputCollector collectors_shared.InputCollectorInterface
 	astLoader      *AstLoader
 	astMapCache    *AstMap
 }
 
-func NewAstMapExtractor(inputCollector collectors.InputCollectorInterface, astLoader *AstLoader) *AstMapExtractor {
+func NewAstMapExtractor(inputCollector collectors_shared.InputCollectorInterface, astLoader *AstLoader) *AstMapExtractor {
 	return &AstMapExtractor{
 		inputCollector: inputCollector,
 		astLoader:      astLoader,
