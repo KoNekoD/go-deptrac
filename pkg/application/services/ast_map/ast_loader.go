@@ -23,7 +23,7 @@ func NewAstLoader(parser parsers.ParserInterface, eventDispatcher dispatchers.Ev
 func (l *AstLoader) CreateAstMap(files []string) (*ast_map.AstMap, error) {
 	references := make([]*tokens_references.FileReference, 0)
 
-	err := l.eventDispatcher.DispatchEvent(NewPreCreateAstMapEvent(len(files)))
+	err := l.eventDispatcher.DispatchEvent(events.NewPreCreateAstMapEvent(len(files)))
 	if err != nil {
 		return nil, err
 	}
@@ -31,7 +31,7 @@ func (l *AstLoader) CreateAstMap(files []string) (*ast_map.AstMap, error) {
 	for _, file := range files {
 		reference, err := l.parser.ParseFile(file)
 		if err != nil {
-			err := l.eventDispatcher.DispatchEvent(NewAstFileSyntaxErrorEvent(file, err.Error()))
+			err := l.eventDispatcher.DispatchEvent(events.NewAstFileSyntaxErrorEvent(file, err.Error()))
 			if err != nil {
 				return nil, err
 			}
@@ -49,7 +49,7 @@ func (l *AstLoader) CreateAstMap(files []string) (*ast_map.AstMap, error) {
 
 	astMap := ast_map.NewAstMap(references)
 
-	errDispatchPostCreateMap := l.eventDispatcher.DispatchEvent(NewPostCreateAstMapEvent())
+	errDispatchPostCreateMap := l.eventDispatcher.DispatchEvent(events.NewPostCreateAstMapEvent())
 	if errDispatchPostCreateMap != nil {
 		return nil, errDispatchPostCreateMap
 	}

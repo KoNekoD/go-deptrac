@@ -1,4 +1,4 @@
-package ast_map
+package events
 
 // AstFileSyntaxErrorEvent - Event triggered when parsing the AST failed on syntax error in the PHP file_supportive.
 type AstFileSyntaxErrorEvent struct {

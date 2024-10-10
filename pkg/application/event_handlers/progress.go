@@ -2,7 +2,6 @@ package event_handlers
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg"
-	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/events"
 )
 
@@ -16,9 +15,9 @@ func NewProgress(output pkg.OutputInterface) *Progress {
 
 func (s *Progress) HandleEvent(rawEvent interface{}, stopPropagation func()) error {
 	switch event := rawEvent.(type) {
-	case *ast_map.PreCreateAstMapEvent:
+	case *events.PreCreateAstMapEvent:
 		s.output.GetStyle().ProgressStart(event.ExpectedFileCount)
-	case *ast_map.PostCreateAstMapEvent:
+	case *events.PostCreateAstMapEvent:
 		err := s.output.GetStyle().ProgressFinish()
 		if err != nil {
 			return err

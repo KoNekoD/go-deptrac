@@ -1,7 +1,6 @@
 package event_handlers
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/events"
 	"github.com/elliotchance/orderedmap/v2"
 	"reflect"
@@ -18,10 +17,10 @@ var Map *orderedmap.OrderedMap[string, *orderedmap.OrderedMap[int, []EventHandle
 func RegForAnalyseCommand(consoleSubscriber *Console, progressSubscriber *Progress, withProgress bool) {
 	processEvent := &events.ProcessEvent{}
 	postProcessEvent := &events.PostProcessEvent{}
-	preCreateAstMapEvent := &ast_map.PreCreateAstMapEvent{}
-	postCreateAstMapEvent := &ast_map.PostCreateAstMapEvent{}
+	preCreateAstMapEvent := &events.PreCreateAstMapEvent{}
+	postCreateAstMapEvent := &events.PostCreateAstMapEvent{}
 	astFileAnalysedEvent := &events.AstFileAnalysedEvent{}
-	astFileSyntaxErrorEvent := &ast_map.AstFileSyntaxErrorEvent{}
+	astFileSyntaxErrorEvent := &events.AstFileSyntaxErrorEvent{}
 	preEmitEvent := &events.PreEmitEvent{}
 	postEmitEvent := &events.PostEmitEvent{}
 	preFlattenEvent := &events.PreFlattenEvent{}

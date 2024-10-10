@@ -1,7 +1,7 @@
 package dependencies_collectors
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
 	dtosAstMap "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"

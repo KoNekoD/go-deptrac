@@ -3,7 +3,6 @@ package event_handlers
 import (
 	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg"
-	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/events"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/stopwatch"
 )
@@ -22,7 +21,7 @@ func NewConsole(output pkg.OutputInterface, stopwatch *stopwatch.Stopwatch) *Con
 
 func (s *Console) HandleEvent(rawEvent interface{}, stopPropagation func()) error {
 	switch event := rawEvent.(type) {
-	case *ast_map.PreCreateAstMapEvent:
+	case *events.PreCreateAstMapEvent:
 		if s.output.IsVerbose() {
 			err := s.stopwatchStart("ast_contract")
 			if err != nil {
@@ -30,7 +29,7 @@ func (s *Console) HandleEvent(rawEvent interface{}, stopPropagation func()) erro
 			}
 			s.output.WriteLineFormatted(pkg.StringOrArrayOfStrings{String: fmt.Sprintf("Start to create an AstMap for <info>%d</> Files.", event.ExpectedFileCount)})
 		}
-	case *ast_map.PostCreateAstMapEvent:
+	case *events.PostCreateAstMapEvent:
 		if s.output.IsVerbose() {
 			s.printMessageWithTime("ast_contract", "<info>AstMap created in %01.2f sec.</>", "<info>AstMap created.</>")
 		}
@@ -38,7 +37,7 @@ func (s *Console) HandleEvent(rawEvent interface{}, stopPropagation func()) erro
 		if s.output.IsVerbose() {
 			s.output.WriteLineFormatted(pkg.StringOrArrayOfStrings{String: fmt.Sprintf("Parsing File %s", event.File)})
 		}
-	case *ast_map.AstFileSyntaxErrorEvent:
+	case *events.AstFileSyntaxErrorEvent:
 		s.output.WriteLineFormatted(pkg.StringOrArrayOfStrings{String: fmt.Sprintf("\nSyntax Error on File %s\n<error>%s</>\n", event.File, event.SyntaxError)})
 	case *events.PreEmitEvent:
 		if s.output.IsVerbose() {

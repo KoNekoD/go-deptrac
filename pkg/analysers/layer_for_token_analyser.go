@@ -2,8 +2,8 @@ package analysers
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/application/services"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/layers_resolvers"
-	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	ast_map2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_map"
 	tokens2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"

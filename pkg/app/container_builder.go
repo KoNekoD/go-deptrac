@@ -6,12 +6,12 @@ import (
 	event_handlers2 "github.com/KoNekoD/go-deptrac/pkg/application/event_handlers"
 	services2 "github.com/KoNekoD/go-deptrac/pkg/application/services"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/ast_file_reference_cache"
+	ast_map2 "github.com/KoNekoD/go-deptrac/pkg/application/services/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/collectors_resolvers"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/input_collectors"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/layers_resolvers"
 	parsers2 "github.com/KoNekoD/go-deptrac/pkg/application/services/parsers"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/types"
-	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/commands"
 	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/configs"
@@ -30,7 +30,7 @@ type ContainerBuilder struct {
 	FileInputCollector                     input_collectors.InputCollector
 	YmlFileLoader                          *pkg.YmlFileLoader
 	Dumper                                 *utils.Dumper
-	AstLoader                              *ast_map.AstLoader
+	AstLoader                              *ast_map2.AstLoader
 	AstFileReferenceFileCache              *ast_file_reference_cache.AstFileReferenceFileCache
 	AstFileReferenceDeferredCacheInterface ast_file_reference_cache.AstFileReferenceDeferredCacheInterface
 	AstFileReferenceCacheInterface         ast_file_reference_cache.AstFileReferenceCacheInterface
@@ -55,7 +55,7 @@ type ContainerBuilder struct {
 	Style                                  *formatters.Style
 	SymfonyOutput                          *pkg.SymfonyOutput
 	TimeStopwatch                          *stopwatch.Stopwatch
-	AstMapExtractor                        *ast_map.AstMapExtractor
+	AstMapExtractor                        *ast_map2.AstMapExtractor
 	InheritanceFlattener                   *services2.InheritanceFlattener
 	DependencyResolver                     *pkg.DependencyResolver
 	TokenResolver                          *services2.TokenResolver

@@ -8,6 +8,7 @@ import (
 	event_handlers2 "github.com/KoNekoD/go-deptrac/pkg/application/event_handlers"
 	services2 "github.com/KoNekoD/go-deptrac/pkg/application/services"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/ast_file_reference_cache"
+	ast_map2 "github.com/KoNekoD/go-deptrac/pkg/application/services/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/collectors_resolvers"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/dependencies_collectors"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/emitters"
@@ -15,7 +16,6 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/layers_resolvers"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/parsers"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/types"
-	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/commands"
 	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
 	enums2 "github.com/KoNekoD/go-deptrac/pkg/domain/enums"
@@ -97,7 +97,7 @@ func Services(builder *ContainerBuilder) error {
 	}
 	nikicPhpParser := parsers.NewNikicPhpParser(builder.AstFileReferenceCacheInterface, typeResolver, nodeNamer, referenceExtractors)
 	parserInterface := nikicPhpParser
-	astLoader := ast_map.NewAstLoader(parserInterface, eventDispatcher)
+	astLoader := ast_map2.NewAstLoader(parserInterface, eventDispatcher)
 
 	/*
 	 * Dependency
@@ -115,7 +115,7 @@ func Services(builder *ContainerBuilder) error {
 	dependencyResolver := pkg.NewDependencyResolver(builderConfiguration.Analyser, dependencyEmitters, inheritanceFlattener, eventDispatcher)
 	tokenResolver := services2.NewTokenResolver()
 
-	astMapExtractor := ast_map.NewAstMapExtractor(fileInputCollector, astLoader)
+	astMapExtractor := ast_map2.NewAstMapExtractor(fileInputCollector, astLoader)
 
 	layerProvider := services2.NewLayerProvider(builderConfiguration.Rulesets)
 	eventHelper := dispatchers.NewEventHelper(builderConfiguration.SkipViolations, layerProvider)
@@ -141,8 +141,8 @@ func Services(builder *ContainerBuilder) error {
 
 	processEvent := &events2.ProcessEvent{}
 	postProcessEvent := &events2.PostProcessEvent{}
-	preCreateAstMapEvent := &ast_map.PreCreateAstMapEvent{}
-	postCreateAstMapEvent := &ast_map.PostCreateAstMapEvent{}
+	preCreateAstMapEvent := &events2.PreCreateAstMapEvent{}
+	postCreateAstMapEvent := &events2.PostCreateAstMapEvent{}
 	// Events Handlers
 	// TODO: Тут надо реализовать глобальный хук на параметры deptrac чтобы сделать что-то вида "param('skip_violations')"
 	event_handlers2.Reg(processEvent, allowDependencyHandler, -100)
