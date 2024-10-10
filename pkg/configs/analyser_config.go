@@ -1,23 +1,23 @@
 package configs
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/emitters"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 )
 
 type AnalyserConfig struct {
-	Types       map[string]emitters.EmitterType
+	Types       map[string]enums.EmitterType
 	InternalTag *string
 }
 
 func newAnalyserConfig() *AnalyserConfig {
-	return &AnalyserConfig{Types: make(map[string]emitters.EmitterType)}
+	return &AnalyserConfig{Types: make(map[string]enums.EmitterType)}
 }
 
-func Create(types []emitters.EmitterType, internalTag *string) *AnalyserConfig {
+func Create(types []enums.EmitterType, internalTag *string) *AnalyserConfig {
 	analyser := newAnalyserConfig()
 
 	if types == nil {
-		types = []emitters.EmitterType{emitters.EmitterTypeClassToken, emitters.EmitterTypeFunctionToken}
+		types = []enums.EmitterType{enums.EmitterTypeClassToken, enums.EmitterTypeFunctionToken}
 	}
 
 	analyser.setTypes(types...)
@@ -26,8 +26,8 @@ func Create(types []emitters.EmitterType, internalTag *string) *AnalyserConfig {
 	return analyser
 }
 
-func (c *AnalyserConfig) setTypes(types ...emitters.EmitterType) *AnalyserConfig {
-	c.Types = make(map[string]emitters.EmitterType)
+func (c *AnalyserConfig) setTypes(types ...enums.EmitterType) *AnalyserConfig {
+	c.Types = make(map[string]enums.EmitterType)
 
 	for _, emitterType := range types {
 		c.Types[string(emitterType)] = emitterType

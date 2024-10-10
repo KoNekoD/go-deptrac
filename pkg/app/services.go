@@ -7,6 +7,7 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/collectors"
 	"github.com/KoNekoD/go-deptrac/pkg/commands"
 	"github.com/KoNekoD/go-deptrac/pkg/dependencies"
+	enums2 "github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/stopwatch"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
 	"github.com/KoNekoD/go-deptrac/pkg/emitters"
@@ -30,7 +31,7 @@ import (
 	"strings"
 )
 
-func getDefaultFormatter() formatters.OutputFormatterType {
+func getDefaultFormatter() enums2.OutputFormatterType {
 	if os.Getenv("GITHUB_ACTIONS") != "" {
 		return formatters.NewGithubActionsOutputFormatter().GetName()
 	}
@@ -102,14 +103,14 @@ func Services(builder *ContainerBuilder) error {
 	/*
 	 * Dependency
 	 */
-	dependencyEmitters := map[emitters.EmitterType]emitters.DependencyEmitterInterface{
-		emitters.EmitterTypeClassToken:               emitters.NewClassDependencyEmitter(),
-		emitters.EmitterTypeClassSuperGlobalToken:    emitters.NewClassSuperglobalDependencyEmitter(),
-		emitters.EmitterTypeFileToken:                emitters.NewFileDependencyEmitter(),
-		emitters.EmitterTypeFunctionToken:            emitters.NewFunctionDependencyEmitter(),
-		emitters.EmitterTypeFunctionCall:             emitters.NewFunctionCallDependencyEmitter(),
-		emitters.EmitterTypeFunctionSuperGlobalToken: emitters.NewFunctionSuperglobalDependencyEmitter(),
-		emitters.EmitterTypeUseToken:                 emitters.NewUsesDependencyEmitter(),
+	dependencyEmitters := map[enums2.EmitterType]emitters.DependencyEmitterInterface{
+		enums2.EmitterTypeClassToken:               emitters.NewClassDependencyEmitter(),
+		enums2.EmitterTypeClassSuperGlobalToken:    emitters.NewClassSuperglobalDependencyEmitter(),
+		enums2.EmitterTypeFileToken:                emitters.NewFileDependencyEmitter(),
+		enums2.EmitterTypeFunctionToken:            emitters.NewFunctionDependencyEmitter(),
+		enums2.EmitterTypeFunctionCall:             emitters.NewFunctionCallDependencyEmitter(),
+		enums2.EmitterTypeFunctionSuperGlobalToken: emitters.NewFunctionSuperglobalDependencyEmitter(),
+		enums2.EmitterTypeUseToken:                 emitters.NewUsesDependencyEmitter(),
 	}
 	inheritanceFlattener := flatteners.NewInheritanceFlattener()
 	dependencyResolver := dependencies.NewDependencyResolver(builderConfiguration.Analyser, dependencyEmitters, inheritanceFlattener, eventDispatcher)
@@ -160,9 +161,9 @@ func Services(builder *ContainerBuilder) error {
 	/*
 	 * OutputFormatter
 	 */
-	outputFormatter := map[formatters.OutputFormatterType]formatters.OutputFormatterInterface{
-		formatters.Table:         formatters.NewTableOutputFormatter(),
-		formatters.GithubActions: formatters.NewGithubActionsOutputFormatter(),
+	outputFormatter := map[enums2.OutputFormatterType]formatters.OutputFormatterInterface{
+		enums2.Table:         formatters.NewTableOutputFormatter(),
+		enums2.GithubActions: formatters.NewGithubActionsOutputFormatter(),
 		// TODO:
 		// $services->set(ConsoleOutputFormatter::class)->tag('output_formatter_contract');
 		// $services->set(JUnitOutputFormatter::class)->tag('output_formatter_contract');
@@ -187,7 +188,7 @@ func Services(builder *ContainerBuilder) error {
 	var (
 		formatterUsagePossible = strings.Join(knownFormattersStr, ", ")
 		formatterUsage         = fmt.Sprintf("Format in which to print the result_contract of the analysis. Possible: [\"%s\"]", formatterUsagePossible)
-		formatter              = flag.String("formatter", string(formatters.Table), formatterUsage)
+		formatter              = flag.String("formatter", string(enums2.Table), formatterUsage)
 		output                 = flag.String("output", "", "Output file_supportive path for formatter (if applicable)")
 		noProgress             = flag.Bool("no-progress", false, "Do not show progress bar")
 		reportSkipped          = flag.Bool("report-skipped", false, "Report skipped violations")
@@ -229,28 +230,28 @@ func Services(builder *ContainerBuilder) error {
 	collectorProvider := collectors.NewCollectorProvider()
 	collectorResolver := collectors.NewCollectorResolver(collectorProvider)
 	layerResolver := layers.NewLayerResolver(collectorResolver, builderConfiguration.Layers)
-	collectors := map[collectors.CollectorType]collectors.CollectorInterface{
+	collectors := map[enums2.CollectorType]collectors.CollectorInterface{
 		//AttributeCollector
-		collectors.CollectorTypeTypeBool:           collectors.NewBoolCollector(collectorResolver),
-		collectors.CollectorTypeTypeClass:          collectors.NewClassCollector(),
-		collectors.CollectorTypeTypeClasslike:      collectors.NewClassLikeCollector(),
-		collectors.CollectorTypeTypeClassNameRegex: collectors.NewClassNameRegexCollector(),
+		enums2.CollectorTypeTypeBool:           collectors.NewBoolCollector(collectorResolver),
+		enums2.CollectorTypeTypeClass:          collectors.NewClassCollector(),
+		enums2.CollectorTypeTypeClasslike:      collectors.NewClassLikeCollector(),
+		enums2.CollectorTypeTypeClassNameRegex: collectors.NewClassNameRegexCollector(),
 		//CollectorType.TypeTagValueRegex: TagValueRegexCollector.NewTagValueRegexCollector(),
-		collectors.CollectorTypeTypeDirectory: collectors.NewDirectoryCollector(),
+		enums2.CollectorTypeTypeDirectory: collectors.NewDirectoryCollector(),
 		//CollectorType.TypeExtends: ExtendsCollector.NewExtendsCollector(collectorResolver),
-		collectors.CollectorTypeTypeFunctionName: collectors.NewFunctionNameCollector(),
-		collectors.CollectorTypeTypeGlob:         collectors.NewGlobCollector(projectDirectory),
+		enums2.CollectorTypeTypeFunctionName: collectors.NewFunctionNameCollector(),
+		enums2.CollectorTypeTypeGlob:         collectors.NewGlobCollector(projectDirectory),
 		//ImplementsCollector
-		collectors.CollectorTypeTypeInheritance: inheritanceLevelCollector,
-		collectors.CollectorTypeTypeInterface:   collectors.NewInterfaceCollector(),
-		collectors.CollectorTypeTypeInherits:    inheritsCollector,
-		collectors.CollectorTypeTypeLayer:       collectors.NewLayerCollector(layerResolver),
-		collectors.CollectorTypeTypeMethod:      collectors.NewMethodCollector(nikicPhpParser),
-		collectors.CollectorTypeTypeSuperGlobal: collectors.NewSuperglobalCollector(),
-		collectors.CollectorTypeTypeTrait:       collectors.NewTraitCollector(),
-		collectors.CollectorTypeTypeUses:        usesCollector,
+		enums2.CollectorTypeTypeInheritance: inheritanceLevelCollector,
+		enums2.CollectorTypeTypeInterface:   collectors.NewInterfaceCollector(),
+		enums2.CollectorTypeTypeInherits:    inheritsCollector,
+		enums2.CollectorTypeTypeLayer:       collectors.NewLayerCollector(layerResolver),
+		enums2.CollectorTypeTypeMethod:      collectors.NewMethodCollector(nikicPhpParser),
+		enums2.CollectorTypeTypeSuperGlobal: collectors.NewSuperglobalCollector(),
+		enums2.CollectorTypeTypeTrait:       collectors.NewTraitCollector(),
+		enums2.CollectorTypeTypeUses:        usesCollector,
 		//CollectorType.TypePhpInternal: PhpInternalCollector
-		collectors.CollectorTypeTypeComposer: collectors.NewComposerCollector(),
+		enums2.CollectorTypeTypeComposer: collectors.NewComposerCollector(),
 	}
 	collectorProvider.Set(collectors)
 

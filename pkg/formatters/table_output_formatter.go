@@ -3,6 +3,7 @@ package formatters
 import (
 	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/dependencies"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
 	"github.com/gookit/color"
@@ -17,8 +18,8 @@ func NewTableOutputFormatter() *TableOutputFormatter {
 	return &TableOutputFormatter{}
 }
 
-func (t *TableOutputFormatter) GetName() OutputFormatterType {
-	return Table
+func (t *TableOutputFormatter) GetName() enums.OutputFormatterType {
+	return enums.Table
 }
 
 func (t *TableOutputFormatter) Finish(outputResult *results.OutputResult, output results.OutputInterface, outputFormatterInput *OutputFormatterInput) error {

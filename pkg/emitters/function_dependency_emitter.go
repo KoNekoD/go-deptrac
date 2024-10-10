@@ -3,6 +3,7 @@ package emitters
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/dependencies"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 )
 
 type FunctionDependencyEmitter struct{}
@@ -19,11 +20,11 @@ func (f FunctionDependencyEmitter) ApplyDependencies(astMap ast_map.AstMap, depe
 	for _, fileReference := range astMap.GetFileReferences() {
 		for _, astFunctionReference := range fileReference.FunctionReferences {
 			for _, dependencyToken := range astFunctionReference.Dependencies {
-				if dependencyToken.Context.DependencyType == dependencies.DependencyTypeSuperGlobalVariable {
+				if dependencyToken.Context.DependencyType == enums.DependencyTypeSuperGlobalVariable {
 					continue
 				}
 
-				if dependencyToken.Context.DependencyType == dependencies.DependencyTypeUnresolvedFunctionCall {
+				if dependencyToken.Context.DependencyType == enums.DependencyTypeUnresolvedFunctionCall {
 					continue
 				}
 

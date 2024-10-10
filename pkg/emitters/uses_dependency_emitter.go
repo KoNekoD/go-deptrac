@@ -3,6 +3,7 @@ package emitters
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/dependencies"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/nodes"
 	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 	"strings"
@@ -42,7 +43,7 @@ func (u *UsesDependencyEmitter) ApplyDependencies(astMap ast_map.AstMap, depende
 	for _, fileReference := range astMap.GetFileReferences() {
 		for _, astStructReference := range fileReference.ClassLikeReferences {
 			for _, emittedDependency := range fileReference.Dependencies {
-				if emittedDependency.Context.DependencyType == dependencies.DependencyTypeUse && u.IsFQDN(emittedDependency, FQDNIndex) {
+				if emittedDependency.Context.DependencyType == enums.DependencyTypeUse && u.IsFQDN(emittedDependency, FQDNIndex) {
 					dependencyList.AddDependency(dependencies.NewDependency(astStructReference.GetToken(), emittedDependency.Token, emittedDependency.Context))
 				}
 			}

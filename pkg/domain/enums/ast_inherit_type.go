@@ -1,4 +1,4 @@
-package ast_map
+package enums
 
 type AstInheritType string
 

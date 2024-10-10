@@ -3,6 +3,7 @@ package emitters
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/dependencies"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 )
 
@@ -39,7 +40,7 @@ func (f *FunctionCallDependencyEmitter) createDependenciesForReferences(referenc
 	for _, referenceInterface := range references {
 		reference := referenceInterface.(tokens.TokenReferenceWithDependenciesInterface)
 		for _, dependencyToken := range reference.GetDependencies() {
-			if dependencyToken.Context.DependencyType != dependencies.DependencyTypeUnresolvedFunctionCall {
+			if dependencyToken.Context.DependencyType != enums.DependencyTypeUnresolvedFunctionCall {
 				continue
 			}
 			token := dependencyToken.Token

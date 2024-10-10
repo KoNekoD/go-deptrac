@@ -2,6 +2,7 @@ package ast_map
 
 import (
 	"fmt"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 	"github.com/KoNekoD/go-deptrac/pkg/violations"
 	"strings"
@@ -10,11 +11,11 @@ import (
 type AstInherit struct {
 	ClassLikeName  *tokens.ClassLikeToken
 	FileOccurrence *violations.FileOccurrence
-	Type           AstInheritType
+	Type           enums.AstInheritType
 	path           []*AstInherit
 }
 
-func NewAstInherit(classLikeName *tokens.ClassLikeToken, fileOccurrence *violations.FileOccurrence, astInheritType AstInheritType, path []*AstInherit) *AstInherit {
+func NewAstInherit(classLikeName *tokens.ClassLikeToken, fileOccurrence *violations.FileOccurrence, astInheritType enums.AstInheritType, path []*AstInherit) *AstInherit {
 	return &AstInherit{
 		ClassLikeName:  classLikeName,
 		FileOccurrence: fileOccurrence,

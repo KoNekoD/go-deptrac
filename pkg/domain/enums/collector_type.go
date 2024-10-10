@@ -1,6 +1,6 @@
-package collectors
+package enums
 
-import "errors"
+import "github.com/pkg/errors"
 
 type CollectorType string
 

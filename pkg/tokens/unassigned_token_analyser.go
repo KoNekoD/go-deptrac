@@ -3,12 +3,13 @@ package tokens
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/configs"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/layers"
 	"slices"
 )
 
 type UnassignedTokenAnalyser struct {
-	tokenTypes      []TokenType
+	tokenTypes      []enums.TokenType
 	config          *configs.AnalyserConfig
 	astMapExtractor *ast_map.AstMapExtractor
 	tokenResolver   *TokenResolver
@@ -22,7 +23,7 @@ func NewUnassignedTokenAnalyser(
 	config *configs.AnalyserConfig,
 ) *UnassignedTokenAnalyser {
 	analyser := &UnassignedTokenAnalyser{
-		tokenTypes:      make([]TokenType, 0),
+		tokenTypes:      make([]enums.TokenType, 0),
 		astMapExtractor: astMapExtractor,
 		tokenResolver:   tokenResolver,
 		layerResolver:   layerResolver,
@@ -30,7 +31,7 @@ func NewUnassignedTokenAnalyser(
 	}
 
 	for _, configType := range config.Types {
-		newTokenType := NewTokenTypeTryFromEmitterType(configType)
+		newTokenType := enums.NewTokenTypeTryFromEmitterType(configType)
 		if newTokenType == nil {
 			continue
 		}
@@ -48,7 +49,7 @@ func (a *UnassignedTokenAnalyser) FindUnassignedTokens() ([]string, error) {
 	}
 	unassignedTokens := make([]string, 0)
 
-	if slices.Contains(a.tokenTypes, TokenTypeClassLike) {
+	if slices.Contains(a.tokenTypes, enums.TokenTypeClassLike) {
 		for _, classReference := range astMap.GetClassLikeReferences() {
 			classToken := a.tokenResolver.Resolve(classReference.GetToken(), astMap)
 			gotLayers, errGet := a.layerResolver.GetLayersForReference(classToken)
@@ -62,7 +63,7 @@ func (a *UnassignedTokenAnalyser) FindUnassignedTokens() ([]string, error) {
 		}
 	}
 
-	if slices.Contains(a.tokenTypes, TokenTypeFunction) {
+	if slices.Contains(a.tokenTypes, enums.TokenTypeFunction) {
 		for _, functionReference := range astMap.GetFunctionReferences() {
 			functionToken := a.tokenResolver.Resolve(functionReference.GetToken(), astMap)
 			gotLayers, errGet := a.layerResolver.GetLayersForReference(functionToken)
@@ -76,7 +77,7 @@ func (a *UnassignedTokenAnalyser) FindUnassignedTokens() ([]string, error) {
 		}
 	}
 
-	if slices.Contains(a.tokenTypes, TokenTypeFile) {
+	if slices.Contains(a.tokenTypes, enums.TokenTypeFile) {
 		for _, fileReference := range astMap.GetFileReferences() {
 			fileToken := a.tokenResolver.Resolve(fileReference.GetToken(), astMap)
 			gotLayers, errGet := a.layerResolver.GetLayersForReference(fileToken)

@@ -1,7 +1,7 @@
 package references
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/dependencies"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 )
 
@@ -16,7 +16,7 @@ func CreateFileReferenceBuilder(filepath string) *FileReferenceBuilder {
 }
 
 func (b *FileReferenceBuilder) UseStatement(classLikeName string, occursAtLine int) *FileReferenceBuilder {
-	b.Dependencies = append(b.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), b.CreateContext(occursAtLine, dependencies.DependencyTypeUse)))
+	b.Dependencies = append(b.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), b.CreateContext(occursAtLine, enums.DependencyTypeUse)))
 	return b
 }
 

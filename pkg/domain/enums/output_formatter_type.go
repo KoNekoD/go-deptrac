@@ -1,6 +1,6 @@
-package formatters
+package enums
 
-import "errors"
+import "github.com/pkg/errors"
 
 type OutputFormatterType string
 

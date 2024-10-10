@@ -1,8 +1,4 @@
-package tokens
-
-import (
-	"github.com/KoNekoD/go-deptrac/pkg/emitters"
-)
+package enums
 
 type TokenType string
 
@@ -12,8 +8,8 @@ const (
 	TokenTypeFile      TokenType = "file_supportive"
 )
 
-func NewTokenTypeTryFromEmitterType(emitterType emitters.EmitterType) *TokenType {
-	if emitterType == emitters.EmitterTypeClassToken {
+func NewTokenTypeTryFromEmitterType(emitterType EmitterType) *TokenType {
+	if emitterType == EmitterTypeClassToken {
 		classLikeTokenType := TokenTypeClassLike
 		return &classLikeTokenType
 	} else {

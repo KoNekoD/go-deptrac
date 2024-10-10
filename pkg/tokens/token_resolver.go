@@ -2,6 +2,7 @@ package tokens
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/references"
 )
 
@@ -17,7 +18,7 @@ func (r *TokenResolver) Resolve(token TokenInterface, astMap *ast_map.AstMap) To
 		return astMap.GetClassReferenceForToken(v)
 	case *FunctionToken:
 		return astMap.GetFunctionReferenceForToken(v)
-	case *SuperGlobalToken:
+	case *enums.SuperGlobalToken:
 		return references.NewVariableReference(v)
 	case *FileToken:
 		return astMap.GetFileReferenceForToken(v)

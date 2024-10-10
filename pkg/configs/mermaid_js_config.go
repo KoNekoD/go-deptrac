@@ -1,7 +1,7 @@
 package configs
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/formatters"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/layers"
 )
 
@@ -19,8 +19,8 @@ func CreateMermaidJsConfig() *MermaidJsConfig {
 	}
 }
 
-func (m *MermaidJsConfig) GetName() formatters.FormatterType {
-	return formatters.FormatterTypeMermaidJsConfig
+func (m *MermaidJsConfig) GetName() enums.FormatterType {
+	return enums.FormatterTypeMermaidJsConfig
 }
 
 func (m *MermaidJsConfig) SetDirection(direction string) *MermaidJsConfig {

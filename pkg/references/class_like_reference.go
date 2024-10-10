@@ -2,12 +2,12 @@ package references
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/tokens"
-	"github.com/KoNekoD/go-deptrac/pkg/types"
 )
 
 type ClassLikeReference struct {
-	Type          *types.ClassLikeType
+	Type          *enums.ClassLikeType
 	classLikeName *tokens.ClassLikeToken
 
 	Inherits      []*ast_map.AstInherit
@@ -16,9 +16,9 @@ type ClassLikeReference struct {
 	*tokens.TaggedTokenReference
 }
 
-func NewClassLikeReference(classLikeName *tokens.ClassLikeToken, classLikeType *types.ClassLikeType, inherits []*ast_map.AstInherit, dependencies []*tokens.DependencyToken, tags map[string][]string, fileReference *FileReference) *ClassLikeReference {
+func NewClassLikeReference(classLikeName *tokens.ClassLikeToken, classLikeType *enums.ClassLikeType, inherits []*ast_map.AstInherit, dependencies []*tokens.DependencyToken, tags map[string][]string, fileReference *FileReference) *ClassLikeReference {
 	if classLikeType == nil {
-		classLikeTypeTmp := types.TypeClasslike
+		classLikeTypeTmp := enums.TypeClasslike
 		classLikeType = &classLikeTypeTmp
 	}
 

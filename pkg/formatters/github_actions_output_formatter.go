@@ -3,7 +3,7 @@ package formatters
 import (
 	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/dependencies"
-	"github.com/KoNekoD/go-deptrac/pkg/enums"
+	enums2 "github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
 	"strings"
@@ -15,16 +15,16 @@ func NewGithubActionsOutputFormatter() *GithubActionsOutputFormatter {
 	return &GithubActionsOutputFormatter{}
 }
 
-func (g *GithubActionsOutputFormatter) GetName() OutputFormatterType {
-	return GithubActions
+func (g *GithubActionsOutputFormatter) GetName() enums2.OutputFormatterType {
+	return enums2.GithubActions
 }
 
 func (g *GithubActionsOutputFormatter) Finish(outputResult *results.OutputResult, output results.OutputInterface, outputFormatterInput *OutputFormatterInput) error {
-	for _, rule := range outputResult.AllOf(enums.TypeViolation) {
+	for _, rule := range outputResult.AllOf(enums2.TypeViolation) {
 		g.printViolation(rule, output)
 	}
 	if outputFormatterInput.ReportSkipped {
-		for _, rule := range outputResult.AllOf(enums.TypeSkippedViolation) {
+		for _, rule := range outputResult.AllOf(enums2.TypeSkippedViolation) {
 			g.printViolation(rule, output)
 		}
 	}

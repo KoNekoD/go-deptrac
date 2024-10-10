@@ -1,7 +1,7 @@
 package formatters
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/enums"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"github.com/gookit/color"
 	"golang.org/x/exp/maps"

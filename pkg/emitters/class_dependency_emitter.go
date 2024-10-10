@@ -3,6 +3,7 @@ package emitters
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/dependencies"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 )
 
@@ -21,11 +22,11 @@ func (c *ClassDependencyEmitter) ApplyDependencies(astMap ast_map.AstMap, depend
 		classLikeName := classReference.GetToken().(*tokens.ClassLikeToken)
 
 		for _, dependencyToken := range classReference.Dependencies {
-			if dependencyToken.Context.DependencyType == dependencies.DependencyTypeSuperGlobalVariable {
+			if dependencyToken.Context.DependencyType == enums.DependencyTypeSuperGlobalVariable {
 				continue
 			}
 
-			if dependencyToken.Context.DependencyType == dependencies.DependencyTypeUnresolvedFunctionCall {
+			if dependencyToken.Context.DependencyType == enums.DependencyTypeUnresolvedFunctionCall {
 				continue
 			}
 
@@ -33,7 +34,7 @@ func (c *ClassDependencyEmitter) ApplyDependencies(astMap ast_map.AstMap, depend
 		}
 
 		for _, inherit := range astMap.GetClassInherits(classLikeName) {
-			dependencyList.AddDependency(dependencies.NewDependency(classLikeName, inherit.ClassLikeName, dependencies.NewDependencyContext(inherit.FileOccurrence, dependencies.DependencyTypeInherit)))
+			dependencyList.AddDependency(dependencies.NewDependency(classLikeName, inherit.ClassLikeName, dependencies.NewDependencyContext(inherit.FileOccurrence, enums.DependencyTypeInherit)))
 		}
 	}
 }

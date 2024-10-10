@@ -2,6 +2,7 @@ package tokens
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/layers"
 	"github.com/pkg/errors"
 	"golang.org/x/exp/maps"
@@ -26,18 +27,18 @@ func NewLayerForTokenAnalyser(
 	}
 }
 
-func (a *LayerForTokenAnalyser) FindLayerForToken(tokenName string, tokenType TokenType) (map[string][]string, error) {
+func (a *LayerForTokenAnalyser) FindLayerForToken(tokenName string, tokenType enums.TokenType) (map[string][]string, error) {
 	astMap, err := a.astMapExtractor.Extract()
 	if err != nil {
 		return nil, err
 	}
 
 	switch tokenType {
-	case TokenTypeClassLike:
+	case enums.TokenTypeClassLike:
 		return a.findLayersForReferences(astMap.GetClassLikeReferences(), tokenName, astMap)
-	case TokenTypeFunction:
+	case enums.TokenTypeFunction:
 		return a.findLayersForReferences(astMap.GetFunctionReferences(), tokenName, astMap)
-	case TokenTypeFile:
+	case enums.TokenTypeFile:
 		return a.findLayersForReferences(astMap.GetFileReferences(), tokenName, astMap)
 	default:
 		return nil, errors.New("Invalid token type")

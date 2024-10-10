@@ -1,15 +1,18 @@
 package configs
 
-import "github.com/KoNekoD/go-deptrac/pkg/collectors"
+import (
+	"github.com/KoNekoD/go-deptrac/pkg/collectors"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
+)
 
 type UsesConfig struct {
 	*collectors.ConfigurableCollectorConfig
-	collectorType collectors.CollectorType
+	collectorType enums.CollectorType
 }
 
 func NewUsesConfig(config string) *UsesConfig {
 	return &UsesConfig{
 		ConfigurableCollectorConfig: collectors.CreateConfigurableCollectorConfig(config),
-		collectorType:               collectors.CollectorTypeTypeUses,
+		collectorType:               enums.CollectorTypeTypeUses,
 	}
 }

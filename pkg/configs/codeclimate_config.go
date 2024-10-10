@@ -1,17 +1,16 @@
 package configs
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/enums"
-	"github.com/KoNekoD/go-deptrac/pkg/formatters"
+	enums2 "github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 )
 
 type CodeclimateConfig struct {
-	Failure   enums.CodeclimateLevelEnum
-	Skipped   enums.CodeclimateLevelEnum
-	Uncovered enums.CodeclimateLevelEnum
+	Failure   enums2.CodeclimateLevelEnum
+	Skipped   enums2.CodeclimateLevelEnum
+	Uncovered enums2.CodeclimateLevelEnum
 }
 
-func newCodeclimateConfig(failure enums.CodeclimateLevelEnum, skipped enums.CodeclimateLevelEnum, uncovered enums.CodeclimateLevelEnum) *CodeclimateConfig {
+func newCodeclimateConfig(failure enums2.CodeclimateLevelEnum, skipped enums2.CodeclimateLevelEnum, uncovered enums2.CodeclimateLevelEnum) *CodeclimateConfig {
 	return &CodeclimateConfig{
 		Failure:   failure,
 		Skipped:   skipped,
@@ -19,33 +18,33 @@ func newCodeclimateConfig(failure enums.CodeclimateLevelEnum, skipped enums.Code
 	}
 }
 
-func CreateCodeclimateConfig(failure *enums.CodeclimateLevelEnum, skipped *enums.CodeclimateLevelEnum, uncovered *enums.CodeclimateLevelEnum) *CodeclimateConfig {
+func CreateCodeclimateConfig(failure *enums2.CodeclimateLevelEnum, skipped *enums2.CodeclimateLevelEnum, uncovered *enums2.CodeclimateLevelEnum) *CodeclimateConfig {
 	if failure == nil {
-		failureTmp := enums.CodeclimateLevelEnumBlocker
+		failureTmp := enums2.CodeclimateLevelEnumBlocker
 		failure = &failureTmp
 	}
 	if skipped == nil {
-		skippedTmp := enums.CodeclimateLevelEnumMinor
+		skippedTmp := enums2.CodeclimateLevelEnumMinor
 		skipped = &skippedTmp
 	}
 	if uncovered == nil {
-		uncoveredTmp := enums.CodeclimateLevelEnumInfo
+		uncoveredTmp := enums2.CodeclimateLevelEnumInfo
 		uncovered = &uncoveredTmp
 	}
 	return newCodeclimateConfig(*failure, *skipped, *uncovered)
 }
 
-func (c *CodeclimateConfig) severity(failure *enums.CodeclimateLevelEnum, skipped *enums.CodeclimateLevelEnum, uncovered *enums.CodeclimateLevelEnum) *CodeclimateConfig {
+func (c *CodeclimateConfig) severity(failure *enums2.CodeclimateLevelEnum, skipped *enums2.CodeclimateLevelEnum, uncovered *enums2.CodeclimateLevelEnum) *CodeclimateConfig {
 	if failure == nil {
-		failureTmp := enums.CodeclimateLevelEnumBlocker
+		failureTmp := enums2.CodeclimateLevelEnumBlocker
 		failure = &failureTmp
 	}
 	if skipped == nil {
-		skippedTmp := enums.CodeclimateLevelEnumMinor
+		skippedTmp := enums2.CodeclimateLevelEnumMinor
 		skipped = &skippedTmp
 	}
 	if uncovered == nil {
-		uncoveredTmp := enums.CodeclimateLevelEnumInfo
+		uncoveredTmp := enums2.CodeclimateLevelEnumInfo
 		uncovered = &uncoveredTmp
 	}
 	c.Failure = *failure
@@ -64,6 +63,6 @@ func (c *CodeclimateConfig) ToArray() map[string]interface{} {
 	}
 }
 
-func (c *CodeclimateConfig) GetName() formatters.FormatterType {
-	return formatters.FormatterTypeCodeclimateConfig
+func (c *CodeclimateConfig) GetName() enums2.FormatterType {
+	return enums2.FormatterTypeCodeclimateConfig
 }

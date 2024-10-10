@@ -3,7 +3,7 @@ package formatters
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/enums"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
 	"os"

@@ -1,4 +1,4 @@
-package tokens
+package enums
 
 type SuperGlobalToken string
 

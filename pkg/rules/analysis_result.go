@@ -1,9 +1,10 @@
 package rules
 
 import (
+	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
-	"github.com/KoNekoD/go-deptrac/pkg/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 )
 
@@ -24,8 +25,23 @@ func NewAnalysisResult() *AnalysisResult {
 	}
 }
 
+func (r *AnalysisResult) ruleTypeByRule(rule RuleInterface) enums.RuleTypeEnum {
+	switch rule.(type) {
+	case *Violation:
+		return enums.TypeViolation
+	case *SkippedViolation:
+		return enums.TypeSkippedViolation
+	case *Uncovered:
+		return enums.TypeUncovered
+	case *Allowed:
+		return enums.TypeAllowed
+	default:
+		panic(fmt.Errorf("unknown rule type: %T", rule))
+	}
+}
+
 func (r *AnalysisResult) AddRule(rule RuleInterface) {
-	ruleType := enums.NewRuleTypeEnumByRule(rule)
+	ruleType := r.ruleTypeByRule(rule)
 	id := utils.SplObjectID(rule)
 
 	if _, ok := r.rules[ruleType]; !ok {
@@ -36,7 +52,7 @@ func (r *AnalysisResult) AddRule(rule RuleInterface) {
 }
 
 func (r *AnalysisResult) RemoveRule(rule RuleInterface) {
-	ruleType := enums.NewRuleTypeEnumByRule(rule)
+	ruleType := r.ruleTypeByRule(rule)
 	id := utils.SplObjectID(rule)
 
 	delete(r.rules[ruleType], id)

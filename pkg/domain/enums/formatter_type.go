@@ -1,4 +1,4 @@
-package formatters
+package enums
 
 type FormatterType string
 

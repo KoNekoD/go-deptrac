@@ -1,7 +1,7 @@
 package collectors
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/types"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 )
 
 type TraitCollector struct {
@@ -14,6 +14,6 @@ func NewTraitCollector() *TraitCollector {
 	}
 }
 
-func (c *TraitCollector) GetType() types.ClassLikeType {
-	return types.TypeTrait
+func (c *TraitCollector) GetType() enums.ClassLikeType {
+	return enums.TypeTrait
 }

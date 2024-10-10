@@ -1,13 +1,17 @@
 package collectors
 
+import (
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
+)
+
 // CollectorConfig - Abstract
 type CollectorConfig struct {
-	CollectorType CollectorType
+	CollectorType enums.CollectorType
 	Payload       map[string]interface{}
 	private       bool
 }
 
-func NewCollectorConfig(collectorType CollectorType, payload map[string]interface{}, private bool) *CollectorConfig {
+func NewCollectorConfig(collectorType enums.CollectorType, payload map[string]interface{}, private bool) *CollectorConfig {
 	return &CollectorConfig{
 		CollectorType: collectorType,
 		Payload:       payload,

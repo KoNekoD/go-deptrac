@@ -3,6 +3,7 @@ package collectors
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
 	"github.com/KoNekoD/go-deptrac/pkg/references"
 	"github.com/KoNekoD/go-deptrac/pkg/tokens"
@@ -35,7 +36,7 @@ func (u *UsesCollector) Satisfy(config map[string]interface{}, reference tokens.
 	}
 
 	for _, inherit := range u.astMap.GetClassInherits(reference.GetToken().(*tokens.ClassLikeToken)) {
-		if ast_map.AstInheritTypeUses == inherit.Type && inherit.ClassLikeName.Equals(traitName) {
+		if enums.AstInheritTypeUses == inherit.Type && inherit.ClassLikeName.Equals(traitName) {
 			return true, nil
 		}
 	}

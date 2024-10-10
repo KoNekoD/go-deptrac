@@ -1,12 +1,15 @@
 package references
 
-import "github.com/KoNekoD/go-deptrac/pkg/tokens"
+import (
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
+	"github.com/KoNekoD/go-deptrac/pkg/tokens"
+)
 
 type VariableReference struct {
-	tokenName *tokens.SuperGlobalToken
+	tokenName *enums.SuperGlobalToken
 }
 
-func NewVariableReference(tokenName *tokens.SuperGlobalToken) *VariableReference {
+func NewVariableReference(tokenName *enums.SuperGlobalToken) *VariableReference {
 	return &VariableReference{tokenName: tokenName}
 }
 

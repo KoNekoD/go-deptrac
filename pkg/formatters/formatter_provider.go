@@ -2,21 +2,22 @@ package formatters
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"golang.org/x/exp/maps"
 	"reflect"
 )
 
 type FormatterProvider struct {
-	formatterLocator map[OutputFormatterType]OutputFormatterInterface
+	formatterLocator map[enums.OutputFormatterType]OutputFormatterInterface
 }
 
-func NewFormatterProvider(formatterLocator map[OutputFormatterType]OutputFormatterInterface) *FormatterProvider {
+func NewFormatterProvider(formatterLocator map[enums.OutputFormatterType]OutputFormatterInterface) *FormatterProvider {
 	return &FormatterProvider{
 		formatterLocator: formatterLocator,
 	}
 }
 
-func (f *FormatterProvider) Get(id OutputFormatterType) (OutputFormatterInterface, error) {
+func (f *FormatterProvider) Get(id enums.OutputFormatterType) (OutputFormatterInterface, error) {
 	service, ok := f.formatterLocator[id]
 
 	if !ok {
@@ -26,11 +27,11 @@ func (f *FormatterProvider) Get(id OutputFormatterType) (OutputFormatterInterfac
 	return service, nil
 }
 
-func (f *FormatterProvider) Has(id OutputFormatterType) bool {
+func (f *FormatterProvider) Has(id enums.OutputFormatterType) bool {
 	_, ok := f.formatterLocator[id]
 	return ok
 }
 
-func (f *FormatterProvider) GetKnownFormatters() []OutputFormatterType {
+func (f *FormatterProvider) GetKnownFormatters() []enums.OutputFormatterType {
 	return maps.Keys(f.formatterLocator)
 }

@@ -2,6 +2,7 @@ package collectors
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/violations"
 )
 
@@ -14,7 +15,7 @@ func NewCollectorResolver(collectorProvider *CollectorProvider) *CollectorResolv
 }
 
 func (c *CollectorResolver) Resolve(configMap map[string]interface{}) (*violations.Collectable, error) {
-	classLikeType, err := NewCollectorTypeFromString(configMap["type"].(string))
+	classLikeType, err := enums.NewCollectorTypeFromString(configMap["type"].(string))
 	if err != nil {
 		return nil, err
 	}

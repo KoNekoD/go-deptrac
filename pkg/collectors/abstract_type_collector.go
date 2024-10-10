@@ -3,9 +3,9 @@ package collectors
 import (
 	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/references"
 	"github.com/KoNekoD/go-deptrac/pkg/tokens"
-	"github.com/KoNekoD/go-deptrac/pkg/types"
 )
 
 type AbstractTypeCollector struct {
@@ -18,7 +18,7 @@ func NewAbstractTypeCollector() *AbstractTypeCollector {
 	}
 }
 
-func (c *AbstractTypeCollector) GetType() types.ClassLikeType {
+func (c *AbstractTypeCollector) GetType() enums.ClassLikeType {
 	panic("Not implemented")
 }
 
@@ -33,7 +33,7 @@ func (c *AbstractTypeCollector) Satisfy(config map[string]interface{}, reference
 		return false, err
 	}
 
-	isClassLike := types.TypeClasslike == c.GetType()
+	isClassLike := enums.TypeClasslike == c.GetType()
 	isSameType := *v.Type == c.GetType()
 
 	return (isClassLike || isSameType) && v.GetToken().(*tokens.ClassLikeToken).Match(pattern), nil

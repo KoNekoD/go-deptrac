@@ -4,20 +4,19 @@ import (
 	"crypto/sha1"
 	"encoding/json"
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/configs"
+	enums2 "github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
-	"github.com/KoNekoD/go-deptrac/pkg/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
 	"os"
 )
 
 type CodeclimateOutputFormatter struct {
-	config map[configs.SeverityType]interface{}
+	config map[enums2.SeverityType]interface{}
 }
 
 func NewCodeclimateOutputFormatter(config FormatterConfiguration) *CodeclimateOutputFormatter {
-	extractedConfig := config.GetConfigFor("codeclimate").(interface{}).(map[configs.SeverityType]interface{})
+	extractedConfig := config.GetConfigFor("codeclimate").(interface{}).(map[enums2.SeverityType]interface{})
 	return &CodeclimateOutputFormatter{config: extractedConfig}
 }
 
@@ -26,22 +25,22 @@ func (f *CodeclimateOutputFormatter) GetName() string {
 }
 
 func (f *CodeclimateOutputFormatter) Finish(outputResult results.OutputResult, output results.OutputInterface, input OutputFormatterInput) error {
-	formatterConfig := configs.NewConfigurationCodeclimateFromArray(f.config)
+	formatterConfig := enums2.NewConfigurationCodeclimateFromArray(f.config)
 	var violations []map[string]interface{}
 
 	if input.ReportSkipped {
-		for _, rule := range outputResult.AllOf(enums.TypeSkippedViolation) {
+		for _, rule := range outputResult.AllOf(enums2.TypeSkippedViolation) {
 			f.addSkipped(&violations, rule.(*rules.SkippedViolation), formatterConfig)
 		}
 	}
 
 	if input.ReportUncovered {
-		for _, rule := range outputResult.AllOf(enums.TypeUncovered) {
+		for _, rule := range outputResult.AllOf(enums2.TypeUncovered) {
 			f.addUncovered(&violations, rule.(*rules.Uncovered), formatterConfig)
 		}
 	}
 
-	for _, rule := range outputResult.AllOf(enums.TypeViolation) {
+	for _, rule := range outputResult.AllOf(enums2.TypeViolation) {
 		f.addFailure(&violations, rule.(*rules.Violation), formatterConfig)
 	}
 
@@ -63,7 +62,7 @@ func (f *CodeclimateOutputFormatter) Finish(outputResult results.OutputResult, o
 	return nil
 }
 
-func (f *CodeclimateOutputFormatter) addFailure(violations *[]map[string]interface{}, violation *rules.Violation, config *configs.ConfigurationCodeclimate) {
+func (f *CodeclimateOutputFormatter) addFailure(violations *[]map[string]interface{}, violation *rules.Violation, config *enums2.ConfigurationCodeclimate) {
 	*violations = append(*violations, f.buildRuleArray(violation, f.getFailureMessage(violation), config.GetSeverity("failure")))
 }
 
@@ -72,7 +71,7 @@ func (f *CodeclimateOutputFormatter) getFailureMessage(violation *rules.Violatio
 	return utils.AsPtr(fmt.Sprintf("%s must not depend on %s (%s on %s)", dependency.GetDepender(), dependency.GetDependent(), violation.GetDependerLayer(), violation.GetDependentLayer()))
 }
 
-func (f *CodeclimateOutputFormatter) addSkipped(violations *[]map[string]interface{}, violation *rules.SkippedViolation, config *configs.ConfigurationCodeclimate) {
+func (f *CodeclimateOutputFormatter) addSkipped(violations *[]map[string]interface{}, violation *rules.SkippedViolation, config *enums2.ConfigurationCodeclimate) {
 	*violations = append(*violations, f.buildRuleArray(violation, f.getWarningMessage(violation), config.GetSeverity("skipped")))
 }
 
@@ -81,7 +80,7 @@ func (f *CodeclimateOutputFormatter) getWarningMessage(violation *rules.SkippedV
 	return utils.AsPtr(fmt.Sprintf("%s should not depend on %s (%s on %s)", dependency.GetDepender(), dependency.GetDependent(), violation.GetDependerLayer(), violation.GetDependentLayer()))
 }
 
-func (f *CodeclimateOutputFormatter) addUncovered(violations *[]map[string]interface{}, violation *rules.Uncovered, config *configs.ConfigurationCodeclimate) {
+func (f *CodeclimateOutputFormatter) addUncovered(violations *[]map[string]interface{}, violation *rules.Uncovered, config *enums2.ConfigurationCodeclimate) {
 	*violations = append(*violations, f.buildRuleArray(violation, f.getUncoveredMessage(violation), config.GetSeverity("uncovered")))
 }
 

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/dependencies"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/formatters"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
@@ -26,7 +27,7 @@ func NewAnalyseRunner(analyzer *dependencies.DependencyLayersAnalyser, formatter
 }
 
 func (r *AnalyseRunner) Run(options *rules.AnalyseOptions, output results.OutputInterface) error {
-	outputFormatterType, err := formatters.NewOutputFormatterTypeFromString(options.Formatter)
+	outputFormatterType, err := enums.NewOutputFormatterTypeFromString(options.Formatter)
 	if err != nil {
 		return err
 	}

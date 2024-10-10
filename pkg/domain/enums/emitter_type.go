@@ -1,6 +1,6 @@
-package emitters
+package enums
 
-import "errors"
+import "github.com/pkg/errors"
 
 type EmitterType string
 

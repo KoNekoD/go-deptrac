@@ -1,7 +1,7 @@
 package configs
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/formatters"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/layers"
 )
 
@@ -82,6 +82,6 @@ func (g *GraphvizConfig) ToArray() map[string]interface{} {
 	return output
 }
 
-func (g *GraphvizConfig) GetName() formatters.FormatterType {
-	return formatters.FormatterTypeGraphvizConfig
+func (g *GraphvizConfig) GetName() enums.FormatterType {
+	return enums.FormatterTypeGraphvizConfig
 }

@@ -1,4 +1,4 @@
-package configs
+package enums
 
 type SeverityType string
 

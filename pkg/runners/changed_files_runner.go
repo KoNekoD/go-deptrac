@@ -3,6 +3,7 @@ package runners
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/dependencies"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
 	"github.com/KoNekoD/go-deptrac/pkg/tokens"
@@ -26,7 +27,7 @@ func NewChangedFilesRunner(layerForTokenAnalyser *tokens.LayerForTokenAnalyser, 
 func (r *ChangedFilesRunner) Run(files []string, withDependencies bool, output results.OutputInterface) error {
 	layers := make(map[string]string)
 	for _, file := range files {
-		matches, err := r.layerForTokenAnalyser.FindLayerForToken(file, tokens.TokenTypeFile)
+		matches, err := r.layerForTokenAnalyser.FindLayerForToken(file, enums.TokenTypeFile)
 		if err != nil {
 			return apperrors.NewCommandRunExceptionAnalyserException(err)
 		}

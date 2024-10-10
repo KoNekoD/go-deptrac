@@ -1,10 +1,13 @@
 package configs
 
-import "github.com/KoNekoD/go-deptrac/pkg/collectors"
+import (
+	"github.com/KoNekoD/go-deptrac/pkg/collectors"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
+)
 
 type ComposerConfig struct {
 	*collectors.CollectorConfig
-	collectorType    collectors.CollectorType
+	collectorType    enums.CollectorType
 	packages         []string
 	composerPath     string
 	composerLockPath string
@@ -24,7 +27,7 @@ func NewComposerConfig(packages []string, composerPath *string, composerLockPath
 
 	return &ComposerConfig{
 		CollectorConfig:  &collectors.CollectorConfig{},
-		collectorType:    collectors.CollectorTypeTypeComposer,
+		collectorType:    enums.CollectorTypeTypeComposer,
 		packages:         packages,
 		composerPath:     *composerPath,
 		composerLockPath: *composerLockPath,

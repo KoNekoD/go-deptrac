@@ -1,7 +1,7 @@
 package collectors
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/types"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 )
 
 type InterfaceCollector struct {
@@ -14,6 +14,6 @@ func NewInterfaceCollector() *InterfaceCollector {
 	}
 }
 
-func (c *InterfaceCollector) GetType() types.ClassLikeType {
-	return types.TypeInterface
+func (c *InterfaceCollector) GetType() enums.ClassLikeType {
+	return enums.TypeInterface
 }

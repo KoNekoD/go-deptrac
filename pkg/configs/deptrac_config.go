@@ -3,9 +3,8 @@ package configs
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/collectors"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
+	enums2 "github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
-	"github.com/KoNekoD/go-deptrac/pkg/emitters"
-	"github.com/KoNekoD/go-deptrac/pkg/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/formatters"
 	"github.com/KoNekoD/go-deptrac/pkg/layers"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
@@ -15,7 +14,7 @@ import (
 type DeptracConfig struct {
 	Paths                          []string
 	Analyser                       *AnalyserConfig
-	Formatters                     map[formatters.FormatterType]formatters.FormatterConfigInterface
+	Formatters                     map[enums2.FormatterType]formatters.FormatterConfigInterface
 	Layers                         []*layers.Layer
 	Rulesets                       map[string]*rules.Ruleset
 	IgnoreUncoveredInternalStructs bool
@@ -100,18 +99,18 @@ func (c *DeptracConfig) SetupDeptracMapData(data map[string]interface{}) error {
 	}
 	layersList := c.Layers
 
-	formattersList := make(map[formatters.FormatterType]formatters.FormatterConfigInterface)
+	formattersList := make(map[enums2.FormatterType]formatters.FormatterConfigInterface)
 	if parsedDeptracFormatters, ok := data["formatters"]; ok {
 		for formatterKey, formatterRawRaw := range parsedDeptracFormatters.(map[string]interface{}) {
 			formatterRaw := formatterRawRaw.(map[string]interface{})
 			switch formatterKey {
-			case string(formatters.FormatterTypeCodeclimateConfig):
-				formattersList[formatters.FormatterTypeCodeclimateConfig] = CreateCodeclimateConfig(
-					formatterRaw["failure"].(*enums.CodeclimateLevelEnum),
-					formatterRaw["skipped"].(*enums.CodeclimateLevelEnum),
-					formatterRaw["uncovered"].(*enums.CodeclimateLevelEnum),
+			case string(enums2.FormatterTypeCodeclimateConfig):
+				formattersList[enums2.FormatterTypeCodeclimateConfig] = CreateCodeclimateConfig(
+					formatterRaw["failure"].(*enums2.CodeclimateLevelEnum),
+					formatterRaw["skipped"].(*enums2.CodeclimateLevelEnum),
+					formatterRaw["uncovered"].(*enums2.CodeclimateLevelEnum),
 				)
-			case string(formatters.FormatterTypeGraphvizConfig):
+			case string(enums2.FormatterTypeGraphvizConfig):
 				hiddenLayers := make([]*layers.Layer, 0)
 
 				for _, hiddenLayer := range formatterRaw["hiddenLayers"].([]string) {
@@ -127,7 +126,7 @@ func (c *DeptracConfig) SetupDeptracMapData(data map[string]interface{}) error {
 					SetPointToGroups(formatterRaw["point_to_groups"].(*bool)).
 					SetHiddenLayers(hiddenLayers...)
 
-				formattersList[formatters.FormatterTypeGraphvizConfig] = formatterGraphvizConfig
+				formattersList[enums2.FormatterTypeGraphvizConfig] = formatterGraphvizConfig
 
 				for groupLayerName, groupRaw := range formatterRaw["groups"].(map[string][]string) {
 					groupLayer := make([]*layers.Layer, 0)
@@ -143,11 +142,11 @@ func (c *DeptracConfig) SetupDeptracMapData(data map[string]interface{}) error {
 
 					formatterGraphvizConfig.SetGroups(groupLayerName, groupLayer...)
 				}
-			case string(formatters.FormatterTypeMermaidJsConfig):
+			case string(enums2.FormatterTypeMermaidJsConfig):
 				formatterMermaidJsConfig := CreateMermaidJsConfig().
 					SetDirection(formatterRaw["direction"].(string))
 
-				formattersList[formatters.FormatterTypeMermaidJsConfig] = formatterMermaidJsConfig
+				formattersList[enums2.FormatterTypeMermaidJsConfig] = formatterMermaidJsConfig
 
 				for groupLayerName, groupRaw := range formatterRaw["groups"].(map[string][]string) {
 					groupLayer := make([]*layers.Layer, 0)
@@ -200,13 +199,13 @@ func (c *DeptracConfig) SetupDeptracMapData(data map[string]interface{}) error {
 		}
 	}
 
-	analyzerTypesDefault := []emitters.EmitterType{emitters.EmitterTypeClassToken, emitters.EmitterTypeFunctionToken}
-	analyzerTypes := make([]emitters.EmitterType, 0)
+	analyzerTypesDefault := []enums2.EmitterType{enums2.EmitterTypeClassToken, enums2.EmitterTypeFunctionToken}
+	analyzerTypes := make([]enums2.EmitterType, 0)
 	internalTag := "@internal"
 	if parsedDeptracAnalyzer, ok := data["analyzer"]; ok {
 		analyzerRaw := parsedDeptracAnalyzer.(map[string]interface{})
 		for _, typeRaw := range analyzerRaw["types"].([]interface{}) {
-			analyzerType, err := emitters.NewEmitterTypeFromString(typeRaw.(string))
+			analyzerType, err := enums2.NewEmitterTypeFromString(typeRaw.(string))
 			if err != nil {
 				return errors.WithStack(err)
 			}
@@ -284,7 +283,7 @@ func (c *DeptracConfig) SetupLayersListData(list []interface{}) error {
 				return apperrors.NewInvalidCollectorDefinitionMissingType()
 			}
 
-			collectorType, err := collectors.NewCollectorTypeFromString(collectorRaw["type"].(string))
+			collectorType, err := enums2.NewCollectorTypeFromString(collectorRaw["type"].(string))
 			if err != nil {
 				return errors.WithStack(err)
 			}

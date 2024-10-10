@@ -1,4 +1,4 @@
-package dependencies
+package enums
 
 // DependencyType - Specifies the type of AST dependency_contract. You can use this information to enrich the displayed output to the user in your output formatter.
 type DependencyType string

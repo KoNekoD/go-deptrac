@@ -1,10 +1,13 @@
 package configs
 
-import "github.com/KoNekoD/go-deptrac/pkg/collectors"
+import (
+	"github.com/KoNekoD/go-deptrac/pkg/collectors"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
+)
 
 type TagValueRegexConfig struct {
 	*collectors.CollectorConfig
-	collectorType collectors.CollectorType
+	collectorType enums.CollectorType
 	tag           string
 	value         *string
 }
@@ -12,7 +15,7 @@ type TagValueRegexConfig struct {
 func newTagValueRegexConfig(tag string, value *string) *TagValueRegexConfig {
 	return &TagValueRegexConfig{
 		CollectorConfig: &collectors.CollectorConfig{},
-		collectorType:   collectors.CollectorTypeTypeTagValueRegex,
+		collectorType:   enums.CollectorTypeTypeTagValueRegex,
 		tag:             tag,
 		value:           value,
 	}

@@ -1,10 +1,13 @@
 package configs
 
-import "github.com/KoNekoD/go-deptrac/pkg/collectors"
+import (
+	"github.com/KoNekoD/go-deptrac/pkg/collectors"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
+)
 
 type BoolConfig struct {
 	*collectors.CollectorConfig
-	collectorType collectors.CollectorType
+	collectorType enums.CollectorType
 	mustNot       []collectors.CollectorConfig
 	must          []collectors.CollectorConfig
 }
@@ -12,7 +15,7 @@ type BoolConfig struct {
 func NewBoolConfig() *BoolConfig {
 	return &BoolConfig{
 		CollectorConfig: &collectors.CollectorConfig{},
-		collectorType:   collectors.CollectorTypeTypeBool,
+		collectorType:   enums.CollectorTypeTypeBool,
 		mustNot:         make([]collectors.CollectorConfig, 0),
 		must:            make([]collectors.CollectorConfig, 0),
 	}
