@@ -2,24 +2,24 @@ package dtos
 
 import "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/collectors_configs"
 
-type LayerConfig struct {
+type Layer struct {
 	Collectors []*collectors_configs.CollectorConfig
 	Name       string
 }
 
-func NewLayer(name string, collectorConfigs []*collectors_configs.CollectorConfig) *LayerConfig {
-	l := &LayerConfig{Name: name}
+func NewLayer(name string, collectorConfigs []*collectors_configs.CollectorConfig) *Layer {
+	l := &Layer{Name: name}
 
 	l.setCollectors(collectorConfigs...)
 
 	return l
 }
 
-func NewLayerWithName(name string) *LayerConfig {
-	return &LayerConfig{Name: name}
+func NewLayerWithName(name string) *Layer {
+	return &Layer{Name: name}
 }
 
-func (l *LayerConfig) setCollectors(collectorConfigs ...*collectors_configs.CollectorConfig) *LayerConfig {
+func (l *Layer) setCollectors(collectorConfigs ...*collectors_configs.CollectorConfig) *Layer {
 	for _, collectorConfig := range collectorConfigs {
 		l.Collectors = append(l.Collectors, collectorConfig)
 	}
@@ -27,7 +27,7 @@ func (l *LayerConfig) setCollectors(collectorConfigs ...*collectors_configs.Coll
 	return l
 }
 
-func (l *LayerConfig) ToArray() map[string]interface{} {
+func (l *Layer) ToArray() map[string]interface{} {
 	collectors := make([]interface{}, len(l.Collectors))
 	for i, collector := range l.Collectors {
 		collectors[i] = collector.ToArray()

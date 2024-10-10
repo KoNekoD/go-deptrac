@@ -8,14 +8,14 @@ import (
 type MermaidJsConfig struct {
 	name      string
 	Direction string
-	Groups    map[string][]*dtos.LayerConfig
+	Groups    map[string][]*dtos.Layer
 }
 
 func CreateMermaidJsConfig() *MermaidJsConfig {
 	return &MermaidJsConfig{
 		name:      "mermaidjs",
 		Direction: "TD",
-		Groups:    make(map[string][]*dtos.LayerConfig),
+		Groups:    make(map[string][]*dtos.Layer),
 	}
 }
 
@@ -28,7 +28,7 @@ func (m *MermaidJsConfig) SetDirection(direction string) *MermaidJsConfig {
 	return m
 }
 
-func (m *MermaidJsConfig) SetGroups(name string, layerConfigs ...*dtos.LayerConfig) *MermaidJsConfig {
+func (m *MermaidJsConfig) SetGroups(name string, layerConfigs ...*dtos.Layer) *MermaidJsConfig {
 	for _, config := range layerConfigs {
 		m.Groups[name] = append(m.Groups[name], config)
 	}

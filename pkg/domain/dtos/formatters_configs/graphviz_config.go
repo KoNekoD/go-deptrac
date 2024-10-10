@@ -8,8 +8,8 @@ import (
 type GraphvizConfig struct {
 	name          string
 	PointToGroups bool
-	HiddenLayers  []*dtos.LayerConfig
-	Groups        map[string][]*dtos.LayerConfig
+	HiddenLayers  []*dtos.Layer
+	Groups        map[string][]*dtos.Layer
 }
 
 func (g *GraphvizConfig) HasHiddenLayer(name string) bool {
@@ -35,8 +35,8 @@ func newGraphvizConfig() *GraphvizConfig {
 	return &GraphvizConfig{
 		name:          "graphviz",
 		PointToGroups: false,
-		HiddenLayers:  make([]*dtos.LayerConfig, 0),
-		Groups:        make(map[string][]*dtos.LayerConfig),
+		HiddenLayers:  make([]*dtos.Layer, 0),
+		Groups:        make(map[string][]*dtos.Layer),
 	}
 }
 
@@ -53,12 +53,12 @@ func (g *GraphvizConfig) SetPointToGroups(pointToGroups *bool) *GraphvizConfig {
 	return g
 }
 
-func (g *GraphvizConfig) SetHiddenLayers(layerConfigs ...*dtos.LayerConfig) *GraphvizConfig {
+func (g *GraphvizConfig) SetHiddenLayers(layerConfigs ...*dtos.Layer) *GraphvizConfig {
 	g.HiddenLayers = append(g.HiddenLayers, layerConfigs...)
 	return g
 }
 
-func (g *GraphvizConfig) SetGroups(name string, layerConfigs ...*dtos.LayerConfig) *GraphvizConfig {
+func (g *GraphvizConfig) SetGroups(name string, layerConfigs ...*dtos.Layer) *GraphvizConfig {
 	g.Groups[name] = append(g.Groups[name], layerConfigs...)
 	return g
 }

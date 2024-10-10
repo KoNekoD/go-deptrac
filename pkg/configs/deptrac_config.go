@@ -15,7 +15,7 @@ type DeptracConfig struct {
 	Paths                          []string
 	Analyser                       *dtos.AnalyserConfig
 	Formatters                     map[enums.FormatterType]formatters_configs2.FormatterConfigInterface
-	Layers                         []*dtos.LayerConfig
+	Layers                         []*dtos.Layer
 	Rulesets                       map[string]*rules.Ruleset
 	IgnoreUncoveredInternalStructs bool
 	SkipViolations                 map[string][]string
@@ -111,7 +111,7 @@ func (c *DeptracConfig) SetupDeptracMapData(data map[string]interface{}) error {
 					formatterRaw["uncovered"].(*enums.CodeclimateLevelEnum),
 				)
 			case string(enums.FormatterTypeGraphvizConfig):
-				hiddenLayers := make([]*dtos.LayerConfig, 0)
+				hiddenLayers := make([]*dtos.Layer, 0)
 
 				for _, hiddenLayer := range formatterRaw["hiddenLayers"].([]string) {
 					for _, layer := range layersList {
@@ -129,7 +129,7 @@ func (c *DeptracConfig) SetupDeptracMapData(data map[string]interface{}) error {
 				formattersList[enums.FormatterTypeGraphvizConfig] = formatterGraphvizConfig
 
 				for groupLayerName, groupRaw := range formatterRaw["groups"].(map[string][]string) {
-					groupLayer := make([]*dtos.LayerConfig, 0)
+					groupLayer := make([]*dtos.Layer, 0)
 
 					for _, layerName := range groupRaw {
 						for _, layer := range layersList {
@@ -149,7 +149,7 @@ func (c *DeptracConfig) SetupDeptracMapData(data map[string]interface{}) error {
 				formattersList[enums.FormatterTypeMermaidJsConfig] = formatterMermaidJsConfig
 
 				for groupLayerName, groupRaw := range formatterRaw["groups"].(map[string][]string) {
-					groupLayer := make([]*dtos.LayerConfig, 0)
+					groupLayer := make([]*dtos.Layer, 0)
 
 					for _, layerName := range groupRaw {
 						for _, layer := range layersList {
@@ -170,7 +170,7 @@ func (c *DeptracConfig) SetupDeptracMapData(data map[string]interface{}) error {
 
 	if rulesetsData, ok := data["ruleset"]; ok {
 		for rulesetLayerName, rulesetLayersNames := range rulesetsData.(map[string]interface{}) {
-			var rulesetOwningLayer *dtos.LayerConfig
+			var rulesetOwningLayer *dtos.Layer
 
 			for _, layer := range layersList {
 				if layer.Name == rulesetLayerName {
@@ -179,7 +179,7 @@ func (c *DeptracConfig) SetupDeptracMapData(data map[string]interface{}) error {
 				}
 			}
 
-			rulesetLayers := make([]*dtos.LayerConfig, 0)
+			rulesetLayers := make([]*dtos.Layer, 0)
 
 			if rulesetLayersNames != nil { // If not ~
 				for _, layerNameRaw := range rulesetLayersNames.([]interface{}) {
@@ -270,7 +270,7 @@ func (c *DeptracConfig) SetupLayersData(layers interface{}) error {
 }
 
 func (c *DeptracConfig) SetupLayersListData(list []interface{}) error {
-	layersList := make([]*dtos.LayerConfig, 0)
+	layersList := make([]*dtos.Layer, 0)
 
 	for _, layerRawRaw := range list {
 		layerRaw := layerRawRaw.(map[string]interface{})

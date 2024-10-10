@@ -5,11 +5,11 @@ import (
 )
 
 type Ruleset struct {
-	LayerConfig      *dtos.LayerConfig
-	AccessableLayers []*dtos.LayerConfig
+	LayerConfig      *dtos.Layer
+	AccessableLayers []*dtos.Layer
 }
 
-func NewRuleset(layerConfig *dtos.LayerConfig, layerConfigs []*dtos.LayerConfig) *Ruleset {
+func NewRuleset(layerConfig *dtos.Layer, layerConfigs []*dtos.Layer) *Ruleset {
 	r := &Ruleset{LayerConfig: layerConfig}
 
 	r.Accesses(layerConfigs...)
@@ -17,11 +17,11 @@ func NewRuleset(layerConfig *dtos.LayerConfig, layerConfigs []*dtos.LayerConfig)
 	return r
 }
 
-func NewForLayer(layerConfig *dtos.LayerConfig) *Ruleset {
-	return &Ruleset{LayerConfig: layerConfig, AccessableLayers: make([]*dtos.LayerConfig, 0)}
+func NewForLayer(layerConfig *dtos.Layer) *Ruleset {
+	return &Ruleset{LayerConfig: layerConfig, AccessableLayers: make([]*dtos.Layer, 0)}
 }
 
-func (r *Ruleset) Accesses(layerConfigs ...*dtos.LayerConfig) *Ruleset {
+func (r *Ruleset) Accesses(layerConfigs ...*dtos.Layer) *Ruleset {
 	for _, config := range layerConfigs {
 		r.AccessableLayers = append(r.AccessableLayers, config)
 	}

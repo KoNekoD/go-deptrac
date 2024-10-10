@@ -14,7 +14,7 @@ type RulesetUsageAnalyser struct {
 	astMapExtractor    *ast_map.AstMapExtractor
 	dependencyResolver *pkg.DependencyResolver
 	tokenResolver      *tokens.TokenResolver
-	layers             []*dtos.LayerConfig
+	layers             []*dtos.Layer
 }
 
 func NewRulesetUsageAnalyser(
@@ -23,7 +23,7 @@ func NewRulesetUsageAnalyser(
 	astMapExtractor *ast_map.AstMapExtractor,
 	dependencyResolver *pkg.DependencyResolver,
 	tokenResolver *tokens.TokenResolver,
-	layers []*dtos.LayerConfig,
+	layers []*dtos.Layer,
 ) *RulesetUsageAnalyser {
 	return &RulesetUsageAnalyser{
 		layerProvider:      layerProvider,

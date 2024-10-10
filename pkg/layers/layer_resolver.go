@@ -13,7 +13,7 @@ import (
 // LayerResolver - LayerResolverInterface defines the structure for a layer_contract resolver
 type LayerResolver struct {
 	collectorResolver collectors_shared.CollectorResolverInterface
-	layersConfig      []*dtos.LayerConfig
+	layersConfig      []*dtos.Layer
 	layers            map[string][]*violations.Collectable
 	initialized       bool
 	resolved          map[string]map[string]bool
@@ -21,7 +21,7 @@ type LayerResolver struct {
 }
 
 // NewLayerResolver creates a new LayerResolverInterface
-func NewLayerResolver(collectorResolver collectors_shared.CollectorResolverInterface, layersConfig []*dtos.LayerConfig) LayerResolverInterface {
+func NewLayerResolver(collectorResolver collectors_shared.CollectorResolverInterface, layersConfig []*dtos.Layer) LayerResolverInterface {
 	return &LayerResolver{
 		collectorResolver: collectorResolver,
 		layersConfig:      layersConfig,
