@@ -18,7 +18,7 @@ The depfile is the config file for this tool, in this file you define (mainly) t
 Here is an example depfile:
 
 ```yaml
-# depfile.yaml
+# deptrac.yaml
 deptrac:
     paths:
       - ./src
@@ -79,7 +79,7 @@ go-deptrac was only tested on Linux and should also work on OS X. Probably it do
 To run the tool, simply pass the path of the depfile:
 
 ```shell script
-go-deptrac ./examples/simple-mvc/depfile.yaml
+go_deptrac ./examples/simple_mvc/deptrac.yaml
 ```
 
 ## Contributing

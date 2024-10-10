@@ -2,25 +2,33 @@ package examples
 
 import (
 	"flag"
-	"github.com/KoNekoD/go-deptrac/pkg/console_supportive/application"
+	"github.com/KoNekoD/go-deptrac/pkg/app"
 	_ "github.com/KoNekoD/go-deptrac/resources"
 	"os"
 	"testing"
 )
 
 func TestRunSimpleCleanarch(t *testing.T) {
-	os.Args = []string{
-		"",
-		"--config_contract-file_supportive=pkg/test_projects/examples/simple-cleanarch/depfile.yaml",
-		"analyse",
-	}
+	t.Parallel()
 
-	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
-	//err := flag.CommandLine.Parse(os.Args)
-	//if err != nil {
-	//	t.Fatal(err)
-	//}
+	t.Run("simple_clean_arch", func(t *testing.T) {
+		configArg := "--config=examples/simple_clean_arch/deptrac.yaml"
+		os.Args = []string{"", configArg, "analyse"}
+		flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+		app.NewApplication().Run()
+	})
 
-	application.NewApplication().
-		Run()
+	t.Run("simple_invalid_mvc", func(t *testing.T) {
+		configArg := "--config=examples/simple_invalid_mvc/deptrac.yaml"
+		os.Args = []string{"", configArg, "analyse"}
+		flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+		app.NewApplication().Run()
+	})
+
+	t.Run("simple_mvc", func(t *testing.T) {
+		configArg := "--config=examples/simple_mvc/deptrac.yaml"
+		os.Args = []string{"", configArg, "analyse"}
+		flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+		app.NewApplication().Run()
+	})
 }
