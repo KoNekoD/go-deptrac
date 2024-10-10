@@ -2,7 +2,7 @@ package dispatchers
 
 import (
 	"fmt"
-	subscribers2 "github.com/KoNekoD/go-deptrac/pkg/subscribers"
+	subscribers2 "github.com/KoNekoD/go-deptrac/pkg/application/event_handlers"
 	"reflect"
 	"slices"
 )
@@ -54,7 +54,7 @@ func (d *EventDispatcher) DispatchEvent(event interface{}) error {
 				fmt.Println("calling:", typeName, priority, subscriberName)
 			}
 
-			err := subscriber.InvokeEventSubscriber(event, stopPropagation)
+			err := subscriber.HandleEvent(event, stopPropagation)
 			if err != nil {
 				return err
 			}

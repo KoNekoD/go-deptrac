@@ -2,8 +2,12 @@ package app
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg"
+	"github.com/KoNekoD/go-deptrac/pkg/analysers"
+	event_handlers2 "github.com/KoNekoD/go-deptrac/pkg/application/event_handlers"
+	services2 "github.com/KoNekoD/go-deptrac/pkg/application/services"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/collectors_resolvers"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/input_collectors"
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
-	"github.com/KoNekoD/go-deptrac/pkg/collectors_shared"
 	"github.com/KoNekoD/go-deptrac/pkg/commands"
 	"github.com/KoNekoD/go-deptrac/pkg/configs"
 	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
@@ -18,7 +22,6 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/references"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
-	"github.com/KoNekoD/go-deptrac/pkg/subscribers"
 	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 	"github.com/KoNekoD/go-deptrac/pkg/types"
 )
@@ -28,29 +31,29 @@ type ContainerBuilder struct {
 	CacheFile                              *string
 	Configuration                          *configs.DeptracConfig
 	EventDispatcher                        dispatchers.EventDispatcherInterface
-	FileInputCollector                     collectors_shared.InputCollectorInterface
+	FileInputCollector                     input_collectors.InputCollector
 	YmlFileLoader                          *hooks.YmlFileLoader
 	Dumper                                 *utils.Dumper
 	AstLoader                              *ast_map.AstLoader
 	AstFileReferenceFileCache              *ast_map.AstFileReferenceFileCache
 	AstFileReferenceDeferredCacheInterface ast_map.AstFileReferenceDeferredCacheInterface
 	AstFileReferenceCacheInterface         ast_map.AstFileReferenceCacheInterface
-	CacheableFileSubscriber                *subscribers.CacheableFileSubscriber
+	CacheableFileSubscriber                *event_handlers2.CacheableFile
 	AstFileReferenceInMemoryCache          *ast_map.AstFileReferenceInMemoryCache
 	TypeResolver                           *types.TypeResolver
 	ReferenceExtractors                    []references.ReferenceExtractorInterface
 	ParserInterface                        parsers.ParserInterface
 	LayerProvider                          *layers.LayerProvider
 	EventHelper                            *dispatchers.EventHelper
-	AllowDependencyHandler                 *subscribers.AllowDependencyHandler
-	DependsOnPrivateLayer                  *subscribers.DependsOnPrivateLayer
-	DependsOnInternalToken                 *subscribers.DependsOnInternalToken
-	DependsOnDisallowedLayer               *subscribers.DependsOnDisallowedLayer
+	AllowDependencyHandler                 *event_handlers2.AllowDependency
+	DependsOnPrivateLayer                  *event_handlers2.DependsOnPrivateLayer
+	DependsOnInternalToken                 *event_handlers2.DependsOnInternalToken
+	DependsOnDisallowedLayer               *event_handlers2.DependsOnDisallowedLayer
 	MatchingLayersHandler                  *layers.MatchingLayersHandler
-	UncoveredDependentHandler              *subscribers.UncoveredDependentHandler
-	UnmatchedSkippedViolations             *subscribers.UnmatchedSkippedViolations
-	ConsoleSubscriber                      *subscribers.ConsoleSubscriber
-	ProgressSubscriber                     *subscribers.ProgressSubscriber
+	UncoveredDependentHandler              *event_handlers2.UncoveredDependent
+	UnmatchedSkippedViolations             *event_handlers2.UnmatchedSkippedViolations
+	ConsoleSubscriber                      *event_handlers2.Console
+	ProgressSubscriber                     *event_handlers2.Progress
 	VerboseBoolFlag                        *bool
 	DebugBoolFlag                          *bool
 	Style                                  *formatters.Style
@@ -60,15 +63,15 @@ type ContainerBuilder struct {
 	InheritanceFlattener                   *flatteners.InheritanceFlattener
 	DependencyResolver                     *pkg.DependencyResolver
 	TokenResolver                          *tokens.TokenResolver
-	CollectorResolver                      *collectors_shared.CollectorResolver
+	CollectorResolver                      *collectors_resolvers.CollectorResolver
 	LayerResolver                          layers.LayerResolverInterface
 	NikicPhpParser                         *parsers.NikicPhpParser
-	CollectorProvider                      *collectors_shared.CollectorProvider
-	DependencyLayersAnalyser               *subscribers.DependencyLayersAnalyser
+	CollectorProvider                      *services2.CollectorProvider
+	DependencyLayersAnalyser               *analysers.DependencyLayersAnalyser
 	TokenInLayerAnalyser                   *tokens.TokenInLayerAnalyser
 	LayerForTokenAnalyser                  *tokens.LayerForTokenAnalyser
 	UnassignedTokenAnalyser                *tokens.UnassignedTokenAnalyser
-	LayerDependenciesAnalyser              *subscribers.LayerDependenciesAnalyser
+	LayerDependenciesAnalyser              *analysers.LayerDependenciesAnalyser
 	RulesetUsageAnalyser                   *rules.RulesetUsageAnalyser
 	FormatterProvider                      *formatters.FormatterProvider
 	FormatterConfiguration                 *formatters.FormatterConfiguration

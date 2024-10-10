@@ -10,7 +10,7 @@ func NewMatchingLayersHandler() *MatchingLayersHandler {
 	return &MatchingLayersHandler{}
 }
 
-func (m *MatchingLayersHandler) InvokeEventSubscriber(rawEvent interface{}, stopPropagation func()) error {
+func (m *MatchingLayersHandler) HandleEvent(rawEvent interface{}, stopPropagation func()) error {
 	event := rawEvent.(*events.ProcessEvent)
 	for dependeeLayer := range event.DependentLayers {
 		if event.DependerLayer != dependeeLayer {

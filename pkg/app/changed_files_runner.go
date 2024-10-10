@@ -1,12 +1,12 @@
 package app
 
 import (
+	"github.com/KoNekoD/go-deptrac/pkg/analysers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
-	"github.com/KoNekoD/go-deptrac/pkg/subscribers"
 	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 	"golang.org/x/exp/maps"
 	"strings"
@@ -15,10 +15,10 @@ import (
 // ChangedFilesRunner - Should only be used by ChangedFilesCommand
 type ChangedFilesRunner struct {
 	layerForTokenAnalyser    *tokens.LayerForTokenAnalyser
-	dependencyLayersAnalyser *subscribers.DependencyLayersAnalyser
+	dependencyLayersAnalyser *analysers.DependencyLayersAnalyser
 }
 
-func NewChangedFilesRunner(layerForTokenAnalyser *tokens.LayerForTokenAnalyser, dependencyLayersAnalyser *subscribers.DependencyLayersAnalyser) *ChangedFilesRunner {
+func NewChangedFilesRunner(layerForTokenAnalyser *tokens.LayerForTokenAnalyser, dependencyLayersAnalyser *analysers.DependencyLayersAnalyser) *ChangedFilesRunner {
 	return &ChangedFilesRunner{
 		layerForTokenAnalyser:    layerForTokenAnalyser,
 		dependencyLayersAnalyser: dependencyLayersAnalyser,

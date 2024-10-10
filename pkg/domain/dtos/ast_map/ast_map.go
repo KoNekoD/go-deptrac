@@ -171,11 +171,6 @@ func (a *AstMap) addClassLike(astStructReference tokens_references.ClassLikeRefe
 		panic(token.ToString())
 	}
 
-	// github.com/KoNekoD/go_deptrac/pkg/core/ast_contract/ast_map/emitter.go AstMap
-	if strings.Contains(token.ToString(), "github.com/KoNekoD/go_deptrac/pkg/core/ast_contract/ast_map/emitter.go AstMap") {
-		panic(token.ToString())
-	}
-
 	a.ClassReferences[token.ToString()] = &astStructReference
 }
 

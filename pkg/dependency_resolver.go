@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/emitters"
 	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos"
@@ -8,7 +9,6 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	events2 "github.com/KoNekoD/go-deptrac/pkg/domain/events"
-	"github.com/KoNekoD/go-deptrac/pkg/emitters"
 	"github.com/KoNekoD/go-deptrac/pkg/flatteners"
 	"reflect"
 )
@@ -42,14 +42,14 @@ func (r *DependencyResolver) Resolve(astMap *ast_map.AstMap) (*dependencies.Depe
 			return nil, apperrors.NewInvalidEmitterConfigurationExceptionIsNotEmitter(string(typeConfig), dependencyEmitterInterface)
 		}
 
-		err := r.eventDispatcher.DispatchEvent(emitters.NewPreEmitEvent(dependencyEmitterInterface.GetName()))
+		err := r.eventDispatcher.DispatchEvent(events2.NewPreEmitEvent(dependencyEmitterInterface.GetName()))
 		if err != nil {
 			return nil, err
 		}
 
 		dependencyEmitterInterface.ApplyDependencies(*astMap, result)
 
-		errDispatchPostEmit := r.eventDispatcher.DispatchEvent(emitters.NewPostEmitEvent())
+		errDispatchPostEmit := r.eventDispatcher.DispatchEvent(events2.NewPostEmitEvent())
 		if errDispatchPostEmit != nil {
 			return nil, errDispatchPostEmit
 		}

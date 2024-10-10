@@ -1,7 +1,7 @@
 package ast_map
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/collectors_shared"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/input_collectors"
 	"github.com/KoNekoD/go-deptrac/pkg/parsers"
 	"github.com/KoNekoD/go-deptrac/pkg/references"
 	"github.com/KoNekoD/go-deptrac/pkg/types"
@@ -30,7 +30,7 @@ func TestAstMapExtractorExtractWorkedFine(t *testing.T) {
 
 	basePath := wd + "/pkg/"
 
-	fileInputCollector, err := collectors_shared.NewFileInputCollector(paths, excluded, basePath)
+	fileInputCollector, err := input_collectors.NewFileInputCollector(paths, excluded, basePath)
 
 	if err != nil {
 		t.Error(err)

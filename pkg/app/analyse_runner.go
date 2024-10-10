@@ -3,23 +3,23 @@ package app
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/KoNekoD/go-deptrac/pkg/analysers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/formatters"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
-	"github.com/KoNekoD/go-deptrac/pkg/subscribers"
 	"github.com/hashicorp/go-multierror"
 	"strings"
 )
 
 // AnalyseRunner - Should only be used by AnalyseCommand
 type AnalyseRunner struct {
-	analyzer          *subscribers.DependencyLayersAnalyser
+	analyzer          *analysers.DependencyLayersAnalyser
 	formatterProvider *formatters.FormatterProvider
 }
 
-func NewAnalyseRunner(analyzer *subscribers.DependencyLayersAnalyser, formatterProvider *formatters.FormatterProvider) *AnalyseRunner {
+func NewAnalyseRunner(analyzer *analysers.DependencyLayersAnalyser, formatterProvider *formatters.FormatterProvider) *AnalyseRunner {
 	return &AnalyseRunner{
 		analyzer:          analyzer,
 		formatterProvider: formatterProvider,

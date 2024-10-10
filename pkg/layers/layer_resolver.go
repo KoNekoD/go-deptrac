@@ -2,30 +2,30 @@ package layers
 
 import (
 	"errors"
-	"github.com/KoNekoD/go-deptrac/pkg/collectors_shared"
+	dtos2 "github.com/KoNekoD/go-deptrac/pkg/application/dtos"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/collectors_resolvers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
-	"github.com/KoNekoD/go-deptrac/pkg/violations"
 	"reflect"
 	"sync"
 )
 
 // LayerResolver - LayerResolverInterface defines the structure for a layer_contract resolver
 type LayerResolver struct {
-	collectorResolver collectors_shared.CollectorResolverInterface
+	collectorResolver collectors_resolvers.CollectorResolverInterface
 	layersConfig      []*dtos.Layer
-	layers            map[string][]*violations.Collectable
+	layers            map[string][]*dtos2.Collectable
 	initialized       bool
 	resolved          map[string]map[string]bool
 	mu                sync.Mutex
 }
 
 // NewLayerResolver creates a new LayerResolverInterface
-func NewLayerResolver(collectorResolver collectors_shared.CollectorResolverInterface, layersConfig []*dtos.Layer) LayerResolverInterface {
+func NewLayerResolver(collectorResolver collectors_resolvers.CollectorResolverInterface, layersConfig []*dtos.Layer) LayerResolverInterface {
 	return &LayerResolver{
 		collectorResolver: collectorResolver,
 		layersConfig:      layersConfig,
-		layers:            make(map[string][]*violations.Collectable),
+		layers:            make(map[string][]*dtos2.Collectable),
 		resolved:          make(map[string]map[string]bool),
 	}
 }
@@ -128,14 +128,14 @@ func (r *LayerResolver) Has(layer string) (bool, error) {
 
 // initializeLayers initializes the layers from the configuration
 func (r *LayerResolver) initializeLayers() error {
-	r.layers = make(map[string][]*violations.Collectable)
+	r.layers = make(map[string][]*dtos2.Collectable)
 	for _, layer := range r.layersConfig {
 		layerName := layer.Name
 		if _, exists := r.layers[layerName]; exists {
 			return errors.New("invalid layer_contract definition: duplicate name " + layerName)
 		}
 
-		r.layers[layerName] = []*violations.Collectable{}
+		r.layers[layerName] = []*dtos2.Collectable{}
 		for _, config := range layer.Collectors {
 			resolvedCollector, err := r.collectorResolver.Resolve(config.ToArray())
 
