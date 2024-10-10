@@ -2,7 +2,7 @@ package ast_map
 
 import (
 	"encoding/json"
-	"github.com/KoNekoD/go-deptrac/pkg/app"
+	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/app"
 	"os"
 	"path"
 	"runtime"

@@ -1,10 +1,10 @@
 package event_handlers
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/configs"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/events"
+	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services/dispatchers"
 )
 
 type DependsOnInternalToken struct {

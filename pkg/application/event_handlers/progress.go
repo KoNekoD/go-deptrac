@@ -1,15 +1,15 @@
 package event_handlers
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/events"
+	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
 )
 
 type Progress struct {
-	output pkg.OutputInterface
+	output services.OutputInterface
 }
 
-func NewProgress(output pkg.OutputInterface) *Progress {
+func NewProgress(output services.OutputInterface) *Progress {
 	return &Progress{output: output}
 }
 
@@ -23,7 +23,7 @@ func (s *Progress) HandleEvent(rawEvent interface{}, stopPropagation func()) err
 			return err
 		}
 	case *events.AstFileAnalysedEvent:
-		err := s.output.GetStyle().ProgressAdvance(pkg.ProgressAdvanceDefault)
+		err := s.output.GetStyle().ProgressAdvance(services.ProgressAdvanceDefault)
 		if err != nil {
 			return err
 		}

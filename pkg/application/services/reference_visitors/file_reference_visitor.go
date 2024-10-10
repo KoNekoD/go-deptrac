@@ -1,11 +1,11 @@
 package reference_visitors
 
 import (
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/extractors"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/references_builders"
 	types2 "github.com/KoNekoD/go-deptrac/pkg/application/services/types"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/services"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
-	"github.com/KoNekoD/go-deptrac/pkg/extractors"
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
 	"go/ast"

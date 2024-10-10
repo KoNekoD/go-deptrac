@@ -2,9 +2,9 @@ package reference_visitors
 
 import (
 	"fmt"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/extractors"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/references_builders"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/types"
-	"github.com/KoNekoD/go-deptrac/pkg/extractors"
 	_ "github.com/KoNekoD/go-deptrac/resources"
 	"go/ast"
 	"go/parser"

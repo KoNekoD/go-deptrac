@@ -2,12 +2,12 @@ package parsers
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/ast_file_reference_cache"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/extractors"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/reference_visitors"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/references_builders"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/types"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/services"
-	"github.com/KoNekoD/go-deptrac/pkg/extractors"
 	"github.com/pkg/errors"
 	"go/ast"
 	"go/parser"

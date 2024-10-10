@@ -1,8 +1,8 @@
 package services_test
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/app"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/services"
+	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/app"
 	"testing"
 )
 

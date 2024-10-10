@@ -1,10 +1,10 @@
 package event_handlers
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/issues"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/events"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
+	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services/dispatchers"
 )
 
 type DependsOnDisallowedLayer struct {
