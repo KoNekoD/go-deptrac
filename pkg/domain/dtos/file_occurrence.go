@@ -1,4 +1,4 @@
-package violations
+package dtos
 
 // FileOccurrence - Where in the file_supportive has the dependency_contract occurred.
 type FileOccurrence struct {

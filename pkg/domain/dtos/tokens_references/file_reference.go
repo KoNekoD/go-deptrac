@@ -1,15 +1,17 @@
-package references
+package tokens_references
 
-import "github.com/KoNekoD/go-deptrac/pkg/tokens"
+import (
+	tokens2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
+)
 
 type FileReference struct {
 	Filepath            *string
 	ClassLikeReferences []*ClassLikeReference
 	FunctionReferences  []*FunctionReference
-	Dependencies        []*tokens.DependencyToken
+	Dependencies        []*tokens2.DependencyToken
 }
 
-func NewFileReference(filepath *string, structLikeReferences []*ClassLikeReference, functionReferences []*FunctionReference, dependencies []*tokens.DependencyToken) *FileReference {
+func NewFileReference(filepath *string, structLikeReferences []*ClassLikeReference, functionReferences []*FunctionReference, dependencies []*tokens2.DependencyToken) *FileReference {
 	structLikeReferencesMapped := make([]*ClassLikeReference, 0)
 	functionReferencesMapped := make([]*FunctionReference, 0)
 
@@ -35,10 +37,10 @@ func (r *FileReference) GetFilepath() *string {
 	return r.Filepath
 }
 
-func (r *FileReference) GetToken() tokens.TokenInterface {
-	return tokens.NewFileToken(r.Filepath)
+func (r *FileReference) GetToken() tokens2.TokenInterface {
+	return tokens2.NewFileToken(r.Filepath)
 }
 
-func (r *FileReference) GetDependencies() []*tokens.DependencyToken {
+func (r *FileReference) GetDependencies() []*tokens2.DependencyToken {
 	return r.Dependencies
 }

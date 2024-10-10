@@ -3,10 +3,10 @@ package formatters
 import (
 	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/dependencies"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
-	"github.com/KoNekoD/go-deptrac/pkg/violations"
 	"strings"
 )
 
@@ -134,7 +134,7 @@ func (f *ConsoleOutputFormatter) printUncovered(result results.OutputResult, out
 	}
 }
 
-func (f *ConsoleOutputFormatter) printFileOccurrence(output results.OutputInterface, fileOccurrence *violations.FileOccurrence) {
+func (f *ConsoleOutputFormatter) printFileOccurrence(output results.OutputInterface, fileOccurrence *dtos.FileOccurrence) {
 	output.WriteLineFormatted(results.StringOrArrayOfStrings{String: fmt.Sprintf("%s:%d", fileOccurrence.FilePath, fileOccurrence.Line)})
 }
 

@@ -3,8 +3,8 @@ package collectors_shared
 import (
 	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
-	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 	"regexp"
 )
 
@@ -18,7 +18,7 @@ func NewDirectoryCollector() *DirectoryCollector {
 	}
 }
 
-func (c *DirectoryCollector) Satisfy(config map[string]interface{}, reference tokens.TokenReferenceInterface) (bool, error) {
+func (c *DirectoryCollector) Satisfy(config map[string]interface{}, reference tokens_references.TokenReferenceInterface) (bool, error) {
 	filepath := reference.GetFilepath()
 	if filepath == nil {
 		return false, nil

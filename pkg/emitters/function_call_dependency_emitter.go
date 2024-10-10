@@ -3,6 +3,7 @@ package emitters
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/dependencies"
+	tokens2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 )
@@ -45,7 +46,7 @@ func (f *FunctionCallDependencyEmitter) createDependenciesForReferences(referenc
 			}
 			token := dependencyToken.Token
 			dependencyList.AddDependency(dependencies.NewDependency(reference.GetToken(), token, dependencyToken.Context))
-			functionToken := token.(*tokens.FunctionToken)
+			functionToken := token.(*tokens2.FunctionToken)
 			if functionReference := astMap.GetFunctionReferenceForToken(functionToken); functionReference != nil {
 				dependencyList.AddDependency(dependencies.NewDependency(reference.GetToken(), dependencyToken.Token, dependencyToken.Context))
 			}

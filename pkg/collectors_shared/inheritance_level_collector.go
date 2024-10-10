@@ -3,9 +3,9 @@ package collectors_shared
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
+	tokens2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
+	tokens_references2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
-	"github.com/KoNekoD/go-deptrac/pkg/references"
-	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 )
 
 type InheritanceLevelCollector struct {
@@ -24,12 +24,12 @@ func NewInheritanceLevelCollector(astMapExtractor *ast_map.AstMapExtractor) (*In
 	}, nil
 }
 
-func (c *InheritanceLevelCollector) Satisfy(config map[string]interface{}, reference tokens.TokenReferenceInterface) (bool, error) {
-	if _, ok := reference.(*references.ClassLikeReference); !ok {
+func (c *InheritanceLevelCollector) Satisfy(config map[string]interface{}, reference tokens_references2.TokenReferenceInterface) (bool, error) {
+	if _, ok := reference.(*tokens_references2.ClassLikeReference); !ok {
 		return false, nil
 	}
 
-	classInherits := c.astMap.GetClassInherits(reference.GetToken().(*tokens.ClassLikeToken))
+	classInherits := c.astMap.GetClassInherits(reference.GetToken().(*tokens2.ClassLikeToken))
 
 	if !utils.MapKeyExists(config, "value") || utils.MapKeyIsInt(config, "value") {
 		return false, apperrors.NewInvalidCollectorDefinitionInvalidCollectorConfiguration("InheritanceLevelCollector needs inheritance depth as int.")

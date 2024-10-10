@@ -2,6 +2,7 @@ package parsers
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/services"
 	"github.com/KoNekoD/go-deptrac/pkg/references"
 	"github.com/KoNekoD/go-deptrac/pkg/types"
@@ -19,7 +20,7 @@ type parsedFilesBag struct {
 	parsedFiles map[string]*parsedFile
 }
 
-func (p *parsedFilesBag) Add(fileReference *references.FileReference, rootNode *ast.File) {
+func (p *parsedFilesBag) Add(fileReference *tokens_references.FileReference, rootNode *ast.File) {
 	filepath := fileReference.GetFilepath()
 	file := &parsedFile{fileReference: fileReference, rootNode: rootNode}
 	p.parsedFiles[*filepath] = file
@@ -30,7 +31,7 @@ func (p *parsedFilesBag) Get(filepath string) *parsedFile {
 }
 
 type parsedFile struct {
-	fileReference *references.FileReference
+	fileReference *tokens_references.FileReference
 	rootNode      *ast.File
 	debt          []interface{}
 }
@@ -63,7 +64,7 @@ func NewNikicPhpParser(cache ast_map.AstFileReferenceCacheInterface, typeResolve
 	}
 }
 
-func (p *NikicPhpParser) ParseFile(file string) (*references.FileReference, error) {
+func (p *NikicPhpParser) ParseFile(file string) (*tokens_references.FileReference, error) {
 	v, err := p.cache.Get(file)
 	if err != nil {
 		return nil, err
@@ -93,7 +94,7 @@ func (p *NikicPhpParser) ParseFile(file string) (*references.FileReference, erro
 	return fileReference, nil
 }
 
-func (p *NikicPhpParser) GetNodeForClassLikeReference(classReference *references.ClassLikeReference) *ast.Ident {
+func (p *NikicPhpParser) GetNodeForClassLikeReference(classReference *tokens_references.ClassLikeReference) *ast.Ident {
 	classLikeName := classReference.GetToken().ToString()
 	if v, ok := classAstMap[classLikeName]; ok {
 		return v

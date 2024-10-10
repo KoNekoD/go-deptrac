@@ -1,21 +1,21 @@
 package ast_map
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/references"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"path/filepath"
 )
 
 type AstFileReferenceInMemoryCache struct {
-	cache map[string]*references.FileReference
+	cache map[string]*tokens_references.FileReference
 }
 
 func NewAstFileReferenceInMemoryCache() *AstFileReferenceInMemoryCache {
 	return &AstFileReferenceInMemoryCache{
-		cache: make(map[string]*references.FileReference),
+		cache: make(map[string]*tokens_references.FileReference),
 	}
 }
 
-func (c *AstFileReferenceInMemoryCache) Get(pathInput string) (*references.FileReference, error) {
+func (c *AstFileReferenceInMemoryCache) Get(pathInput string) (*tokens_references.FileReference, error) {
 	path, err := filepath.Abs(pathInput)
 	if err != nil {
 		return nil, err
@@ -29,7 +29,7 @@ func (c *AstFileReferenceInMemoryCache) Get(pathInput string) (*references.FileR
 	return v, nil
 }
 
-func (c *AstFileReferenceInMemoryCache) Set(fileReference *references.FileReference) error {
+func (c *AstFileReferenceInMemoryCache) Set(fileReference *tokens_references.FileReference) error {
 	path, err := filepath.Abs(*fileReference.Filepath)
 	if err != nil {
 		return err

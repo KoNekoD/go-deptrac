@@ -3,7 +3,7 @@ package flatteners
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/dependencies"
-	"github.com/KoNekoD/go-deptrac/pkg/tokens"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
 )
 
 type InheritanceFlattener struct{}

@@ -2,8 +2,8 @@ package ast_map
 
 import (
 	"encoding/json"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
-	"github.com/KoNekoD/go-deptrac/pkg/references"
 	"os"
 	"path/filepath"
 )
@@ -11,7 +11,7 @@ import (
 type AstFileReferenceFileCache struct {
 	cache map[string]struct {
 		hash      string
-		reference *references.FileReference
+		reference *tokens_references.FileReference
 	}
 	loaded       bool
 	parsedFiles  map[string]bool
@@ -23,7 +23,7 @@ func NewAstFileReferenceFileCache(cacheFile string, cacheVersion string) *AstFil
 	return &AstFileReferenceFileCache{
 		cache: make(map[string]struct {
 			hash      string
-			reference *references.FileReference
+			reference *tokens_references.FileReference
 		}),
 		loaded:       false,
 		parsedFiles:  make(map[string]bool),
@@ -32,7 +32,7 @@ func NewAstFileReferenceFileCache(cacheFile string, cacheVersion string) *AstFil
 	}
 }
 
-func (c *AstFileReferenceFileCache) Get(filepath string) (*references.FileReference, error) {
+func (c *AstFileReferenceFileCache) Get(filepath string) (*tokens_references.FileReference, error) {
 	err := c.Load()
 	if err != nil {
 		return nil, err
@@ -53,7 +53,7 @@ func (c *AstFileReferenceFileCache) Get(filepath string) (*references.FileRefere
 	return nil, nil
 }
 
-func (c *AstFileReferenceFileCache) Set(fileReference *references.FileReference) error {
+func (c *AstFileReferenceFileCache) Set(fileReference *tokens_references.FileReference) error {
 	err := c.Load()
 	if err != nil {
 		return err
@@ -68,7 +68,7 @@ func (c *AstFileReferenceFileCache) Set(fileReference *references.FileReference)
 
 	c.cache[normalizedFilepath] = struct {
 		hash      string
-		reference *references.FileReference
+		reference *tokens_references.FileReference
 	}{hash: hash, reference: fileReference}
 
 	return nil
@@ -89,7 +89,7 @@ func (c *AstFileReferenceFileCache) Load() error {
 		version string
 		payload map[string]struct {
 			hash      string
-			reference *references.FileReference
+			reference *tokens_references.FileReference
 		}
 	}{}
 	err = json.Unmarshal([]byte(contents), &cache)
@@ -100,7 +100,7 @@ func (c *AstFileReferenceFileCache) Load() error {
 	for filepathData, data := range cache.payload {
 		c.cache[filepathData] = struct {
 			hash      string
-			reference *references.FileReference
+			reference *tokens_references.FileReference
 		}{hash: data.hash, reference: data.reference}
 	}
 	return nil
@@ -112,7 +112,7 @@ func (c *AstFileReferenceFileCache) Write() error {
 	}
 	cache := make(map[string]struct {
 		hash      string
-		reference *references.FileReference
+		reference *tokens_references.FileReference
 	})
 	for filepathData, data := range c.cache {
 		if _, ok := c.parsedFiles[filepathData]; ok {
@@ -124,7 +124,7 @@ func (c *AstFileReferenceFileCache) Write() error {
 		version string
 		payload map[string]struct {
 			hash      string
-			reference *references.FileReference
+			reference *tokens_references.FileReference
 		}
 	}{
 		version: c.cacheVersion,

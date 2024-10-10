@@ -1,4 +1,4 @@
-package tokens
+package tokens_references
 
 // TaggedTokenReferenceInterface - Represents the AST-TokenInterface, its location, and associated tags.
 type TaggedTokenReferenceInterface interface {

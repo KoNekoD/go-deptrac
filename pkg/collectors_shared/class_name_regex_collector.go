@@ -2,9 +2,9 @@ package collectors_shared
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
+	tokens2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
+	tokens_references2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
-	"github.com/KoNekoD/go-deptrac/pkg/references"
-	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 )
 
 type ClassNameRegexCollector struct {
@@ -17,8 +17,8 @@ func NewClassNameRegexCollector() *ClassNameRegexCollector {
 	}
 }
 
-func (c ClassNameRegexCollector) Satisfy(config map[string]interface{}, reference tokens.TokenReferenceInterface) (bool, error) {
-	if _, ok := reference.(*references.ClassLikeReference); !ok {
+func (c ClassNameRegexCollector) Satisfy(config map[string]interface{}, reference tokens_references2.TokenReferenceInterface) (bool, error) {
+	if _, ok := reference.(*tokens_references2.ClassLikeReference); !ok {
 		return false, nil
 	}
 
@@ -27,7 +27,7 @@ func (c ClassNameRegexCollector) Satisfy(config map[string]interface{}, referenc
 		return false, err
 	}
 
-	return reference.GetToken().(*tokens.ClassLikeToken).Match(validatedPattern), nil
+	return reference.GetToken().(*tokens2.ClassLikeToken).Match(validatedPattern), nil
 }
 
 func (c ClassNameRegexCollector) GetPattern(config map[string]interface{}) (string, error) {

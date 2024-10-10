@@ -3,9 +3,9 @@ package collectors_shared
 import (
 	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
+	tokens2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
+	tokens_references2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
-	"github.com/KoNekoD/go-deptrac/pkg/references"
-	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 )
 
 type AbstractTypeCollector struct {
@@ -22,8 +22,8 @@ func (c *AbstractTypeCollector) GetType() enums.ClassLikeType {
 	panic("Not implemented")
 }
 
-func (c *AbstractTypeCollector) Satisfy(config map[string]interface{}, reference tokens.TokenReferenceInterface) (bool, error) {
-	v, ok := reference.(*references.ClassLikeReference)
+func (c *AbstractTypeCollector) Satisfy(config map[string]interface{}, reference tokens_references2.TokenReferenceInterface) (bool, error) {
+	v, ok := reference.(*tokens_references2.ClassLikeReference)
 	if !ok {
 		return false, nil
 	}
@@ -36,7 +36,7 @@ func (c *AbstractTypeCollector) Satisfy(config map[string]interface{}, reference
 	isClassLike := enums.TypeClasslike == c.GetType()
 	isSameType := *v.Type == c.GetType()
 
-	return (isClassLike || isSameType) && v.GetToken().(*tokens.ClassLikeToken).Match(pattern), nil
+	return (isClassLike || isSameType) && v.GetToken().(*tokens2.ClassLikeToken).Match(pattern), nil
 }
 
 func (c *AbstractTypeCollector) GetPattern(config map[string]interface{}) (string, error) {

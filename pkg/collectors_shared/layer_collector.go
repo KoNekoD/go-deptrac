@@ -3,9 +3,9 @@ package collectors_shared
 import (
 	"fmt"
 	apperrors2 "github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
 	"github.com/KoNekoD/go-deptrac/pkg/layers"
-	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 )
 
 type LayerCollector struct {
@@ -19,7 +19,7 @@ func NewLayerCollector(resolver layers.LayerResolverInterface) *LayerCollector {
 	}
 }
 
-func (c *LayerCollector) Satisfy(config map[string]interface{}, reference tokens.TokenReferenceInterface) (bool, error) {
+func (c *LayerCollector) Satisfy(config map[string]interface{}, reference tokens_references.TokenReferenceInterface) (bool, error) {
 	if _, ok := config["value"]; !ok {
 		if _, ok2 := config["value"].(string); !ok2 {
 			return false, apperrors2.NewInvalidCollectorDefinitionInvalidCollectorConfiguration("LayerCollector needs the layer_contract configuration, expected 'value' config_contract is missing or invalid.")

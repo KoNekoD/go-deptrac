@@ -1,9 +1,9 @@
 package dependencies
 
 import (
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
 	"github.com/KoNekoD/go-deptrac/pkg/events"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
-	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 )
 
 type UncoveredDependentHandler struct {

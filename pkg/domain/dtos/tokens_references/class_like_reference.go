@@ -1,22 +1,22 @@
-package references
+package tokens_references
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_map"
+	tokens2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
-	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 )
 
 type ClassLikeReference struct {
 	Type          *enums.ClassLikeType
-	classLikeName *tokens.ClassLikeToken
+	classLikeName *tokens2.ClassLikeToken
 
 	Inherits      []*ast_map.AstInherit
-	Dependencies  []*tokens.DependencyToken
+	Dependencies  []*tokens2.DependencyToken
 	fileReference *FileReference
-	*tokens.TaggedTokenReference
+	*TaggedTokenReference
 }
 
-func NewClassLikeReference(classLikeName *tokens.ClassLikeToken, classLikeType *enums.ClassLikeType, inherits []*ast_map.AstInherit, dependencies []*tokens.DependencyToken, tags map[string][]string, fileReference *FileReference) *ClassLikeReference {
+func NewClassLikeReference(classLikeName *tokens2.ClassLikeToken, classLikeType *enums.ClassLikeType, inherits []*ast_map.AstInherit, dependencies []*tokens2.DependencyToken, tags map[string][]string, fileReference *FileReference) *ClassLikeReference {
 	if classLikeType == nil {
 		classLikeTypeTmp := enums.TypeClasslike
 		classLikeType = &classLikeTypeTmp
@@ -28,7 +28,7 @@ func NewClassLikeReference(classLikeName *tokens.ClassLikeToken, classLikeType *
 		Inherits:             inherits,
 		Dependencies:         dependencies,
 		fileReference:        fileReference,
-		TaggedTokenReference: tokens.NewTaggedTokenReference(tags),
+		TaggedTokenReference: NewTaggedTokenReference(tags),
 	}
 }
 
@@ -40,10 +40,10 @@ func (c *ClassLikeReference) GetFilepath() *string {
 	return c.fileReference.Filepath
 }
 
-func (c *ClassLikeReference) GetToken() tokens.TokenInterface {
+func (c *ClassLikeReference) GetToken() tokens2.TokenInterface {
 	return c.classLikeName
 }
 
-func (c *ClassLikeReference) GetDependencies() []*tokens.DependencyToken {
+func (c *ClassLikeReference) GetDependencies() []*tokens2.DependencyToken {
 	return c.Dependencies
 }

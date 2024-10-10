@@ -1,8 +1,9 @@
 package references
 
 import (
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
-	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 )
 
 type FileReferenceBuilder struct {
@@ -50,16 +51,16 @@ func (b *FileReferenceBuilder) NewFunction(functionName string, templateTypes []
 	return functionReference
 }
 
-func (b *FileReferenceBuilder) Build() *FileReference {
-	classReferences := make([]*ClassLikeReference, 0)
+func (b *FileReferenceBuilder) Build() *tokens_references.FileReference {
+	classReferences := make([]*tokens_references.ClassLikeReference, 0)
 	for _, classReference := range b.classReferences {
 		classReferences = append(classReferences, classReference.Build())
 	}
 
-	functionReferences := make([]*FunctionReference, 0)
+	functionReferences := make([]*tokens_references.FunctionReference, 0)
 	for _, functionReference := range b.functionReferences {
 		functionReferences = append(functionReferences, functionReference.Build())
 	}
 
-	return NewFileReference(&b.Filepath, classReferences, functionReferences, b.Dependencies)
+	return tokens_references.NewFileReference(&b.Filepath, classReferences, functionReferences, b.Dependencies)
 }

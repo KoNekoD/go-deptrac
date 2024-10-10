@@ -2,22 +2,23 @@ package ast_map
 
 import (
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/references"
-	"github.com/KoNekoD/go-deptrac/pkg/tokens"
+	ast_map2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_map"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"strings"
 )
 
 type AstMap struct {
-	ClassReferences    map[string]*references.ClassLikeReference
-	FileReferences     map[string]*references.FileReference
-	FunctionReferences map[string]*references.FunctionReference
+	ClassReferences    map[string]*tokens_references.ClassLikeReference
+	FileReferences     map[string]*tokens_references.FileReference
+	FunctionReferences map[string]*tokens_references.FunctionReference
 }
 
-func NewAstMap(astFileReferences []*references.FileReference) *AstMap {
+func NewAstMap(astFileReferences []*tokens_references.FileReference) *AstMap {
 	a := &AstMap{
-		ClassReferences:    make(map[string]*references.ClassLikeReference),
-		FileReferences:     make(map[string]*references.FileReference),
-		FunctionReferences: make(map[string]*references.FunctionReference),
+		ClassReferences:    make(map[string]*tokens_references.ClassLikeReference),
+		FileReferences:     make(map[string]*tokens_references.FileReference),
+		FunctionReferences: make(map[string]*tokens_references.FunctionReference),
 	}
 	for _, astFileReference := range astFileReferences {
 		a.addAstFileReference(astFileReference)
@@ -25,8 +26,8 @@ func NewAstMap(astFileReferences []*references.FileReference) *AstMap {
 	return a
 }
 
-func (a *AstMap) GetClassLikeReferences() []*references.ClassLikeReference {
-	values := make([]*references.ClassLikeReference, 0)
+func (a *AstMap) GetClassLikeReferences() []*tokens_references.ClassLikeReference {
+	values := make([]*tokens_references.ClassLikeReference, 0)
 
 	for _, r := range a.ClassReferences {
 		values = append(values, r)
@@ -35,8 +36,8 @@ func (a *AstMap) GetClassLikeReferences() []*references.ClassLikeReference {
 	return values
 }
 
-func (a *AstMap) GetFileReferences() []*references.FileReference {
-	values := make([]*references.FileReference, 0)
+func (a *AstMap) GetFileReferences() []*tokens_references.FileReference {
+	values := make([]*tokens_references.FileReference, 0)
 
 	for _, fileReference := range a.FileReferences {
 		values = append(values, fileReference)
@@ -45,8 +46,8 @@ func (a *AstMap) GetFileReferences() []*references.FileReference {
 	return values
 }
 
-func (a *AstMap) GetFunctionReferences() []*references.FunctionReference {
-	values := make([]*references.FunctionReference, 0)
+func (a *AstMap) GetFunctionReferences() []*tokens_references.FunctionReference {
+	values := make([]*tokens_references.FunctionReference, 0)
 
 	for _, functionReference := range a.FunctionReferences {
 		values = append(values, functionReference)
@@ -55,7 +56,7 @@ func (a *AstMap) GetFunctionReferences() []*references.FunctionReference {
 	return values
 }
 
-func (a *AstMap) GetClassReferenceForToken(structName *tokens.ClassLikeToken) *references.ClassLikeReference {
+func (a *AstMap) GetClassReferenceForToken(structName *tokens.ClassLikeToken) *tokens_references.ClassLikeReference {
 	// TODO: Rework to full package path
 	name := structName.ToString()
 
@@ -82,7 +83,7 @@ func (a *AstMap) GetClassReferenceForToken(structName *tokens.ClassLikeToken) *r
 	return v
 }
 
-func (a *AstMap) GetFunctionReferenceForToken(functionName *tokens.FunctionToken) *references.FunctionReference {
+func (a *AstMap) GetFunctionReferenceForToken(functionName *tokens.FunctionToken) *tokens_references.FunctionReference {
 	v, ok := a.FunctionReferences[functionName.ToString()]
 	if !ok {
 		return nil
@@ -91,7 +92,7 @@ func (a *AstMap) GetFunctionReferenceForToken(functionName *tokens.FunctionToken
 	return v
 }
 
-func (a *AstMap) GetFileReferenceForToken(filePath *tokens.FileToken) *references.FileReference {
+func (a *AstMap) GetFileReferenceForToken(filePath *tokens.FileToken) *tokens_references.FileReference {
 	v, ok := a.FileReferences[filePath.ToString()]
 	if !ok {
 		return nil
@@ -100,12 +101,12 @@ func (a *AstMap) GetFileReferenceForToken(filePath *tokens.FileToken) *reference
 	return v
 }
 
-func (a *AstMap) GetClassInherits(structLikeName *tokens.ClassLikeToken) []*AstInherit {
+func (a *AstMap) GetClassInherits(structLikeName *tokens.ClassLikeToken) []*ast_map2.AstInherit {
 	structReference := a.GetClassReferenceForToken(structLikeName)
 	if structReference == nil {
 		return nil
 	}
-	inherits := make([]*AstInherit, 0)
+	inherits := make([]*ast_map2.AstInherit, 0)
 	for _, dep := range structReference.Inherits {
 		inherits = append(inherits, dep)
 		outArr := a.recursivelyResolveDependencies(dep, nil, nil)
@@ -117,25 +118,25 @@ func (a *AstMap) GetClassInherits(structLikeName *tokens.ClassLikeToken) []*AstI
 }
 
 type stack struct {
-	s []*AstInherit
+	s []*ast_map2.AstInherit
 }
 
-func (s *stack) Push(v *AstInherit) {
+func (s *stack) Push(v *ast_map2.AstInherit) {
 	s.s = append(s.s, v)
 }
 
-func (s *stack) Pop() *AstInherit {
+func (s *stack) Pop() *ast_map2.AstInherit {
 	v := s.s[len(s.s)-1]
 	s.s = s.s[:len(s.s)-1]
 	return v
 }
 
-func (a *AstMap) recursivelyResolveDependencies(inheritDependency *AstInherit, alreadyResolved map[string]bool, pathStack *stack) []*AstInherit {
+func (a *AstMap) recursivelyResolveDependencies(inheritDependency *ast_map2.AstInherit, alreadyResolved map[string]bool, pathStack *stack) []*ast_map2.AstInherit {
 	if alreadyResolved == nil {
 		alreadyResolved = make(map[string]bool)
 	}
 	if pathStack == nil {
-		pathStack = &stack{s: make([]*AstInherit, 0)}
+		pathStack = &stack{s: make([]*ast_map2.AstInherit, 0)}
 		pathStack.Push(inheritDependency)
 	}
 	structName := inheritDependency.ClassLikeName.ToString()
@@ -147,7 +148,7 @@ func (a *AstMap) recursivelyResolveDependencies(inheritDependency *AstInherit, a
 	if structReference == nil {
 		return nil
 	}
-	out := make([]*AstInherit, 0)
+	out := make([]*ast_map2.AstInherit, 0)
 	for _, inherit := range structReference.Inherits {
 		alreadyResolved[structName] = true
 		path := pathStack.s
@@ -163,7 +164,7 @@ func (a *AstMap) recursivelyResolveDependencies(inheritDependency *AstInherit, a
 	return out
 }
 
-func (a *AstMap) addClassLike(astStructReference references.ClassLikeReference) {
+func (a *AstMap) addClassLike(astStructReference tokens_references.ClassLikeReference) {
 	token := astStructReference.GetToken()
 
 	// If token.ToString() contains :: then panic
@@ -179,7 +180,7 @@ func (a *AstMap) addClassLike(astStructReference references.ClassLikeReference) 
 	a.ClassReferences[token.ToString()] = &astStructReference
 }
 
-func (a *AstMap) addAstFileReference(astFileReference *references.FileReference) {
+func (a *AstMap) addAstFileReference(astFileReference *tokens_references.FileReference) {
 	a.FileReferences[*astFileReference.Filepath] = astFileReference
 	for _, astStructReference := range astFileReference.ClassLikeReferences {
 		a.addClassLike(*astStructReference)
@@ -190,6 +191,6 @@ func (a *AstMap) addAstFileReference(astFileReference *references.FileReference)
 	}
 }
 
-func (a *AstMap) addFunction(astFunctionReference references.FunctionReference) {
+func (a *AstMap) addFunction(astFunctionReference tokens_references.FunctionReference) {
 	a.FunctionReferences[astFunctionReference.GetToken().ToString()] = &astFunctionReference
 }

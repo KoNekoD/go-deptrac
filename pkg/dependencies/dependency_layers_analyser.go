@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
+	tokens2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/events"
 	"github.com/KoNekoD/go-deptrac/pkg/layers"
-	"github.com/KoNekoD/go-deptrac/pkg/references"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
 	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 )
@@ -49,9 +50,9 @@ func (a *DependencyLayersAnalyser) Analyse() (*rules.AnalysisResult, error) {
 		depender := dependency.GetDepender()
 		dependerRef := a.tokenResolver.Resolve(depender, astMap)
 
-		if v, ok55 := dependerRef.(*references.FunctionReference); ok55 {
+		if v, ok55 := dependerRef.(*tokens_references.FunctionReference); ok55 {
 			t := v.GetToken()
-			if tt, ok66 := t.(*tokens.FunctionToken); ok66 {
+			if tt, ok66 := t.(*tokens2.FunctionToken); ok66 {
 				if tt.FunctionName == "ParseFile" {
 					fmt.Println()
 				}

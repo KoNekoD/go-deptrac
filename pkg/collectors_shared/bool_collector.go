@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/collectors_configs"
-	"github.com/KoNekoD/go-deptrac/pkg/tokens"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 )
 
 type BoolCollector struct {
@@ -17,7 +17,7 @@ func NewBoolCollector(collectorResolver CollectorResolverInterface) *BoolCollect
 	}
 }
 
-func (b *BoolCollector) Satisfy(config map[string]interface{}, reference tokens.TokenReferenceInterface) (bool, error) {
+func (b *BoolCollector) Satisfy(config map[string]interface{}, reference tokens_references.TokenReferenceInterface) (bool, error) {
 	configuration, err := b.normalizeConfiguration(config)
 	if err != nil {
 		return false, err

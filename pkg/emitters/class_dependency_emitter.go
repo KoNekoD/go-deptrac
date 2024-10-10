@@ -3,8 +3,9 @@ package emitters
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/dependencies"
+	dependencies2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
-	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 )
 
 type ClassDependencyEmitter struct{}
@@ -34,7 +35,7 @@ func (c *ClassDependencyEmitter) ApplyDependencies(astMap ast_map.AstMap, depend
 		}
 
 		for _, inherit := range astMap.GetClassInherits(classLikeName) {
-			dependencyList.AddDependency(dependencies.NewDependency(classLikeName, inherit.ClassLikeName, dependencies.NewDependencyContext(inherit.FileOccurrence, enums.DependencyTypeInherit)))
+			dependencyList.AddDependency(dependencies.NewDependency(classLikeName, inherit.ClassLikeName, dependencies2.NewDependencyContext(inherit.FileOccurrence, enums.DependencyTypeInherit)))
 		}
 	}
 }

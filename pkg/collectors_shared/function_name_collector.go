@@ -3,9 +3,9 @@ package collectors_shared
 import (
 	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
+	tokens_references2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
-	"github.com/KoNekoD/go-deptrac/pkg/references"
-	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 )
 
 type FunctionNameCollector struct{}
@@ -14,8 +14,8 @@ func NewFunctionNameCollector() *FunctionNameCollector {
 	return &FunctionNameCollector{}
 }
 
-func (c FunctionNameCollector) Satisfy(config map[string]interface{}, reference tokens.TokenReferenceInterface) (bool, error) {
-	if _, ok := reference.(*references.FunctionReference); !ok {
+func (c FunctionNameCollector) Satisfy(config map[string]interface{}, reference tokens_references2.TokenReferenceInterface) (bool, error) {
+	if _, ok := reference.(*tokens_references2.FunctionReference); !ok {
 		return false, nil
 	}
 

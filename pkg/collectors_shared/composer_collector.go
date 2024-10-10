@@ -2,8 +2,8 @@ package collectors_shared
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
-	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 )
 
 type ComposerCollector struct{}
@@ -12,7 +12,7 @@ func NewComposerCollector() *ComposerCollector {
 	return &ComposerCollector{}
 }
 
-func (c *ComposerCollector) Satisfy(config map[string]interface{}, reference tokens.TokenReferenceInterface) (bool, error) {
+func (c *ComposerCollector) Satisfy(config map[string]interface{}, reference tokens_references.TokenReferenceInterface) (bool, error) {
 	if !utils.MapKeyExists(config, "composerPath") || !utils.MapKeyIsString(config, "composerPath") {
 		return false, apperrors.NewInvalidCollectorDefinitionInvalidCollectorConfiguration("ComposerCollector needs the path to the composer.json file_supportive as string.")
 	}

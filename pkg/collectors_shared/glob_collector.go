@@ -2,8 +2,8 @@ package collectors_shared
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
-	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 	filepath2 "path/filepath"
 	"regexp"
 )
@@ -20,7 +20,7 @@ func NewGlobCollector(basePath string) *GlobCollector {
 	}
 }
 
-func (c *GlobCollector) Satisfy(config map[string]interface{}, reference tokens.TokenReferenceInterface) (bool, error) {
+func (c *GlobCollector) Satisfy(config map[string]interface{}, reference tokens_references.TokenReferenceInterface) (bool, error) {
 	filepath := reference.GetFilepath()
 
 	if filepath == nil {

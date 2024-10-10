@@ -3,10 +3,9 @@ package collectors_shared
 import (
 	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
+	tokens_references2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
 	"github.com/KoNekoD/go-deptrac/pkg/parsers"
-	"github.com/KoNekoD/go-deptrac/pkg/references"
-	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 )
 
 type MethodCollector struct {
@@ -21,8 +20,8 @@ func NewMethodCollector(astParser *parsers.NikicPhpParser) *MethodCollector {
 	}
 }
 
-func (c *MethodCollector) Satisfy(config map[string]interface{}, reference tokens.TokenReferenceInterface) (bool, error) {
-	if _, ok := reference.(*references.ClassLikeReference); !ok {
+func (c *MethodCollector) Satisfy(config map[string]interface{}, reference tokens_references2.TokenReferenceInterface) (bool, error) {
+	if _, ok := reference.(*tokens_references2.ClassLikeReference); !ok {
 		return false, nil
 	}
 
@@ -31,7 +30,7 @@ func (c *MethodCollector) Satisfy(config map[string]interface{}, reference token
 		return false, err
 	}
 
-	classLike := c.astParser.GetNodeForClassLikeReference(reference.(*references.ClassLikeReference))
+	classLike := c.astParser.GetNodeForClassLikeReference(reference.(*tokens_references2.ClassLikeReference))
 	if classLike == nil {
 		return false, nil
 	}

@@ -1,17 +1,18 @@
 package references
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/dependencies"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
+	references2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	enums2 "github.com/KoNekoD/go-deptrac/pkg/domain/enums"
-	"github.com/KoNekoD/go-deptrac/pkg/tokens"
-	"github.com/KoNekoD/go-deptrac/pkg/violations"
 )
 
 type ReferenceBuilder struct {
 	Dependencies   []*tokens.DependencyToken
 	tokenTemplates []string
 	Filepath       string
-	ref            *FileReference
+	ref            *references2.FileReference
 }
 
 type ReferenceBuilderInterface interface {
@@ -50,7 +51,7 @@ func (r *ReferenceBuilder) GetTokenTemplates() []string {
 }
 
 func (r *ReferenceBuilder) CreateContext(occursAtLine int, dependencyType enums2.DependencyType) *dependencies.DependencyContext {
-	return dependencies.NewDependencyContext(violations.NewFileOccurrence(r.Filepath, occursAtLine), dependencyType)
+	return dependencies.NewDependencyContext(dtos.NewFileOccurrence(r.Filepath, occursAtLine), dependencyType)
 }
 
 // UnresolvedFunctionCall - Unqualified function and constant names inside a namespace cannot be statically resolved. Inside a namespace Foo, a call to strlen() may either refer to the namespaced \Foo\strlen(), or the global \strlen(). Because PHP-ParserInterface does not have the necessary context to decide this, such names are left unresolved.

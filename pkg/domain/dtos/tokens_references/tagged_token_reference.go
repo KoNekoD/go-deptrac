@@ -1,4 +1,4 @@
-package tokens
+package tokens_references
 
 // TaggedTokenReference - Helper trait for implementing TaggedTokenReferenceInterface.
 type TaggedTokenReference struct {

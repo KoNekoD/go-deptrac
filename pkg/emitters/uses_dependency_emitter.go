@@ -4,8 +4,9 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/dependencies"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
+	tokens2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
-	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 	"strings"
 )
 
@@ -20,7 +21,7 @@ func (u *UsesDependencyEmitter) GetName() string {
 }
 
 func (u *UsesDependencyEmitter) ApplyDependencies(astMap ast_map.AstMap, dependencyList *dependencies.DependencyList) {
-	references := make([]tokens.TaggedTokenReferenceInterface, 0)
+	references := make([]tokens2.TaggedTokenReferenceInterface, 0)
 	for _, structLikeReference := range astMap.GetClassLikeReferences() {
 		references = append(references, structLikeReference)
 	}

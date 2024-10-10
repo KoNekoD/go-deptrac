@@ -3,9 +3,9 @@ package collectors_shared
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
+	tokens2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
+	tokens_references2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
-	"github.com/KoNekoD/go-deptrac/pkg/references"
-	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 )
 
 type InheritsCollector struct {
@@ -24,8 +24,8 @@ func NewInheritsCollector(astMapExtractor *ast_map.AstMapExtractor) (*InheritsCo
 	}, nil
 }
 
-func (c *InheritsCollector) Satisfy(config map[string]interface{}, reference tokens.TokenReferenceInterface) (bool, error) {
-	if _, ok := reference.(*references.ClassLikeReference); !ok {
+func (c *InheritsCollector) Satisfy(config map[string]interface{}, reference tokens_references2.TokenReferenceInterface) (bool, error) {
+	if _, ok := reference.(*tokens_references2.ClassLikeReference); !ok {
 		return false, nil
 	}
 
@@ -34,7 +34,7 @@ func (c *InheritsCollector) Satisfy(config map[string]interface{}, reference tok
 		return false, err
 	}
 
-	for _, inherit := range c.astMap.GetClassInherits(reference.GetToken().(*tokens.ClassLikeToken)) {
+	for _, inherit := range c.astMap.GetClassInherits(reference.GetToken().(*tokens2.ClassLikeToken)) {
 		if inherit.ClassLikeName.Equals(classLikeName) {
 			return true, nil
 		}
@@ -43,10 +43,10 @@ func (c *InheritsCollector) Satisfy(config map[string]interface{}, reference tok
 	return false, nil
 }
 
-func (c *InheritsCollector) getClassLikeName(config map[string]interface{}) (*tokens.ClassLikeToken, error) {
+func (c *InheritsCollector) getClassLikeName(config map[string]interface{}) (*tokens2.ClassLikeToken, error) {
 	if !utils.MapKeyExists(config, "value") || !utils.MapKeyIsString(config, "value") {
 		return nil, apperrors.NewInvalidCollectorDefinitionInvalidCollectorConfiguration("InheritsCollector needs the interface, trait or class name as a string.")
 	}
 
-	return tokens.NewClassLikeTokenFromFQCN(config["value"].(string)), nil
+	return tokens2.NewClassLikeTokenFromFQCN(config["value"].(string)), nil
 }

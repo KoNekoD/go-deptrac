@@ -4,7 +4,7 @@ import (
 	"errors"
 	"github.com/KoNekoD/go-deptrac/pkg/collectors_shared"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos"
-	"github.com/KoNekoD/go-deptrac/pkg/tokens"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/violations"
 	"reflect"
 	"sync"
@@ -31,7 +31,7 @@ func NewLayerResolver(collectorResolver collectors_shared.CollectorResolverInter
 }
 
 // GetLayersForReference retrieves layers for a given reference
-func (r *LayerResolver) GetLayersForReference(reference tokens.TokenReferenceInterface) (map[string]bool, error) {
+func (r *LayerResolver) GetLayersForReference(reference tokens_references.TokenReferenceInterface) (map[string]bool, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -76,7 +76,7 @@ func (r *LayerResolver) GetLayersForReference(reference tokens.TokenReferenceInt
 }
 
 // IsReferenceInLayer checks if a reference is in a given layer_contract
-func (r *LayerResolver) IsReferenceInLayer(layer string, reference tokens.TokenReferenceInterface) (bool, error) {
+func (r *LayerResolver) IsReferenceInLayer(layer string, reference tokens_references.TokenReferenceInterface) (bool, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 

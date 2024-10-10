@@ -1,7 +1,7 @@
 package tokens
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/dependencies"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
 )
 
 type DependencyToken struct {

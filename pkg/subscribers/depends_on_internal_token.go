@@ -3,8 +3,8 @@ package subscribers
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/events"
-	"github.com/KoNekoD/go-deptrac/pkg/references"
 )
 
 type DependsOnInternalToken struct {
@@ -22,7 +22,7 @@ func (d *DependsOnInternalToken) InvokeEventSubscriber(rawEvent interface{}, sto
 	ruleset := event.GetResult()
 	for dependentLayer := range event.DependentLayers {
 		if event.DependerLayer != dependentLayer {
-			if ref, ok := event.DependentReference.(*references.ClassLikeReference); ok {
+			if ref, ok := event.DependentReference.(*tokens_references.ClassLikeReference); ok {
 				isInternal := ref.HasTag("@deptrac-internal")
 				if !isInternal && nil != d.internalTag {
 					isInternal = ref.HasTag(*d.internalTag)
