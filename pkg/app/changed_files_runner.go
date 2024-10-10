@@ -7,18 +7,17 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
-	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 	"golang.org/x/exp/maps"
 	"strings"
 )
 
 // ChangedFilesRunner - Should only be used by ChangedFilesCommand
 type ChangedFilesRunner struct {
-	layerForTokenAnalyser    *tokens.LayerForTokenAnalyser
+	layerForTokenAnalyser    *analysers.LayerForTokenAnalyser
 	dependencyLayersAnalyser *analysers.DependencyLayersAnalyser
 }
 
-func NewChangedFilesRunner(layerForTokenAnalyser *tokens.LayerForTokenAnalyser, dependencyLayersAnalyser *analysers.DependencyLayersAnalyser) *ChangedFilesRunner {
+func NewChangedFilesRunner(layerForTokenAnalyser *analysers.LayerForTokenAnalyser, dependencyLayersAnalyser *analysers.DependencyLayersAnalyser) *ChangedFilesRunner {
 	return &ChangedFilesRunner{
 		layerForTokenAnalyser:    layerForTokenAnalyser,
 		dependencyLayersAnalyser: dependencyLayersAnalyser,

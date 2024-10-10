@@ -23,7 +23,6 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/parsers"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
-	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 )
 
 type ContainerBuilder struct {
@@ -62,15 +61,15 @@ type ContainerBuilder struct {
 	AstMapExtractor                        *ast_map.AstMapExtractor
 	InheritanceFlattener                   *flatteners.InheritanceFlattener
 	DependencyResolver                     *pkg.DependencyResolver
-	TokenResolver                          *tokens.TokenResolver
+	TokenResolver                          *services2.TokenResolver
 	CollectorResolver                      *collectors_resolvers.CollectorResolver
 	LayerResolver                          layers.LayerResolverInterface
 	NikicPhpParser                         *parsers.NikicPhpParser
 	CollectorProvider                      *services2.CollectorProvider
 	DependencyLayersAnalyser               *analysers.DependencyLayersAnalyser
-	TokenInLayerAnalyser                   *tokens.TokenInLayerAnalyser
-	LayerForTokenAnalyser                  *tokens.LayerForTokenAnalyser
-	UnassignedTokenAnalyser                *tokens.UnassignedTokenAnalyser
+	TokenInLayerAnalyser                   *analysers.TokenInLayerAnalyser
+	LayerForTokenAnalyser                  *analysers.LayerForTokenAnalyser
+	UnassignedTokenAnalyser                *analysers.UnassignedTokenAnalyser
 	LayerDependenciesAnalyser              *analysers.LayerDependenciesAnalyser
 	RulesetUsageAnalyser                   *analysers.RulesetUsageAnalyser
 	FormatterProvider                      *formatters.FormatterProvider

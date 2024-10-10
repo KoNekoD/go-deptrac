@@ -1,6 +1,7 @@
-package tokens
+package analysers
 
 import (
+	"github.com/KoNekoD/go-deptrac/pkg/application/services"
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	ast_map2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_map"
 	tokens2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
@@ -13,13 +14,13 @@ import (
 
 type LayerForTokenAnalyser struct {
 	astMapExtractor *ast_map.AstMapExtractor
-	tokenResolver   *TokenResolver
+	tokenResolver   *services.TokenResolver
 	layerResolver   layers.LayerResolverInterface
 }
 
 func NewLayerForTokenAnalyser(
 	astMapExtractor *ast_map.AstMapExtractor,
-	tokenResolver *TokenResolver,
+	tokenResolver *services.TokenResolver,
 	layerResolver layers.LayerResolverInterface,
 ) *LayerForTokenAnalyser {
 	return &LayerForTokenAnalyser{

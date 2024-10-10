@@ -2,22 +2,22 @@ package analysers
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services"
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/layers"
-	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 )
 
 type LayerDependenciesAnalyser struct {
 	astMapExtractor    *ast_map.AstMapExtractor
-	tokenResolver      *tokens.TokenResolver
+	tokenResolver      *services.TokenResolver
 	dependencyResolver *pkg.DependencyResolver
 	layerResolver      layers.LayerResolverInterface
 }
 
 func NewLayerDependenciesAnalyser(
 	astMapExtractor *ast_map.AstMapExtractor,
-	tokenResolver *tokens.TokenResolver,
+	tokenResolver *services.TokenResolver,
 	dependencyResolver *pkg.DependencyResolver,
 	layerResolver layers.LayerResolverInterface,
 ) *LayerDependenciesAnalyser {

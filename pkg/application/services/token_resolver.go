@@ -1,9 +1,9 @@
-package tokens
+package services
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_map"
-	tokens3 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
-	tokens_references2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 )
 
@@ -13,15 +13,15 @@ func NewTokenResolver() *TokenResolver {
 	return &TokenResolver{}
 }
 
-func (r *TokenResolver) Resolve(token tokens3.TokenInterface, astMap *ast_map.AstMap) tokens_references2.TokenReferenceInterface {
+func (r *TokenResolver) Resolve(token tokens.TokenInterface, astMap *ast_map.AstMap) tokens_references.TokenReferenceInterface {
 	switch v := token.(type) {
-	case *tokens3.ClassLikeToken:
+	case *tokens.ClassLikeToken:
 		return astMap.GetClassReferenceForToken(v)
-	case *tokens3.FunctionToken:
+	case *tokens.FunctionToken:
 		return astMap.GetFunctionReferenceForToken(v)
 	case *enums.SuperGlobalToken:
-		return tokens_references2.NewVariableReference(v)
-	case *tokens3.FileToken:
+		return tokens_references.NewVariableReference(v)
+	case *tokens.FileToken:
 		return astMap.GetFileReferenceForToken(v)
 	default:
 		panic("Unrecognized TokenInterface")

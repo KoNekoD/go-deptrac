@@ -1,6 +1,7 @@
-package tokens
+package analysers
 
 import (
+	"github.com/KoNekoD/go-deptrac/pkg/application/services"
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/configs"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
@@ -8,21 +9,21 @@ import (
 	"slices"
 )
 
-type TokenInLayerAnalyser struct {
+type UnassignedTokenAnalyser struct {
 	tokenTypes      []enums.TokenType
 	config          *configs.AnalyserConfig
 	astMapExtractor *ast_map.AstMapExtractor
-	tokenResolver   *TokenResolver
+	tokenResolver   *services.TokenResolver
 	layerResolver   layers.LayerResolverInterface
 }
 
-func NewTokenInLayerAnalyser(
+func NewUnassignedTokenAnalyser(
 	astMapExtractor *ast_map.AstMapExtractor,
-	tokenResolver *TokenResolver,
+	tokenResolver *services.TokenResolver,
 	layerResolver layers.LayerResolverInterface,
 	config *configs.AnalyserConfig,
-) *TokenInLayerAnalyser {
-	analyser := &TokenInLayerAnalyser{
+) *UnassignedTokenAnalyser {
+	analyser := &UnassignedTokenAnalyser{
 		tokenTypes:      make([]enums.TokenType, 0),
 		astMapExtractor: astMapExtractor,
 		tokenResolver:   tokenResolver,
@@ -42,12 +43,12 @@ func NewTokenInLayerAnalyser(
 	return analyser
 }
 
-func (a *TokenInLayerAnalyser) FindTokensInLayer(layer string) (map[string]enums.TokenType, error) {
+func (a *UnassignedTokenAnalyser) FindUnassignedTokens() ([]string, error) {
 	astMap, err := a.astMapExtractor.Extract()
 	if err != nil {
 		return nil, err
 	}
-	matchingTokens := make(map[string]enums.TokenType)
+	unassignedTokens := make([]string, 0)
 
 	if slices.Contains(a.tokenTypes, enums.TokenTypeClassLike) {
 		for _, classReference := range astMap.GetClassLikeReferences() {
@@ -56,8 +57,9 @@ func (a *TokenInLayerAnalyser) FindTokensInLayer(layer string) (map[string]enums
 			if errGet != nil {
 				return nil, errGet
 			}
-			if _, ok := gotLayers[layer]; ok {
-				matchingTokens[classToken.GetToken().ToString()] = enums.TokenTypeClassLike
+
+			if len(gotLayers) == 0 {
+				unassignedTokens = append(unassignedTokens, classToken.GetToken().ToString())
 			}
 		}
 	}
@@ -69,8 +71,9 @@ func (a *TokenInLayerAnalyser) FindTokensInLayer(layer string) (map[string]enums
 			if errGet != nil {
 				return nil, errGet
 			}
-			if _, ok := gotLayers[layer]; ok {
-				matchingTokens[functionToken.GetToken().ToString()] = enums.TokenTypeFunction
+
+			if len(gotLayers) == 0 {
+				unassignedTokens = append(unassignedTokens, functionToken.GetToken().ToString())
 			}
 		}
 	}
@@ -82,11 +85,14 @@ func (a *TokenInLayerAnalyser) FindTokensInLayer(layer string) (map[string]enums
 			if errGet != nil {
 				return nil, errGet
 			}
-			if _, ok := gotLayers[layer]; ok {
-				matchingTokens[fileToken.GetToken().ToString()] = enums.TokenTypeFile
+
+			if len(gotLayers) == 0 {
+				unassignedTokens = append(unassignedTokens, fileToken.GetToken().ToString())
 			}
 		}
 	}
 
-	return matchingTokens, nil
+	slices.Sort(unassignedTokens)
+
+	return unassignedTokens, nil
 }

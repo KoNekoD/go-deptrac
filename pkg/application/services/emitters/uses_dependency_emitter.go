@@ -3,9 +3,9 @@ package emitters
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_map"
-	dependencies2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
-	tokens2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"strings"
 )
@@ -20,8 +20,8 @@ func (u *UsesDependencyEmitter) GetName() string {
 	return "UsesDependencyEmitter"
 }
 
-func (u *UsesDependencyEmitter) ApplyDependencies(astMap ast_map.AstMap, dependencyList *dependencies2.DependencyList) {
-	references := make([]tokens2.TaggedTokenReferenceInterface, 0)
+func (u *UsesDependencyEmitter) ApplyDependencies(astMap ast_map.AstMap, dependencyList *dependencies.DependencyList) {
+	references := make([]tokens_references.TaggedTokenReferenceInterface, 0)
 	for _, structLikeReference := range astMap.GetClassLikeReferences() {
 		references = append(references, structLikeReference)
 	}
@@ -45,7 +45,7 @@ func (u *UsesDependencyEmitter) ApplyDependencies(astMap ast_map.AstMap, depende
 		for _, astStructReference := range fileReference.ClassLikeReferences {
 			for _, emittedDependency := range fileReference.Dependencies {
 				if emittedDependency.Context.DependencyType == enums.DependencyTypeUse && u.IsFQDN(emittedDependency, FQDNIndex) {
-					dependencyList.AddDependency(dependencies2.NewDependency(astStructReference.GetToken(), emittedDependency.Token, emittedDependency.Context))
+					dependencyList.AddDependency(dependencies.NewDependency(astStructReference.GetToken(), emittedDependency.Token, emittedDependency.Context))
 				}
 			}
 		}

@@ -28,7 +28,6 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/parsers"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
-	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 	"github.com/elliotchance/orderedmap/v2"
 	"os"
 	"strings"
@@ -117,7 +116,7 @@ func Services(builder *ContainerBuilder) error {
 	}
 	inheritanceFlattener := flatteners.NewInheritanceFlattener()
 	dependencyResolver := pkg.NewDependencyResolver(builderConfiguration.Analyser, dependencyEmitters, inheritanceFlattener, eventDispatcher)
-	tokenResolver := tokens.NewTokenResolver()
+	tokenResolver := services2.NewTokenResolver()
 
 	astMapExtractor := ast_map.NewAstMapExtractor(fileInputCollector, astLoader)
 
@@ -262,9 +261,9 @@ func Services(builder *ContainerBuilder) error {
 	 * SetAnalyser
 	 */
 	dependencyLayersAnalyser := analysers.NewDependencyLayersAnalyser(astMapExtractor, dependencyResolver, tokenResolver, layerResolver, eventDispatcher)
-	tokenInLayerAnalyser := tokens.NewTokenInLayerAnalyser(astMapExtractor, tokenResolver, layerResolver, builderConfiguration.Analyser)
-	layerForTokenAnalyser := tokens.NewLayerForTokenAnalyser(astMapExtractor, tokenResolver, layerResolver)
-	unassignedTokenAnalyser := tokens.NewUnassignedTokenAnalyser(astMapExtractor, tokenResolver, layerResolver, builderConfiguration.Analyser)
+	tokenInLayerAnalyser := analysers.NewTokenInLayerAnalyser(astMapExtractor, tokenResolver, layerResolver, builderConfiguration.Analyser)
+	layerForTokenAnalyser := analysers.NewLayerForTokenAnalyser(astMapExtractor, tokenResolver, layerResolver)
+	unassignedTokenAnalyser := analysers.NewUnassignedTokenAnalyser(astMapExtractor, tokenResolver, layerResolver, builderConfiguration.Analyser)
 	layerDependenciesAnalyser := analysers.NewLayerDependenciesAnalyser(astMapExtractor, tokenResolver, dependencyResolver, layerResolver)
 	rulesetUsageAnalyser := analysers.NewRulesetUsageAnalyser(layerProvider, layerResolver, astMapExtractor, dependencyResolver, tokenResolver, builderConfiguration.Layers)
 
