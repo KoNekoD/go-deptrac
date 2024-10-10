@@ -1,10 +1,11 @@
-package dependencies
+package pkg
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_map"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/emitters"
 	"github.com/KoNekoD/go-deptrac/pkg/events"
@@ -28,8 +29,8 @@ func NewDependencyResolver(typesConfig *dtos.AnalyserConfig, emitterLocator map[
 	}
 }
 
-func (r *DependencyResolver) Resolve(astMap *ast_map.AstMap) (*DependencyList, error) {
-	result := NewDependencyList()
+func (r *DependencyResolver) Resolve(astMap *ast_map.AstMap) (*dependencies.DependencyList, error) {
+	result := dependencies.NewDependencyList()
 
 	for _, typeConfig := range r.config.Types {
 		dependencyEmitterInterface, ok := r.emitterLocator[typeConfig]

@@ -1,6 +1,8 @@
-package rules
+package violations
 
-import "github.com/KoNekoD/go-deptrac/pkg/dependencies"
+import (
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
+)
 
 // SkippedViolation - Represents a Violation that is being skipped by the baseline file_supportive
 type SkippedViolation struct {

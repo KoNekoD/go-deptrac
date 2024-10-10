@@ -1,23 +1,24 @@
-package dependencies
+package subscribers
 
 import (
+	"github.com/KoNekoD/go-deptrac/pkg"
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/violations"
 	"github.com/KoNekoD/go-deptrac/pkg/layers"
-	"github.com/KoNekoD/go-deptrac/pkg/rules"
 	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 )
 
 type LayerDependenciesAnalyser struct {
 	astMapExtractor    *ast_map.AstMapExtractor
 	tokenResolver      *tokens.TokenResolver
-	dependencyResolver *DependencyResolver
+	dependencyResolver *pkg.DependencyResolver
 	layerResolver      layers.LayerResolverInterface
 }
 
 func NewLayerDependenciesAnalyser(
 	astMapExtractor *ast_map.AstMapExtractor,
 	tokenResolver *tokens.TokenResolver,
-	dependencyResolver *DependencyResolver,
+	dependencyResolver *pkg.DependencyResolver,
 	layerResolver layers.LayerResolverInterface,
 ) *LayerDependenciesAnalyser {
 	return &LayerDependenciesAnalyser{
@@ -28,8 +29,8 @@ func NewLayerDependenciesAnalyser(
 	}
 }
 
-func (a *LayerDependenciesAnalyser) GetDependencies(layer string, targetLayer *string) (map[string][]*rules.Uncovered, error) {
-	uncoveredResult := make(map[string][]*rules.Uncovered)
+func (a *LayerDependenciesAnalyser) GetDependencies(layer string, targetLayer *string) (map[string][]*violations.Uncovered, error) {
+	uncoveredResult := make(map[string][]*violations.Uncovered)
 	astMap, err := a.astMapExtractor.Extract()
 	if err != nil {
 		return nil, err
@@ -53,9 +54,9 @@ func (a *LayerDependenciesAnalyser) GetDependencies(layer string, targetLayer *s
 					continue
 				}
 				if _, ok := uncoveredResult[dependentLayerName]; !ok {
-					uncoveredResult[dependentLayerName] = make([]*rules.Uncovered, 0)
+					uncoveredResult[dependentLayerName] = make([]*violations.Uncovered, 0)
 				}
-				uncoveredResult[dependentLayerName] = append(uncoveredResult[dependentLayerName], rules.NewUncovered(dependency, dependentLayerName))
+				uncoveredResult[dependentLayerName] = append(uncoveredResult[dependentLayerName], violations.NewUncovered(dependency, dependentLayerName))
 			}
 		}
 	}

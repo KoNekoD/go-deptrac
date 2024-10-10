@@ -1,11 +1,11 @@
 package app
 
 import (
+	"github.com/KoNekoD/go-deptrac/pkg"
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/collectors_shared"
 	"github.com/KoNekoD/go-deptrac/pkg/commands"
 	"github.com/KoNekoD/go-deptrac/pkg/configs"
-	"github.com/KoNekoD/go-deptrac/pkg/dependencies"
 	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/services"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/stopwatch"
@@ -21,7 +21,6 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/subscribers"
 	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 	"github.com/KoNekoD/go-deptrac/pkg/types"
-	"github.com/KoNekoD/go-deptrac/pkg/violations"
 )
 
 type ContainerBuilder struct {
@@ -43,13 +42,13 @@ type ContainerBuilder struct {
 	ParserInterface                        parsers.ParserInterface
 	LayerProvider                          *layers.LayerProvider
 	EventHelper                            *dispatchers.EventHelper
-	AllowDependencyHandler                 *dependencies.AllowDependencyHandler
+	AllowDependencyHandler                 *subscribers.AllowDependencyHandler
 	DependsOnPrivateLayer                  *subscribers.DependsOnPrivateLayer
 	DependsOnInternalToken                 *subscribers.DependsOnInternalToken
 	DependsOnDisallowedLayer               *subscribers.DependsOnDisallowedLayer
 	MatchingLayersHandler                  *layers.MatchingLayersHandler
-	UncoveredDependentHandler              *dependencies.UncoveredDependentHandler
-	UnmatchedSkippedViolations             *violations.UnmatchedSkippedViolations
+	UncoveredDependentHandler              *subscribers.UncoveredDependentHandler
+	UnmatchedSkippedViolations             *subscribers.UnmatchedSkippedViolations
 	ConsoleSubscriber                      *subscribers.ConsoleSubscriber
 	ProgressSubscriber                     *subscribers.ProgressSubscriber
 	VerboseBoolFlag                        *bool
@@ -59,17 +58,17 @@ type ContainerBuilder struct {
 	TimeStopwatch                          *stopwatch.Stopwatch
 	AstMapExtractor                        *ast_map.AstMapExtractor
 	InheritanceFlattener                   *flatteners.InheritanceFlattener
-	DependencyResolver                     *dependencies.DependencyResolver
+	DependencyResolver                     *pkg.DependencyResolver
 	TokenResolver                          *tokens.TokenResolver
 	CollectorResolver                      *collectors_shared.CollectorResolver
 	LayerResolver                          layers.LayerResolverInterface
 	NikicPhpParser                         *parsers.NikicPhpParser
 	CollectorProvider                      *collectors_shared.CollectorProvider
-	DependencyLayersAnalyser               *dependencies.DependencyLayersAnalyser
+	DependencyLayersAnalyser               *subscribers.DependencyLayersAnalyser
 	TokenInLayerAnalyser                   *tokens.TokenInLayerAnalyser
 	LayerForTokenAnalyser                  *tokens.LayerForTokenAnalyser
 	UnassignedTokenAnalyser                *tokens.UnassignedTokenAnalyser
-	LayerDependenciesAnalyser              *dependencies.LayerDependenciesAnalyser
+	LayerDependenciesAnalyser              *subscribers.LayerDependenciesAnalyser
 	RulesetUsageAnalyser                   *rules.RulesetUsageAnalyser
 	FormatterProvider                      *formatters.FormatterProvider
 	FormatterConfiguration                 *formatters.FormatterConfiguration

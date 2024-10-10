@@ -2,6 +2,7 @@ package ast_map
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/events"
 	"github.com/KoNekoD/go-deptrac/pkg/parsers"
@@ -19,7 +20,7 @@ func NewAstLoader(parser parsers.ParserInterface, eventDispatcher dispatchers.Ev
 	}
 }
 
-func (l *AstLoader) CreateAstMap(files []string) (*AstMap, error) {
+func (l *AstLoader) CreateAstMap(files []string) (*ast_map.AstMap, error) {
 	references := make([]*tokens_references.FileReference, 0)
 
 	err := l.eventDispatcher.DispatchEvent(NewPreCreateAstMapEvent(len(files)))
@@ -46,7 +47,7 @@ func (l *AstLoader) CreateAstMap(files []string) (*AstMap, error) {
 		}
 	}
 
-	astMap := NewAstMap(references)
+	astMap := ast_map.NewAstMap(references)
 
 	errDispatchPostCreateMap := l.eventDispatcher.DispatchEvent(NewPostCreateAstMapEvent())
 	if errDispatchPostCreateMap != nil {

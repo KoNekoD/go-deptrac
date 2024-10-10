@@ -2,7 +2,6 @@ package ast_map
 
 import (
 	"fmt"
-	ast_map2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"strings"
@@ -101,12 +100,12 @@ func (a *AstMap) GetFileReferenceForToken(filePath *tokens.FileToken) *tokens_re
 	return v
 }
 
-func (a *AstMap) GetClassInherits(structLikeName *tokens.ClassLikeToken) []*ast_map2.AstInherit {
+func (a *AstMap) GetClassInherits(structLikeName *tokens.ClassLikeToken) []*AstInherit {
 	structReference := a.GetClassReferenceForToken(structLikeName)
 	if structReference == nil {
 		return nil
 	}
-	inherits := make([]*ast_map2.AstInherit, 0)
+	inherits := make([]*AstInherit, 0)
 	for _, dep := range structReference.Inherits {
 		inherits = append(inherits, dep)
 		outArr := a.recursivelyResolveDependencies(dep, nil, nil)
@@ -118,25 +117,25 @@ func (a *AstMap) GetClassInherits(structLikeName *tokens.ClassLikeToken) []*ast_
 }
 
 type stack struct {
-	s []*ast_map2.AstInherit
+	s []*AstInherit
 }
 
-func (s *stack) Push(v *ast_map2.AstInherit) {
+func (s *stack) Push(v *AstInherit) {
 	s.s = append(s.s, v)
 }
 
-func (s *stack) Pop() *ast_map2.AstInherit {
+func (s *stack) Pop() *AstInherit {
 	v := s.s[len(s.s)-1]
 	s.s = s.s[:len(s.s)-1]
 	return v
 }
 
-func (a *AstMap) recursivelyResolveDependencies(inheritDependency *ast_map2.AstInherit, alreadyResolved map[string]bool, pathStack *stack) []*ast_map2.AstInherit {
+func (a *AstMap) recursivelyResolveDependencies(inheritDependency *AstInherit, alreadyResolved map[string]bool, pathStack *stack) []*AstInherit {
 	if alreadyResolved == nil {
 		alreadyResolved = make(map[string]bool)
 	}
 	if pathStack == nil {
-		pathStack = &stack{s: make([]*ast_map2.AstInherit, 0)}
+		pathStack = &stack{s: make([]*AstInherit, 0)}
 		pathStack.Push(inheritDependency)
 	}
 	structName := inheritDependency.ClassLikeName.ToString()
@@ -148,7 +147,7 @@ func (a *AstMap) recursivelyResolveDependencies(inheritDependency *ast_map2.AstI
 	if structReference == nil {
 		return nil
 	}
-	out := make([]*ast_map2.AstInherit, 0)
+	out := make([]*AstInherit, 0)
 	for _, inherit := range structReference.Inherits {
 		alreadyResolved[structName] = true
 		path := pathStack.s

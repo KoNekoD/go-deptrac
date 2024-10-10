@@ -2,12 +2,13 @@ package ast_map
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/collectors_shared"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_map"
 )
 
 type AstMapExtractor struct {
 	inputCollector collectors_shared.InputCollectorInterface
 	astLoader      *AstLoader
-	astMapCache    *AstMap
+	astMapCache    *ast_map.AstMap
 }
 
 func NewAstMapExtractor(inputCollector collectors_shared.InputCollectorInterface, astLoader *AstLoader) *AstMapExtractor {
@@ -18,7 +19,7 @@ func NewAstMapExtractor(inputCollector collectors_shared.InputCollectorInterface
 	}
 }
 
-func (e *AstMapExtractor) Extract() (*AstMap, error) {
+func (e *AstMapExtractor) Extract() (*ast_map.AstMap, error) {
 	if e.astMapCache == nil {
 		collected, err := e.inputCollector.Collect()
 

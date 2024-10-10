@@ -2,7 +2,8 @@ package formatters
 
 import (
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/dependencies"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
+	violations2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/violations"
 	enums2 "github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
@@ -43,9 +44,9 @@ func (g *GithubActionsOutputFormatter) Finish(outputResult *results.OutputResult
 
 func (g *GithubActionsOutputFormatter) determineLogLevel(rule rules.RuleInterface) string {
 	switch rule.(type) {
-	case *rules.Violation:
+	case *violations2.Violation:
 		return "error"
-	case *rules.SkippedViolation:
+	case *violations2.SkippedViolation:
 		return "warning"
 	default:
 		return "debug"
@@ -103,11 +104,11 @@ func (g *GithubActionsOutputFormatter) printViolation(rule rules.RuleInterface, 
 	dependerLayer := ""
 	dependentLayer := ""
 	switch v := rule.(type) {
-	case *rules.SkippedViolation:
+	case *violations2.SkippedViolation:
 		prefix = "[SKIPPED] "
 		dependerLayer = v.GetDependerLayer()
 		dependentLayer = v.GetDependentLayer()
-	case *rules.Violation:
+	case *violations2.Violation:
 		dependerLayer = v.GetDependerLayer()
 		dependentLayer = v.GetDependentLayer()
 	}

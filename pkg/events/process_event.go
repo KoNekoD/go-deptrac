@@ -1,7 +1,7 @@
 package events
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/dependencies"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
 )

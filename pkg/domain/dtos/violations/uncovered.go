@@ -1,6 +1,8 @@
-package rules
+package violations
 
-import "github.com/KoNekoD/go-deptrac/pkg/dependencies"
+import (
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
+)
 
 // Uncovered - Represents a dependency_contract that is NOT covered by the current configuration.
 type Uncovered struct {

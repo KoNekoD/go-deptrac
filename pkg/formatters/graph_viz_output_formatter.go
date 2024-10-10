@@ -3,6 +3,7 @@ package formatters
 import (
 	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/formatters_configs"
+	violations2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/violations"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
 	"github.com/goccy/go-graphviz"
@@ -47,7 +48,7 @@ func (f *GraphVizOutputFormatter) Finish(result results.OutputResult, output res
 	return nil
 }
 
-func (f *GraphVizOutputFormatter) calculateViolations(violations []*rules.Violation) map[string]map[string]int {
+func (f *GraphVizOutputFormatter) calculateViolations(violations []*violations2.Violation) map[string]map[string]int {
 	layerViolations := make(map[string]map[string]int)
 	for _, violation := range violations {
 		dependerLayer := violation.GetDependerLayer()
@@ -75,7 +76,7 @@ func (f *GraphVizOutputFormatter) calculateLayerDependencies(rulesList []rules.R
 			}
 
 			layersDependOnLayers[layerA][layerB]++
-		case *rules.Uncovered:
+		case *violations2.Uncovered:
 			if layersDependOnLayers[r.Layer] == nil {
 				layersDependOnLayers[r.Layer] = make(map[string]int)
 			}

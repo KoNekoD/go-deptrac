@@ -1,7 +1,6 @@
 package dependencies
 
 import (
-	dependencies2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
 )
 
@@ -11,7 +10,7 @@ type DependencyInterface interface {
 
 	GetDependent() tokens.TokenInterface
 
-	GetContext() *dependencies2.DependencyContext
+	GetContext() *DependencyContext
 
 	Serialize() []map[string]interface{}
 }

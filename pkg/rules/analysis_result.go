@@ -2,36 +2,35 @@ package rules
 
 import (
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/violations"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
-	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 )
 
 // AnalysisResult - Describes the result_contract of a source code analysis.
 type AnalysisResult struct {
 	rules map[enums.RuleTypeEnum]map[string]RuleInterface
 
-	warnings []*tokens.Warning
+	warnings []*violations.Warning
 
-	errors []*apperrors.Error
+	errors []*violations.Error
 }
 
 func NewAnalysisResult() *AnalysisResult {
 	return &AnalysisResult{
 		rules:    make(map[enums.RuleTypeEnum]map[string]RuleInterface),
-		warnings: make([]*tokens.Warning, 0),
-		errors:   make([]*apperrors.Error, 0),
+		warnings: make([]*violations.Warning, 0),
+		errors:   make([]*violations.Error, 0),
 	}
 }
 
 func (r *AnalysisResult) ruleTypeByRule(rule RuleInterface) enums.RuleTypeEnum {
 	switch rule.(type) {
-	case *Violation:
+	case *violations.Violation:
 		return enums.TypeViolation
-	case *SkippedViolation:
+	case *violations.SkippedViolation:
 		return enums.TypeSkippedViolation
-	case *Uncovered:
+	case *violations.Uncovered:
 		return enums.TypeUncovered
 	case *Allowed:
 		return enums.TypeAllowed
@@ -62,18 +61,18 @@ func (r *AnalysisResult) Rules() map[enums.RuleTypeEnum]map[string]RuleInterface
 	return r.rules
 }
 
-func (r *AnalysisResult) AddWarning(warning *tokens.Warning) {
+func (r *AnalysisResult) AddWarning(warning *violations.Warning) {
 	r.warnings = append(r.warnings, warning)
 }
 
-func (r *AnalysisResult) Warnings() []*tokens.Warning {
+func (r *AnalysisResult) Warnings() []*violations.Warning {
 	return r.warnings
 }
 
-func (r *AnalysisResult) AddError(error *apperrors.Error) {
+func (r *AnalysisResult) AddError(error *violations.Error) {
 	r.errors = append(r.errors, error)
 }
 
-func (r *AnalysisResult) Errors() []*apperrors.Error {
+func (r *AnalysisResult) Errors() []*violations.Error {
 	return r.errors
 }

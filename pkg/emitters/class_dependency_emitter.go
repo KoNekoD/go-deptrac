@@ -1,8 +1,7 @@
 package emitters
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
-	"github.com/KoNekoD/go-deptrac/pkg/dependencies"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_map"
 	dependencies2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
@@ -18,7 +17,7 @@ func (c *ClassDependencyEmitter) GetName() string {
 	return "ClassDependencyEmitter"
 }
 
-func (c *ClassDependencyEmitter) ApplyDependencies(astMap ast_map.AstMap, dependencyList *dependencies.DependencyList) {
+func (c *ClassDependencyEmitter) ApplyDependencies(astMap ast_map.AstMap, dependencyList *dependencies2.DependencyList) {
 	for _, classReference := range astMap.GetClassLikeReferences() {
 		classLikeName := classReference.GetToken().(*tokens.ClassLikeToken)
 
@@ -31,11 +30,11 @@ func (c *ClassDependencyEmitter) ApplyDependencies(astMap ast_map.AstMap, depend
 				continue
 			}
 
-			dependencyList.AddDependency(dependencies.NewDependency(classLikeName, dependencyToken.Token, dependencyToken.Context))
+			dependencyList.AddDependency(dependencies2.NewDependency(classLikeName, dependencyToken.Token, dependencyToken.Context))
 		}
 
 		for _, inherit := range astMap.GetClassInherits(classLikeName) {
-			dependencyList.AddDependency(dependencies.NewDependency(classLikeName, inherit.ClassLikeName, dependencies2.NewDependencyContext(inherit.FileOccurrence, enums.DependencyTypeInherit)))
+			dependencyList.AddDependency(dependencies2.NewDependency(classLikeName, inherit.ClassLikeName, dependencies2.NewDependencyContext(inherit.FileOccurrence, enums.DependencyTypeInherit)))
 		}
 	}
 }

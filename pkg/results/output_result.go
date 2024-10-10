@@ -1,20 +1,19 @@
 package results
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
+	violations2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/violations"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
-	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 )
 
 // OutputResult - Represents a result_contract ready for output formatting
 type OutputResult struct {
 	rules    map[enums.RuleTypeEnum]map[string]rules.RuleInterface
-	Errors   []*apperrors.Error
-	Warnings []*tokens.Warning
+	Errors   []*violations2.Error
+	Warnings []*violations2.Warning
 }
 
-func newOutputResult(rules map[enums.RuleTypeEnum]map[string]rules.RuleInterface, errors []*apperrors.Error, warnings []*tokens.Warning) *OutputResult {
+func newOutputResult(rules map[enums.RuleTypeEnum]map[string]rules.RuleInterface, errors []*violations2.Error, warnings []*violations2.Warning) *OutputResult {
 	return &OutputResult{rules: rules, Errors: errors, Warnings: warnings}
 }
 
@@ -48,12 +47,12 @@ func (r *OutputResult) AllRules() []rules.RuleInterface {
 	}
 	return rules
 }
-func (r *OutputResult) Violations() []*rules.Violation {
+func (r *OutputResult) Violations() []*violations2.Violation {
 	untyped := r.AllOf(enums.TypeViolation)
 
-	items := make([]*rules.Violation, 0, len(untyped))
+	items := make([]*violations2.Violation, 0, len(untyped))
 	for _, item := range untyped {
-		items = append(items, item.(*rules.Violation))
+		items = append(items, item.(*violations2.Violation))
 	}
 
 	return items
@@ -63,23 +62,23 @@ func (r *OutputResult) HasViolations() bool {
 	return len(r.Violations()) > 0
 }
 
-func (r *OutputResult) SkippedViolations() []*rules.SkippedViolation {
+func (r *OutputResult) SkippedViolations() []*violations2.SkippedViolation {
 	untyped := r.AllOf(enums.TypeSkippedViolation)
 
-	items := make([]*rules.SkippedViolation, 0, len(untyped))
+	items := make([]*violations2.SkippedViolation, 0, len(untyped))
 	for _, item := range untyped {
-		items = append(items, item.(*rules.SkippedViolation))
+		items = append(items, item.(*violations2.SkippedViolation))
 	}
 
 	return items
 }
 
-func (r *OutputResult) Uncovered() []*rules.Uncovered {
+func (r *OutputResult) Uncovered() []*violations2.Uncovered {
 	untyped := r.AllOf(enums.TypeUncovered)
 
-	items := make([]*rules.Uncovered, 0, len(untyped))
+	items := make([]*violations2.Uncovered, 0, len(untyped))
 	for _, item := range untyped {
-		items = append(items, item.(*rules.Uncovered))
+		items = append(items, item.(*violations2.Uncovered))
 	}
 
 	return items

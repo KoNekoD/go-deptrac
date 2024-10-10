@@ -1,8 +1,8 @@
 package emitters
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
-	"github.com/KoNekoD/go-deptrac/pkg/dependencies"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_map"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
 )
 
 type DependencyEmitterInterface interface {

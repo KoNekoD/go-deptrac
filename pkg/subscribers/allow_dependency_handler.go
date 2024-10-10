@@ -1,4 +1,4 @@
-package dependencies
+package subscribers
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/events"

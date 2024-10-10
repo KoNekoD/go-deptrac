@@ -1,11 +1,13 @@
-package dependencies
+package subscribers
 
 import (
 	"fmt"
+	"github.com/KoNekoD/go-deptrac/pkg"
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
 	tokens2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/violations"
 	"github.com/KoNekoD/go-deptrac/pkg/events"
 	"github.com/KoNekoD/go-deptrac/pkg/layers"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
@@ -14,7 +16,7 @@ import (
 
 type DependencyLayersAnalyser struct {
 	astMapExtractor    *ast_map.AstMapExtractor
-	dependencyResolver *DependencyResolver
+	dependencyResolver *pkg.DependencyResolver
 	tokenResolver      *tokens.TokenResolver
 	layerResolver      layers.LayerResolverInterface
 	eventDispatcher    dispatchers.EventDispatcherInterface
@@ -22,7 +24,7 @@ type DependencyLayersAnalyser struct {
 
 func NewDependencyLayersAnalyser(
 	astMapExtractor *ast_map.AstMapExtractor,
-	dependencyResolver *DependencyResolver,
+	dependencyResolver *pkg.DependencyResolver,
 	tokenResolver *tokens.TokenResolver,
 	layerResolver layers.LayerResolverInterface,
 	eventDispatcher dispatchers.EventDispatcherInterface) *DependencyLayersAnalyser {
@@ -45,7 +47,7 @@ func (a *DependencyLayersAnalyser) Analyse() (*rules.AnalysisResult, error) {
 		return nil, err
 	}
 	analysisResult := rules.NewAnalysisResult()
-	warnings := make(map[string]*tokens.Warning)
+	warnings := make(map[string]*violations.Warning)
 	for _, dependency := range dependencies.GetDependenciesAndInheritDependencies() {
 		depender := dependency.GetDepender()
 		dependerRef := a.tokenResolver.Resolve(depender, astMap)
@@ -70,7 +72,7 @@ func (a *DependencyLayersAnalyser) Analyse() (*rules.AnalysisResult, error) {
 
 		_, ok := warnings[depender.ToString()]
 		if !ok && len(dependerLayers) > 1 {
-			warnings[depender.ToString()] = tokens.NewWarningTokenIsInMoreThanOneLayer(depender.ToString(), dependerLayers)
+			warnings[depender.ToString()] = violations.NewWarningTokenIsInMoreThanOneLayer(depender.ToString(), dependerLayers)
 		}
 
 		dependent := dependency.GetDependent()

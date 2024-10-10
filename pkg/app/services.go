@@ -3,10 +3,10 @@ package app
 import (
 	"flag"
 	"fmt"
+	"github.com/KoNekoD/go-deptrac/pkg"
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/collectors_shared"
 	"github.com/KoNekoD/go-deptrac/pkg/commands"
-	"github.com/KoNekoD/go-deptrac/pkg/dependencies"
 	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
 	enums2 "github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/services"
@@ -25,7 +25,6 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/subscribers"
 	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 	"github.com/KoNekoD/go-deptrac/pkg/types"
-	"github.com/KoNekoD/go-deptrac/pkg/violations"
 	"github.com/elliotchance/orderedmap/v2"
 	"os"
 	"strings"
@@ -113,7 +112,7 @@ func Services(builder *ContainerBuilder) error {
 		enums2.EmitterTypeUseToken:                 emitters.NewUsesDependencyEmitter(),
 	}
 	inheritanceFlattener := flatteners.NewInheritanceFlattener()
-	dependencyResolver := dependencies.NewDependencyResolver(builderConfiguration.Analyser, dependencyEmitters, inheritanceFlattener, eventDispatcher)
+	dependencyResolver := pkg.NewDependencyResolver(builderConfiguration.Analyser, dependencyEmitters, inheritanceFlattener, eventDispatcher)
 	tokenResolver := tokens.NewTokenResolver()
 
 	astMapExtractor := ast_map.NewAstMapExtractor(fileInputCollector, astLoader)
@@ -130,15 +129,15 @@ func Services(builder *ContainerBuilder) error {
 	subscribers.Map = orderedmap.NewOrderedMap[string, *orderedmap.OrderedMap[int, []subscribers.EventSubscriberInterface]]()
 
 	// Events
-	uncoveredDependentHandler := dependencies.NewUncoveredDependentHandler(builderConfiguration.IgnoreUncoveredInternalStructs)
+	uncoveredDependentHandler := subscribers.NewUncoveredDependentHandler(builderConfiguration.IgnoreUncoveredInternalStructs)
 	matchingLayersHandler := layers.NewMatchingLayersHandler()
-	allowDependencyHandler := dependencies.NewAllowDependencyHandler()
+	allowDependencyHandler := subscribers.NewAllowDependencyHandler()
 	consoleSubscriber := subscribers.NewConsoleSubscriber(symfonyOutput, timeStopwatch)
 	progressSubscriber := subscribers.NewProgressSubscriber(symfonyOutput)
 	dependsOnDisallowedLayer := subscribers.NewDependsOnDisallowedLayer(eventHelper)
 	dependsOnPrivateLayer := subscribers.NewDependsOnPrivateLayer(eventHelper)
 	dependsOnInternalToken := subscribers.NewDependsOnInternalToken(eventHelper, builderConfiguration.Analyser)
-	unmatchedSkippedViolations := violations.NewUnmatchedSkippedViolations(eventHelper)
+	unmatchedSkippedViolations := subscribers.NewUnmatchedSkippedViolations(eventHelper)
 
 	processEvent := &events.ProcessEvent{}
 	postProcessEvent := &events.PostProcessEvent{}
@@ -258,11 +257,11 @@ func Services(builder *ContainerBuilder) error {
 	/*
 	 * SetAnalyser
 	 */
-	dependencyLayersAnalyser := dependencies.NewDependencyLayersAnalyser(astMapExtractor, dependencyResolver, tokenResolver, layerResolver, eventDispatcher)
+	dependencyLayersAnalyser := subscribers.NewDependencyLayersAnalyser(astMapExtractor, dependencyResolver, tokenResolver, layerResolver, eventDispatcher)
 	tokenInLayerAnalyser := tokens.NewTokenInLayerAnalyser(astMapExtractor, tokenResolver, layerResolver, builderConfiguration.Analyser)
 	layerForTokenAnalyser := tokens.NewLayerForTokenAnalyser(astMapExtractor, tokenResolver, layerResolver)
 	unassignedTokenAnalyser := tokens.NewUnassignedTokenAnalyser(astMapExtractor, tokenResolver, layerResolver, builderConfiguration.Analyser)
-	layerDependenciesAnalyser := dependencies.NewLayerDependenciesAnalyser(astMapExtractor, tokenResolver, dependencyResolver, layerResolver)
+	layerDependenciesAnalyser := subscribers.NewLayerDependenciesAnalyser(astMapExtractor, tokenResolver, dependencyResolver, layerResolver)
 	rulesetUsageAnalyser := rules.NewRulesetUsageAnalyser(layerProvider, layerResolver, astMapExtractor, dependencyResolver, tokenResolver, builderConfiguration.Layers)
 
 	/*

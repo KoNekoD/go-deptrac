@@ -2,6 +2,7 @@ package tokens
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
+	ast_map2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_map"
 	tokens2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/layers"
@@ -46,7 +47,7 @@ func (a *LayerForTokenAnalyser) FindLayerForToken(tokenName string, tokenType en
 	}
 }
 
-func (a *LayerForTokenAnalyser) findLayersForReferences(referencesAny any, tokenName string, astMap *ast_map.AstMap) (map[string][]string, error) {
+func (a *LayerForTokenAnalyser) findLayersForReferences(referencesAny any, tokenName string, astMap *ast_map2.AstMap) (map[string][]string, error) {
 	references := referencesAny.([]tokens2.TokenReferenceInterface)
 	if len(references) == 0 {
 		return make(map[string][]string), nil

@@ -2,8 +2,9 @@ package formatters
 
 import (
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/dependencies"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
+	violations2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/violations"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
@@ -22,12 +23,12 @@ func (f *ConsoleOutputFormatter) GetName() string {
 
 func (f *ConsoleOutputFormatter) Finish(outputResult results.OutputResult, output results.OutputInterface, input OutputFormatterInput) {
 	for _, rule := range outputResult.AllOf(enums.TypeViolation) {
-		f.printViolation(rule.(*rules.Violation), output)
+		f.printViolation(rule.(*violations2.Violation), output)
 	}
 
 	if input.ReportSkipped {
 		for _, rule := range outputResult.AllOf(enums.TypeSkippedViolation) {
-			f.printViolation(rule.(*rules.SkippedViolation), output)
+			f.printViolation(rule.(*violations2.SkippedViolation), output)
 		}
 	}
 
@@ -53,11 +54,11 @@ func (f *ConsoleOutputFormatter) printViolation(rule rules.RuleInterface, output
 	dependerLayer := ""
 	dependentLayer := ""
 
-	if ruleAsserted, ok := rule.(*rules.SkippedViolation); ok {
+	if ruleAsserted, ok := rule.(*violations2.SkippedViolation); ok {
 		skippedText = "[SKIPPED] "
 		dependerLayer = ruleAsserted.GetDependerLayer()
 		dependentLayer = ruleAsserted.GetDependentLayer()
-	} else if ruleAsserted, ok := rule.(*rules.Violation); ok {
+	} else if ruleAsserted, ok := rule.(*violations2.Violation); ok {
 		dependerLayer = ruleAsserted.GetDependerLayer()
 		dependentLayer = ruleAsserted.GetDependentLayer()
 	} else {

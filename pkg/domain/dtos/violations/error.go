@@ -1,4 +1,4 @@
-package apperrors
+package violations
 
 type Error struct {
 	Message string

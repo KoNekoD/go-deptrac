@@ -1,8 +1,8 @@
 package emitters
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
-	"github.com/KoNekoD/go-deptrac/pkg/dependencies"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_map"
+	dependencies2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 )
 
@@ -16,7 +16,7 @@ func (f FunctionDependencyEmitter) GetName() string {
 	return "FunctionDependencyEmitter"
 }
 
-func (f FunctionDependencyEmitter) ApplyDependencies(astMap ast_map.AstMap, dependencyList *dependencies.DependencyList) {
+func (f FunctionDependencyEmitter) ApplyDependencies(astMap ast_map.AstMap, dependencyList *dependencies2.DependencyList) {
 	for _, fileReference := range astMap.GetFileReferences() {
 		for _, astFunctionReference := range fileReference.FunctionReferences {
 			for _, dependencyToken := range astFunctionReference.Dependencies {
@@ -28,7 +28,7 @@ func (f FunctionDependencyEmitter) ApplyDependencies(astMap ast_map.AstMap, depe
 					continue
 				}
 
-				dependencyList.AddDependency(dependencies.NewDependency(astFunctionReference.GetToken(), dependencyToken.Token, dependencyToken.Context))
+				dependencyList.AddDependency(dependencies2.NewDependency(astFunctionReference.GetToken(), dependencyToken.Token, dependencyToken.Context))
 			}
 		}
 	}

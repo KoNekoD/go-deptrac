@@ -3,6 +3,7 @@ package collectors_shared
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
+	ast_map2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_map"
 	tokens2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
 	tokens_references2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
@@ -10,7 +11,7 @@ import (
 
 type InheritsCollector struct {
 	astMapExtractor *ast_map.AstMapExtractor
-	astMap          *ast_map.AstMap
+	astMap          *ast_map2.AstMap
 }
 
 func NewInheritsCollector(astMapExtractor *ast_map.AstMapExtractor) (*InheritsCollector, error) {

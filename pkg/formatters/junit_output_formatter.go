@@ -3,6 +3,7 @@ package formatters
 import (
 	"encoding/xml"
 	"fmt"
+	violations2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/violations"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
@@ -78,7 +79,7 @@ func (f *JUnitOutputFormatter) createXML(outputResult results.OutputResult) (str
 				Classname: rule.GetDependency().GetDepender().ToString(),
 			}
 			switch r := rule.(type) {
-			case *rules.Violation:
+			case *violations2.Violation:
 				testSuite.Failures++
 				testCase.Failures = append(testCase.Failures, struct {
 					Message string `xml:"message,attr"`
@@ -93,12 +94,12 @@ func (f *JUnitOutputFormatter) createXML(outputResult results.OutputResult) (str
 					),
 					Type: "WARNING",
 				})
-			case *rules.SkippedViolation:
+			case *violations2.SkippedViolation:
 				testSuite.Skipped++
 				testCase.Skipped = append(testCase.Skipped, struct {
 					XMLName xml.Name `xml:"skipped"`
 				}{})
-			case *rules.Uncovered:
+			case *violations2.Uncovered:
 				testCase.Warnings = append(testCase.Warnings, struct {
 					Message string `xml:"message,attr"`
 					Type    string `xml:"type,attr"`
@@ -131,7 +132,7 @@ func (f *JUnitOutputFormatter) groupRulesByLayer(outputResult results.OutputResu
 		switch r := rule.(type) {
 		case rules.CoveredRuleInterface:
 			layers[r.GetDependerLayer()] = append(layers[r.GetDependerLayer()], rule)
-		case *rules.Uncovered:
+		case *violations2.Uncovered:
 			layers[r.Layer] = append(layers[r.Layer], rule)
 		}
 	}

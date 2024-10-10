@@ -1,17 +1,16 @@
 package dependencies
 
 import (
-	dependencies2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
 )
 
 type Dependency struct {
 	depender  tokens.TokenInterface
 	dependent tokens.TokenInterface
-	context   *dependencies2.DependencyContext
+	context   *DependencyContext
 }
 
-func NewDependency(depender tokens.TokenInterface, dependent tokens.TokenInterface, context *dependencies2.DependencyContext) *Dependency {
+func NewDependency(depender tokens.TokenInterface, dependent tokens.TokenInterface, context *DependencyContext) *Dependency {
 	if dependent.ToString() == "" {
 		panic("1")
 	}
@@ -36,6 +35,6 @@ func (d *Dependency) GetDependent() tokens.TokenInterface {
 	return d.dependent
 }
 
-func (d *Dependency) GetContext() *dependencies2.DependencyContext {
+func (d *Dependency) GetContext() *DependencyContext {
 	return d.context
 }

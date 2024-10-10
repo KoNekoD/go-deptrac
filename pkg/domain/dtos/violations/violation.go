@@ -1,9 +1,8 @@
-package rules
+package violations
 
 import (
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/dependencies"
-	"github.com/KoNekoD/go-deptrac/pkg/violations"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
 )
 
 // Violation - Represents a dependency_contract that is NOT allowed to exist given the defined rules
@@ -11,10 +10,10 @@ type Violation struct {
 	Dependency            dependencies.DependencyInterface
 	DependerLayer         string
 	DependentLayer        string
-	ViolationCreatingRule violations.ViolationCreatingInterface
+	ViolationCreatingRule ViolationCreatingInterface
 }
 
-func NewViolation(dependency dependencies.DependencyInterface, dependerLayer string, dependentLayer string, violationCreatingRule violations.ViolationCreatingInterface) *Violation {
+func NewViolation(dependency dependencies.DependencyInterface, dependerLayer string, dependentLayer string, violationCreatingRule ViolationCreatingInterface) *Violation {
 
 	if dependentLayer == dependerLayer {
 		panic("1")

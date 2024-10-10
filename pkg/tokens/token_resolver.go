@@ -1,7 +1,7 @@
 package tokens
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_map"
 	tokens3 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
 	tokens_references2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"

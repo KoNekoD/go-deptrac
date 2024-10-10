@@ -1,6 +1,8 @@
 package rules
 
-import "github.com/KoNekoD/go-deptrac/pkg/dependencies"
+import (
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
+)
 
 // Allowed - Represents a dependency_contract that is allowed to exist given the defined rules
 type Allowed struct {

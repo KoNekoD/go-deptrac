@@ -2,7 +2,8 @@ package formatters
 
 import (
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/dependencies"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
+	violations2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/violations"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
@@ -58,11 +59,11 @@ func (t *TableOutputFormatter) Finish(outputResult *results.OutputResult, output
 		rows := make([][]string, 0)
 		for _, ruleItem := range rulesList {
 			switch item := ruleItem.(type) {
-			case *rules.Uncovered:
+			case *violations2.Uncovered:
 				rows = append(rows, t.uncoveredRow(item, outputFormatterInput.FailOnUncovered))
-			case *rules.Violation:
+			case *violations2.Violation:
 				rows = append(rows, t.violationRow(item))
-			case *rules.SkippedViolation:
+			case *violations2.SkippedViolation:
 				rows = append(rows, t.skippedViolationRow(item))
 			}
 		}
@@ -79,7 +80,7 @@ func (t *TableOutputFormatter) Finish(outputResult *results.OutputResult, output
 	return nil
 }
 
-func (t *TableOutputFormatter) skippedViolationRow(rule *rules.SkippedViolation) []string {
+func (t *TableOutputFormatter) skippedViolationRow(rule *violations2.SkippedViolation) []string {
 	gotDependency := rule.GetDependency()
 	message := color.Sprintf("<info>%s</> must not depend on <info>%s</> (%s)", gotDependency.GetDepender().ToString(), gotDependency.GetDependent().ToString(), rule.GetDependentLayer())
 	if len(gotDependency.Serialize()) > 1 {
@@ -91,7 +92,7 @@ func (t *TableOutputFormatter) skippedViolationRow(rule *rules.SkippedViolation)
 
 }
 
-func (t *TableOutputFormatter) violationRow(rule *rules.Violation) []string {
+func (t *TableOutputFormatter) violationRow(rule *violations2.Violation) []string {
 	gotDependency := rule.GetDependency()
 	message := color.Sprintf("<info>%s</> must not depend on <info>%s</>", gotDependency.GetDepender().ToString(), gotDependency.GetDependent().ToString())
 	message += fmt.Sprintf("\n%s (To fix %s(You need to add to the array by this key) -> %s(That value needs to be added to that array))", rule.RuleDescription(), rule.GetDependerLayer(), rule.GetDependentLayer())
@@ -164,7 +165,7 @@ func (t *TableOutputFormatter) printSummary(result *results.OutputResult, output
 	)
 }
 
-func (t *TableOutputFormatter) uncoveredRow(rule *rules.Uncovered, reportAsError bool) []string {
+func (t *TableOutputFormatter) uncoveredRow(rule *violations2.Uncovered, reportAsError bool) []string {
 	gotDependency := rule.GetDependency()
 	message := color.Sprintf("<info>%s</> has uncovered dependency_contract on <info>%s</>", gotDependency.GetDepender().ToString(), gotDependency.GetDependent().ToString())
 	if len(gotDependency.Serialize()) > 1 {

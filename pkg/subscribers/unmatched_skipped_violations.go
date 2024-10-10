@@ -1,9 +1,9 @@
-package violations
+package subscribers
 
 import (
 	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
-	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/violations"
 	"github.com/KoNekoD/go-deptrac/pkg/events"
 )
 
@@ -21,7 +21,7 @@ func (u *UnmatchedSkippedViolations) InvokeEventSubscriber(rawEvent interface{},
 	ruleset := event.GetResult()
 	for tokenA, tokensB := range u.eventHelper.UnmatchedSkippedViolations() {
 		for _, tokenB := range tokensB {
-			ruleset.AddError(apperrors.NewError(fmt.Sprintf("Skipped violation \"%s\" for \"%s\" was not matched.", tokenB, tokenA)))
+			ruleset.AddError(violations.NewError(fmt.Sprintf("Skipped violation \"%s\" for \"%s\" was not matched.", tokenB, tokenA)))
 		}
 	}
 	stopPropagation()

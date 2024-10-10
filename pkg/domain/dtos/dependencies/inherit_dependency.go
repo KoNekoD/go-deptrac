@@ -2,7 +2,6 @@ package dependencies
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_map"
-	dependencies2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
 )
 
@@ -41,6 +40,6 @@ func (i *InheritDependency) GetDependent() tokens.TokenInterface {
 	return i.dependent
 }
 
-func (i *InheritDependency) GetContext() *dependencies2.DependencyContext {
+func (i *InheritDependency) GetContext() *DependencyContext {
 	return i.originalDependency.GetContext()
 }
