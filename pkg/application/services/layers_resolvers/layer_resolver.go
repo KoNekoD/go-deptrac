@@ -1,8 +1,8 @@
-package layers
+package layers_resolvers
 
 import (
 	"errors"
-	dtos2 "github.com/KoNekoD/go-deptrac/pkg/application/dtos"
+	"github.com/KoNekoD/go-deptrac/pkg/application/dtos"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/collectors_resolvers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
@@ -14,7 +14,7 @@ import (
 type LayerResolver struct {
 	collectorResolver collectors_resolvers.CollectorResolverInterface
 	layersConfig      []*rules.Layer
-	layers            map[string][]*dtos2.Collectable
+	layers            map[string][]*dtos.Collectable
 	initialized       bool
 	resolved          map[string]map[string]bool
 	mu                sync.Mutex
@@ -25,7 +25,7 @@ func NewLayerResolver(collectorResolver collectors_resolvers.CollectorResolverIn
 	return &LayerResolver{
 		collectorResolver: collectorResolver,
 		layersConfig:      layersConfig,
-		layers:            make(map[string][]*dtos2.Collectable),
+		layers:            make(map[string][]*dtos.Collectable),
 		resolved:          make(map[string]map[string]bool),
 	}
 }
@@ -128,14 +128,14 @@ func (r *LayerResolver) Has(layer string) (bool, error) {
 
 // initializeLayers initializes the layers from the configuration
 func (r *LayerResolver) initializeLayers() error {
-	r.layers = make(map[string][]*dtos2.Collectable)
+	r.layers = make(map[string][]*dtos.Collectable)
 	for _, layer := range r.layersConfig {
 		layerName := layer.Name
 		if _, exists := r.layers[layerName]; exists {
 			return errors.New("invalid layer_contract definition: duplicate name " + layerName)
 		}
 
-		r.layers[layerName] = []*dtos2.Collectable{}
+		r.layers[layerName] = []*dtos.Collectable{}
 		for _, config := range layer.Collectors {
 			resolvedCollector, err := r.collectorResolver.Resolve(config.ToArray())
 

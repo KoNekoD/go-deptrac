@@ -11,6 +11,7 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/dependencies_collectors"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/emitters"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/input_collectors"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/layers_resolvers"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/parsers"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/types"
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
@@ -22,10 +23,7 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/stopwatch"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
 	"github.com/KoNekoD/go-deptrac/pkg/extractors"
-	"github.com/KoNekoD/go-deptrac/pkg/flatteners"
 	"github.com/KoNekoD/go-deptrac/pkg/formatters"
-	"github.com/KoNekoD/go-deptrac/pkg/hooks"
-	"github.com/KoNekoD/go-deptrac/pkg/layers"
 	"github.com/elliotchance/orderedmap/v2"
 	"os"
 	"strings"
@@ -69,7 +67,7 @@ func Services(builder *ContainerBuilder) error {
 		return err
 	}
 
-	ymlFileLoader := hooks.NewYmlFileLoader()
+	ymlFileLoader := pkg.NewYmlFileLoader()
 	dumper := utils.NewDumper("/deptrac_template.yaml")
 
 	/*
@@ -112,13 +110,13 @@ func Services(builder *ContainerBuilder) error {
 		enums2.EmitterTypeFunctionSuperGlobalToken: emitters.NewFunctionSuperglobalDependencyEmitter(),
 		enums2.EmitterTypeUseToken:                 emitters.NewUsesDependencyEmitter(),
 	}
-	inheritanceFlattener := flatteners.NewInheritanceFlattener()
+	inheritanceFlattener := services2.NewInheritanceFlattener()
 	dependencyResolver := pkg.NewDependencyResolver(builderConfiguration.Analyser, dependencyEmitters, inheritanceFlattener, eventDispatcher)
 	tokenResolver := services2.NewTokenResolver()
 
 	astMapExtractor := ast_map.NewAstMapExtractor(fileInputCollector, astLoader)
 
-	layerProvider := layers.NewLayerProvider(builderConfiguration.Rulesets)
+	layerProvider := services2.NewLayerProvider(builderConfiguration.Rulesets)
 	eventHelper := dispatchers.NewEventHelper(builderConfiguration.SkipViolations, layerProvider)
 
 	/*
@@ -131,7 +129,7 @@ func Services(builder *ContainerBuilder) error {
 
 	// Events
 	uncoveredDependentHandler := event_handlers2.NewUncoveredDependent(builderConfiguration.IgnoreUncoveredInternalStructs)
-	matchingLayersHandler := layers.NewMatchingLayersHandler()
+	matchingLayersHandler := event_handlers2.NewMatchingLayers()
 	allowDependencyHandler := event_handlers2.NewAllowDependency()
 	consoleSubscriber := event_handlers2.NewConsole(symfonyOutput, timeStopwatch)
 	progressSubscriber := event_handlers2.NewProgress(symfonyOutput)
@@ -229,7 +227,7 @@ func Services(builder *ContainerBuilder) error {
 	}
 	collectorProvider := services2.NewCollectorProvider()
 	collectorResolver := collectors_resolvers.NewCollectorResolver(collectorProvider)
-	layerResolver := layers.NewLayerResolver(collectorResolver, builderConfiguration.Layers)
+	layerResolver := layers_resolvers.NewLayerResolver(collectorResolver, builderConfiguration.Layers)
 	collectors := map[enums2.CollectorType]dependencies_collectors.CollectorInterface{
 		//AttributeCollector
 		enums2.CollectorTypeTypeBool:           dependencies_collectors.NewBoolCollector(collectorResolver),

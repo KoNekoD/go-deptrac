@@ -1,4 +1,4 @@
-package layers
+package services
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"

@@ -1,4 +1,4 @@
-package hooks
+package pkg
 
 import (
 	apperrors2 "github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"

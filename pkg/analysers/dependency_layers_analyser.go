@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/layers_resolvers"
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
@@ -11,14 +12,13 @@ import (
 	tokens2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	events2 "github.com/KoNekoD/go-deptrac/pkg/domain/events"
-	"github.com/KoNekoD/go-deptrac/pkg/layers"
 )
 
 type DependencyLayersAnalyser struct {
 	astMapExtractor    *ast_map.AstMapExtractor
 	dependencyResolver *pkg.DependencyResolver
 	tokenResolver      *services.TokenResolver
-	layerResolver      layers.LayerResolverInterface
+	layerResolver      layers_resolvers.LayerResolverInterface
 	eventDispatcher    dispatchers.EventDispatcherInterface
 }
 
@@ -26,7 +26,7 @@ func NewDependencyLayersAnalyser(
 	astMapExtractor *ast_map.AstMapExtractor,
 	dependencyResolver *pkg.DependencyResolver,
 	tokenResolver *services.TokenResolver,
-	layerResolver layers.LayerResolverInterface,
+	layerResolver layers_resolvers.LayerResolverInterface,
 	eventDispatcher dispatchers.EventDispatcherInterface) *DependencyLayersAnalyser {
 	return &DependencyLayersAnalyser{
 		astMapExtractor:    astMapExtractor,

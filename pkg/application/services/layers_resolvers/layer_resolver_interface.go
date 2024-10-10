@@ -1,4 +1,4 @@
-package layers
+package layers_resolvers
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"

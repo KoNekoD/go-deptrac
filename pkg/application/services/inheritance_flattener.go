@@ -1,4 +1,4 @@
-package flatteners
+package services
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_map"

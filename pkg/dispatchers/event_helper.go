@@ -1,21 +1,21 @@
 package dispatchers
 
 import (
+	"github.com/KoNekoD/go-deptrac/pkg/application/services"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
 	violations2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/events"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
-	"github.com/KoNekoD/go-deptrac/pkg/layers"
 )
 
 // EventHelper - Utility class for managing adding violations that could be skipped.
 type EventHelper struct {
 	UnmatchedSkippedViolation map[string][]string
 	SkippedViolations         map[string][]string
-	LayerProvider             *layers.LayerProvider
+	LayerProvider             *services.LayerProvider
 }
 
-func NewEventHelper(skippedViolations map[string][]string, layerProvider *layers.LayerProvider) *EventHelper {
+func NewEventHelper(skippedViolations map[string][]string, layerProvider *services.LayerProvider) *EventHelper {
 	return &EventHelper{
 		UnmatchedSkippedViolation: skippedViolations,
 		SkippedViolations:         skippedViolations,

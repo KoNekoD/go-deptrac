@@ -2,18 +2,18 @@ package dependencies_collectors
 
 import (
 	"fmt"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/layers_resolvers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
-	"github.com/KoNekoD/go-deptrac/pkg/layers"
 )
 
 type LayerCollector struct {
-	resolver layers.LayerResolverInterface
+	resolver layers_resolvers.LayerResolverInterface
 	resolved map[string]map[string]*bool
 }
 
-func NewLayerCollector(resolver layers.LayerResolverInterface) *LayerCollector {
+func NewLayerCollector(resolver layers_resolvers.LayerResolverInterface) *LayerCollector {
 	return &LayerCollector{
 		resolver: resolver,
 	}

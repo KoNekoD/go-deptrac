@@ -2,10 +2,10 @@ package analysers
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/application/services"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/layers_resolvers"
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/configs"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
-	"github.com/KoNekoD/go-deptrac/pkg/layers"
 	"slices"
 )
 
@@ -14,13 +14,13 @@ type TokenInLayerAnalyser struct {
 	config          *configs.AnalyserConfig
 	astMapExtractor *ast_map.AstMapExtractor
 	tokenResolver   *services.TokenResolver
-	layerResolver   layers.LayerResolverInterface
+	layerResolver   layers_resolvers.LayerResolverInterface
 }
 
 func NewTokenInLayerAnalyser(
 	astMapExtractor *ast_map.AstMapExtractor,
 	tokenResolver *services.TokenResolver,
-	layerResolver layers.LayerResolverInterface,
+	layerResolver layers_resolvers.LayerResolverInterface,
 	config *configs.AnalyserConfig,
 ) *TokenInLayerAnalyser {
 	analyser := &TokenInLayerAnalyser{
