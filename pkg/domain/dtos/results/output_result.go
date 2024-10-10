@@ -1,24 +1,23 @@
 package results
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results"
-	analysis_results_failure2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results/issues"
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results/violations_rules"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/issues"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 )
 
 // OutputResult - Represents a result_contract ready for output formatting
 type OutputResult struct {
 	rules    map[enums.RuleTypeEnum]map[string]violations_rules.RuleInterface
-	Errors   []*analysis_results_failure2.Error
-	Warnings []*analysis_results_failure2.Warning
+	Errors   []*issues.Error
+	Warnings []*issues.Warning
 }
 
-func newOutputResult(rules map[enums.RuleTypeEnum]map[string]violations_rules.RuleInterface, errors []*analysis_results_failure2.Error, warnings []*analysis_results_failure2.Warning) *OutputResult {
+func newOutputResult(rules map[enums.RuleTypeEnum]map[string]violations_rules.RuleInterface, errors []*issues.Error, warnings []*issues.Warning) *OutputResult {
 	return &OutputResult{rules: rules, Errors: errors, Warnings: warnings}
 }
 
-func NewOutputResultFromAnalysisResult(analysisResult *analysis_results.AnalysisResult) *OutputResult {
+func NewOutputResultFromAnalysisResult(analysisResult *AnalysisResult) *OutputResult {
 	return newOutputResult(
 		analysisResult.Rules(),
 		analysisResult.Errors(),

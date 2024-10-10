@@ -1,6 +1,7 @@
 package formatters
 
 import (
+	results2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"github.com/gookit/color"
@@ -19,7 +20,7 @@ func NewBaselineOutputFormatter() *BaselineOutputFormatter {
 	return &BaselineOutputFormatter{}
 }
 
-func (b *BaselineOutputFormatter) Finish(outputResult *results.OutputResult, output results.OutputInterface, outputFormatterInput *OutputFormatterInput) error {
+func (b *BaselineOutputFormatter) Finish(outputResult *results2.OutputResult, output results.OutputInterface, outputFormatterInput *OutputFormatterInput) error {
 	groupedViolations := b.collectViolations(outputResult)
 
 	for _, violations := range groupedViolations {
@@ -56,7 +57,7 @@ func (b *BaselineOutputFormatter) Finish(outputResult *results.OutputResult, out
 	return nil
 }
 
-func (b *BaselineOutputFormatter) collectViolations(outputResult *results.OutputResult) map[string][]string {
+func (b *BaselineOutputFormatter) collectViolations(outputResult *results2.OutputResult) map[string][]string {
 	violations := make(map[string]map[string]string)
 	for _, rule := range append(outputResult.AllOf(enums.TypeViolation), outputResult.AllOf(enums.TypeSkippedViolation)...) {
 		dependency := rule.GetDependency()

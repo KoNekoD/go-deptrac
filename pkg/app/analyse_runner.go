@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/analysers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
+	results2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/formatters"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
@@ -44,7 +45,7 @@ func (r *AnalyseRunner) Run(options *rules.AnalyseOptions, output results.Output
 		r.printAnalysisException(output, multierror.Append(errAnalyse))
 		return apperrors.NewCommandRunExceptionAnalyserException(errAnalyse)
 	}
-	result := results.NewOutputResultFromAnalysisResult(analysisResult)
+	result := results2.NewOutputResultFromAnalysisResult(analysisResult)
 	r.printFormattingStart(output)
 	errFinish := formatter.Finish(result, output, formatterInput)
 	if errFinish != nil {

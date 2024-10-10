@@ -5,8 +5,8 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg"
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results"
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results/issues"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/issues"
 	tokens2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	events2 "github.com/KoNekoD/go-deptrac/pkg/domain/events"
@@ -37,7 +37,7 @@ func NewDependencyLayersAnalyser(
 	}
 }
 
-func (a *DependencyLayersAnalyser) Analyse() (*analysis_results.AnalysisResult, error) {
+func (a *DependencyLayersAnalyser) Analyse() (*results.AnalysisResult, error) {
 	astMap, err := a.astMapExtractor.Extract()
 	if err != nil {
 		return nil, err
@@ -46,7 +46,7 @@ func (a *DependencyLayersAnalyser) Analyse() (*analysis_results.AnalysisResult, 
 	if err != nil {
 		return nil, err
 	}
-	analysisResult := analysis_results.NewAnalysisResult()
+	analysisResult := results.NewAnalysisResult()
 	warnings := make(map[string]*issues.Warning)
 	for _, dependency := range dependencies.GetDependenciesAndInheritDependencies() {
 		depender := dependency.GetDepender()

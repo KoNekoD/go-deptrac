@@ -3,7 +3,8 @@ package formatters
 import (
 	"encoding/xml"
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results/violations_rules"
+	results2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"os"
@@ -22,7 +23,7 @@ func (f *XMLOutputFormatter) GetName() string {
 	return "xml"
 }
 
-func (f *XMLOutputFormatter) Finish(result results.OutputResult, output results.OutputInterface, input OutputFormatterInput) error {
+func (f *XMLOutputFormatter) Finish(result results2.OutputResult, output results.OutputInterface, input OutputFormatterInput) error {
 	xmlData, err := f.createXML(result)
 	if err != nil {
 		return err
@@ -41,7 +42,7 @@ func (f *XMLOutputFormatter) Finish(result results.OutputResult, output results.
 	return nil
 }
 
-func (f *XMLOutputFormatter) createXML(dependencyContext results.OutputResult) (string, error) {
+func (f *XMLOutputFormatter) createXML(dependencyContext results2.OutputResult) (string, error) {
 	entries := Entries{}
 
 	for _, rule := range dependencyContext.Violations() {

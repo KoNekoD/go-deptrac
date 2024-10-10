@@ -3,7 +3,8 @@ package app
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/analysers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results/violations_rules"
+	results2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
@@ -44,7 +45,7 @@ func (r *ChangedFilesRunner) Run(files []string, withDependencies bool, output r
 		if err != nil {
 			return apperrors.NewCommandRunExceptionAnalyserException(err)
 		}
-		analysisResult := results.NewOutputResultFromAnalysisResult(analyseResult)
+		analysisResult := results2.NewOutputResultFromAnalysisResult(analyseResult)
 		layersDependOnLayers := r.calculateLayerDependencies(analysisResult.AllRules())
 		layerDependencies := make(map[string]string)
 		for _, layer := range layers {

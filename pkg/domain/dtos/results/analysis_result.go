@@ -1,9 +1,9 @@
-package analysis_results
+package results
 
 import (
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results/issues"
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results/violations_rules"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/issues"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
 )

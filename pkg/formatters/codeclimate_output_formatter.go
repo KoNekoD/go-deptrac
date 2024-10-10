@@ -4,7 +4,8 @@ import (
 	"crypto/sha1"
 	"encoding/json"
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results/violations_rules"
+	results2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/violations_rules"
 	enums2 "github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
@@ -24,7 +25,7 @@ func (f *CodeclimateOutputFormatter) GetName() string {
 	return "codeclimate"
 }
 
-func (f *CodeclimateOutputFormatter) Finish(outputResult results.OutputResult, output results.OutputInterface, input OutputFormatterInput) error {
+func (f *CodeclimateOutputFormatter) Finish(outputResult results2.OutputResult, output results.OutputInterface, input OutputFormatterInput) error {
 	formatterConfig := enums2.NewConfigurationCodeclimateFromArray(f.config)
 	var violations []map[string]interface{}
 

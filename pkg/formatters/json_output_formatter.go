@@ -3,7 +3,8 @@ package formatters
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results/violations_rules"
+	results2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"os"
@@ -20,7 +21,7 @@ func (f *JsonOutputFormatter) GetName() string {
 	return "json"
 }
 
-func (f *JsonOutputFormatter) Finish(outputResult results.OutputResult, output results.OutputInterface, input OutputFormatterInput) error {
+func (f *JsonOutputFormatter) Finish(outputResult results2.OutputResult, output results.OutputInterface, input OutputFormatterInput) error {
 	jsonArray := make(map[string]interface{})
 	violations := make(map[string]FileViolations)
 

@@ -3,7 +3,7 @@ package event_handlers
 import (
 	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results/issues"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/issues"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/events"
 )
 
