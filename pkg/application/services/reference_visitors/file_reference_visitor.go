@@ -1,11 +1,11 @@
 package reference_visitors
 
 import (
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/references_builders"
+	types2 "github.com/KoNekoD/go-deptrac/pkg/application/services/types"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/services"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
 	"github.com/KoNekoD/go-deptrac/pkg/extractors"
-	"github.com/KoNekoD/go-deptrac/pkg/references_builders"
-	"github.com/KoNekoD/go-deptrac/pkg/types"
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
 	"go/ast"
@@ -14,16 +14,16 @@ import (
 
 type FileReferenceVisitor struct {
 	dependencyResolvers  []extractors.ReferenceExtractorInterface
-	currentTypeScope     *types.TypeScope
+	currentTypeScope     *types2.TypeScope
 	currentReference     references_builders.ReferenceBuilderInterface
 	fileReferenceBuilder *references_builders.FileReferenceBuilder
-	typeResolver         *types.TypeResolver
+	typeResolver         *types2.TypeResolver
 	nodeNamer            *services.NodeNamer
 	errors               []error
 	nestingStack         []ast.Node
 }
 
-func NewFileReferenceVisitor(fileReferenceBuilder *references_builders.FileReferenceBuilder, resolver *types.TypeResolver, nodeNamer *services.NodeNamer, extractors ...extractors.ReferenceExtractorInterface) *FileReferenceVisitor {
+func NewFileReferenceVisitor(fileReferenceBuilder *references_builders.FileReferenceBuilder, resolver *types2.TypeResolver, nodeNamer *services.NodeNamer, extractors ...extractors.ReferenceExtractorInterface) *FileReferenceVisitor {
 	return &FileReferenceVisitor{
 		currentReference:     fileReferenceBuilder,
 		fileReferenceBuilder: fileReferenceBuilder,
@@ -31,7 +31,7 @@ func NewFileReferenceVisitor(fileReferenceBuilder *references_builders.FileRefer
 		nodeNamer:            nodeNamer,
 		errors:               make([]error, 0),
 		dependencyResolvers:  extractors,
-		currentTypeScope:     types.NewTypeScope(""),
+		currentTypeScope:     types2.NewTypeScope(""),
 	}
 }
 
@@ -72,7 +72,7 @@ func (f *FileReferenceVisitor) enterNode(node ast.Node) {
 		packageFileName, err := f.nodeNamer.GetPackageFilename(f.fileReferenceBuilder.Filepath)
 		f.addErrIfNeeded(err)
 
-		f.currentTypeScope = types.NewTypeScope(packageFileName).SetFileNode(typedNode)
+		f.currentTypeScope = types2.NewTypeScope(packageFileName).SetFileNode(typedNode)
 	case *ast.FuncDecl:
 		f.enterFunction(typedNode)
 	case *ast.GenDecl:

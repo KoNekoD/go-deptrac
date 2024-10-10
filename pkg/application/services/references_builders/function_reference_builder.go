@@ -2,7 +2,7 @@ package references_builders
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
-	references2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 )
 
 type FunctionReferenceBuilder struct {
@@ -24,6 +24,6 @@ func CreateFunctionReferenceBuilder(filepath string, functionName string, functi
 }
 
 // Build - Internal
-func (b *FunctionReferenceBuilder) Build() *references2.FunctionReference {
-	return references2.NewFunctionReference(tokens.NewFunctionTokenFromFQCN(b.functionName), b.Dependencies, b.tags, nil)
+func (b *FunctionReferenceBuilder) Build() *tokens_references.FunctionReference {
+	return tokens_references.NewFunctionReference(tokens.NewFunctionTokenFromFQCN(b.functionName), b.Dependencies, b.tags, nil)
 }

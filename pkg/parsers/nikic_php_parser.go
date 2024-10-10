@@ -1,13 +1,13 @@
 package parsers
 
 import (
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/reference_visitors"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/references_builders"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/types"
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/services"
 	"github.com/KoNekoD/go-deptrac/pkg/extractors"
-	"github.com/KoNekoD/go-deptrac/pkg/reference_visitors"
-	"github.com/KoNekoD/go-deptrac/pkg/references_builders"
-	"github.com/KoNekoD/go-deptrac/pkg/types"
 	"github.com/pkg/errors"
 	"go/ast"
 	"go/parser"

@@ -4,20 +4,20 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
-	references2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
-	enums2 "github.com/KoNekoD/go-deptrac/pkg/domain/enums"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 )
 
 type ReferenceBuilder struct {
 	Dependencies   []*tokens.DependencyToken
 	tokenTemplates []string
 	Filepath       string
-	ref            *references2.FileReference
+	ref            *tokens_references.FileReference
 }
 
 type ReferenceBuilderInterface interface {
 	GetTokenTemplates() []string
-	CreateContext(occursAtLine int, dependencyType enums2.DependencyType) *dependencies.DependencyContext
+	CreateContext(occursAtLine int, dependencyType enums.DependencyType) *dependencies.DependencyContext
 	UnresolvedFunctionCall(functionName string, occursAtLine int) *ReferenceBuilder
 	Variable(classLikeName string, occursAtLine int) *ReferenceBuilder
 	Superglobal(superglobalName string, occursAtLine int) *ReferenceBuilder
@@ -50,88 +50,88 @@ func (r *ReferenceBuilder) GetTokenTemplates() []string {
 	return r.tokenTemplates
 }
 
-func (r *ReferenceBuilder) CreateContext(occursAtLine int, dependencyType enums2.DependencyType) *dependencies.DependencyContext {
+func (r *ReferenceBuilder) CreateContext(occursAtLine int, dependencyType enums.DependencyType) *dependencies.DependencyContext {
 	return dependencies.NewDependencyContext(dtos.NewFileOccurrence(r.Filepath, occursAtLine), dependencyType)
 }
 
 // UnresolvedFunctionCall - Unqualified function and constant names inside a namespace cannot be statically resolved. Inside a namespace Foo, a call to strlen() may either refer to the namespaced \Foo\strlen(), or the global \strlen(). Because PHP-ParserInterface does not have the necessary context to decide this, such names are left unresolved.
 func (r *ReferenceBuilder) UnresolvedFunctionCall(functionName string, occursAtLine int) *ReferenceBuilder {
-	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewFunctionTokenFromFQCN(functionName), r.CreateContext(occursAtLine, enums2.DependencyTypeUnresolvedFunctionCall)))
+	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewFunctionTokenFromFQCN(functionName), r.CreateContext(occursAtLine, enums.DependencyTypeUnresolvedFunctionCall)))
 	return r
 }
 
 func (r *ReferenceBuilder) Variable(classLikeName string, occursAtLine int) *ReferenceBuilder {
-	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), r.CreateContext(occursAtLine, enums2.DependencyTypeVariable)))
+	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), r.CreateContext(occursAtLine, enums.DependencyTypeVariable)))
 	return r
 }
 
 func (r *ReferenceBuilder) Superglobal(superglobalName string, occursAtLine int) *ReferenceBuilder {
-	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(enums2.NewSuperGlobalToken(superglobalName), r.CreateContext(occursAtLine, enums2.DependencyTypeSuperGlobalVariable)))
+	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(enums.NewSuperGlobalToken(superglobalName), r.CreateContext(occursAtLine, enums.DependencyTypeSuperGlobalVariable)))
 	return r
 }
 
 func (r *ReferenceBuilder) ReturnType(classLikeName string, occursAtLine int) *ReferenceBuilder {
-	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), r.CreateContext(occursAtLine, enums2.DependencyTypeReturnType)))
+	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), r.CreateContext(occursAtLine, enums.DependencyTypeReturnType)))
 	return r
 }
 
 func (r *ReferenceBuilder) ThrowStatement(classLikeName string, occursAtLine int) *ReferenceBuilder {
-	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), r.CreateContext(occursAtLine, enums2.DependencyTypeThrow)))
+	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), r.CreateContext(occursAtLine, enums.DependencyTypeThrow)))
 	return r
 }
 
 func (r *ReferenceBuilder) AnonymousClassExtends(classLikeName string, occursAtLine int) *ReferenceBuilder {
-	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), r.CreateContext(occursAtLine, enums2.DependencyTypeAnonymousClassExtends)))
+	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), r.CreateContext(occursAtLine, enums.DependencyTypeAnonymousClassExtends)))
 	return r
 }
 
 func (r *ReferenceBuilder) AnonymousClassTrait(classLikeName string, occursAtLine int) *ReferenceBuilder {
-	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), r.CreateContext(occursAtLine, enums2.DependencyTypeAnonymousClassTrait)))
+	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), r.CreateContext(occursAtLine, enums.DependencyTypeAnonymousClassTrait)))
 	return r
 }
 
 func (r *ReferenceBuilder) ConstFetch(classLikeName string, occursAtLine int) *ReferenceBuilder {
-	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), r.CreateContext(occursAtLine, enums2.DependencyTypeConst)))
+	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), r.CreateContext(occursAtLine, enums.DependencyTypeConst)))
 	return r
 }
 
 func (r *ReferenceBuilder) AnonymousClassImplements(classLikeName string, occursAtLine int) *ReferenceBuilder {
-	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), r.CreateContext(occursAtLine, enums2.DependencyTypeAnonymousClassImplements)))
+	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), r.CreateContext(occursAtLine, enums.DependencyTypeAnonymousClassImplements)))
 	return r
 }
 
 func (r *ReferenceBuilder) Parameter(classLikeName string, occursAtLine int) *ReferenceBuilder {
-	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), r.CreateContext(occursAtLine, enums2.DependencyTypeParameter)))
+	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), r.CreateContext(occursAtLine, enums.DependencyTypeParameter)))
 	return r
 }
 
 func (r *ReferenceBuilder) Attribute(classLikeName string, occursAtLine int) *ReferenceBuilder {
-	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), r.CreateContext(occursAtLine, enums2.DependencyTypeAttribute)))
+	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), r.CreateContext(occursAtLine, enums.DependencyTypeAttribute)))
 	return r
 }
 
 func (r *ReferenceBuilder) Instanceof(classLikeName string, occursAtLine int) *ReferenceBuilder {
-	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), r.CreateContext(occursAtLine, enums2.DependencyTypeInstanceof)))
+	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), r.CreateContext(occursAtLine, enums.DependencyTypeInstanceof)))
 	return r
 }
 
 func (r *ReferenceBuilder) NewStatement(classLikeName string, occursAtLine int) *ReferenceBuilder {
-	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), r.CreateContext(occursAtLine, enums2.DependencyTypeNew)))
+	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), r.CreateContext(occursAtLine, enums.DependencyTypeNew)))
 	return r
 }
 
 func (r *ReferenceBuilder) StaticProperty(classLikeName string, occursAtLine int) *ReferenceBuilder {
-	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), r.CreateContext(occursAtLine, enums2.DependencyTypeStaticProperty)))
+	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), r.CreateContext(occursAtLine, enums.DependencyTypeStaticProperty)))
 	return r
 }
 
 func (r *ReferenceBuilder) StaticMethod(classLikeName string, occursAtLine int) *ReferenceBuilder {
-	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), r.CreateContext(occursAtLine, enums2.DependencyTypeStaticMethod)))
+	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), r.CreateContext(occursAtLine, enums.DependencyTypeStaticMethod)))
 	return r
 }
 
 func (r *ReferenceBuilder) CatchStmt(classLikeName string, occursAtLine int) *ReferenceBuilder {
-	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), r.CreateContext(occursAtLine, enums2.DependencyTypeCatch)))
+	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), r.CreateContext(occursAtLine, enums.DependencyTypeCatch)))
 	return r
 }
 

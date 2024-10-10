@@ -1,8 +1,8 @@
 package extractors
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/references_builders"
-	"github.com/KoNekoD/go-deptrac/pkg/types"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/references_builders"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/types"
 	"go/ast"
 )
 
