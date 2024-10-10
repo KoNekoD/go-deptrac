@@ -2,7 +2,7 @@ package subscribers
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results/violations_rules"
-	"github.com/KoNekoD/go-deptrac/pkg/events"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/events"
 )
 
 type AllowDependencyHandler struct{}

@@ -2,7 +2,7 @@ package subscribers
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
-	"github.com/KoNekoD/go-deptrac/pkg/events"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/events"
 )
 
 type DependsOnPrivateLayer struct {

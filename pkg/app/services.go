@@ -9,11 +9,11 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/commands"
 	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
 	enums2 "github.com/KoNekoD/go-deptrac/pkg/domain/enums"
+	events2 "github.com/KoNekoD/go-deptrac/pkg/domain/events"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/services"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/stopwatch"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
 	"github.com/KoNekoD/go-deptrac/pkg/emitters"
-	"github.com/KoNekoD/go-deptrac/pkg/events"
 	"github.com/KoNekoD/go-deptrac/pkg/flatteners"
 	"github.com/KoNekoD/go-deptrac/pkg/formatters"
 	"github.com/KoNekoD/go-deptrac/pkg/hooks"
@@ -139,8 +139,8 @@ func Services(builder *ContainerBuilder) error {
 	dependsOnInternalToken := subscribers.NewDependsOnInternalToken(eventHelper, builderConfiguration.Analyser)
 	unmatchedSkippedViolations := subscribers.NewUnmatchedSkippedViolations(eventHelper)
 
-	processEvent := &events.ProcessEvent{}
-	postProcessEvent := &events.PostProcessEvent{}
+	processEvent := &events2.ProcessEvent{}
+	postProcessEvent := &events2.PostProcessEvent{}
 	preCreateAstMapEvent := &ast_map.PreCreateAstMapEvent{}
 	postCreateAstMapEvent := &ast_map.PostCreateAstMapEvent{}
 	// Events Handlers

@@ -2,23 +2,23 @@ package subscribers
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
+	events2 "github.com/KoNekoD/go-deptrac/pkg/domain/events"
 	"github.com/KoNekoD/go-deptrac/pkg/emitters"
-	"github.com/KoNekoD/go-deptrac/pkg/events"
 	"github.com/elliotchance/orderedmap/v2"
 	"reflect"
 )
 
 func RegForAnalyseCommand(consoleSubscriber *ConsoleSubscriber, progressSubscriber *ProgressSubscriber, withProgress bool) {
-	processEvent := &events.ProcessEvent{}
-	postProcessEvent := &events.PostProcessEvent{}
+	processEvent := &events2.ProcessEvent{}
+	postProcessEvent := &events2.PostProcessEvent{}
 	preCreateAstMapEvent := &ast_map.PreCreateAstMapEvent{}
 	postCreateAstMapEvent := &ast_map.PostCreateAstMapEvent{}
-	astFileAnalysedEvent := &events.AstFileAnalysedEvent{}
+	astFileAnalysedEvent := &events2.AstFileAnalysedEvent{}
 	astFileSyntaxErrorEvent := &ast_map.AstFileSyntaxErrorEvent{}
 	preEmitEvent := &emitters.PreEmitEvent{}
 	postEmitEvent := &emitters.PostEmitEvent{}
-	preFlattenEvent := &events.PreFlattenEvent{}
-	postFlattenEvent := &events.PostFlattenEvent{}
+	preFlattenEvent := &events2.PreFlattenEvent{}
+	postFlattenEvent := &events2.PostFlattenEvent{}
 
 	Reg(preCreateAstMapEvent, consoleSubscriber, DefaultPriority)
 	Reg(postCreateAstMapEvent, consoleSubscriber, DefaultPriority)

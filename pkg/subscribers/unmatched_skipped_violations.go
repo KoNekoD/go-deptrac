@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results/issues"
-	"github.com/KoNekoD/go-deptrac/pkg/events"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/events"
 )
 
 type UnmatchedSkippedViolations struct {

@@ -1,7 +1,7 @@
 package layers
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/events"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/events"
 )
 
 type MatchingLayersHandler struct{}

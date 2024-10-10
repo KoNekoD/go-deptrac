@@ -3,8 +3,8 @@ package dispatchers
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results"
 	violations2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results/violations_rules"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/events"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
-	"github.com/KoNekoD/go-deptrac/pkg/events"
 	"github.com/KoNekoD/go-deptrac/pkg/layers"
 )
 

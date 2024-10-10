@@ -9,7 +9,7 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results/issues"
 	tokens2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
-	"github.com/KoNekoD/go-deptrac/pkg/events"
+	events2 "github.com/KoNekoD/go-deptrac/pkg/domain/events"
 	"github.com/KoNekoD/go-deptrac/pkg/layers"
 	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 )
@@ -84,7 +84,7 @@ func (a *DependencyLayersAnalyser) Analyse() (*analysis_results.AnalysisResult, 
 		}
 
 		for _, dependerLayer := range dependerLayers {
-			event := events.NewProcessEvent(dependency, dependerRef, dependerLayer, dependentRef, dependentLayers, analysisResult)
+			event := events2.NewProcessEvent(dependency, dependerRef, dependerLayer, dependentRef, dependentLayers, analysisResult)
 			err := a.eventDispatcher.DispatchEvent(event)
 			if err != nil {
 				return nil, err
@@ -97,7 +97,7 @@ func (a *DependencyLayersAnalyser) Analyse() (*analysis_results.AnalysisResult, 
 		analysisResult.AddWarning(warning)
 	}
 
-	event := events.NewPostProcessEvent(analysisResult)
+	event := events2.NewPostProcessEvent(analysisResult)
 	errDispatch := a.eventDispatcher.DispatchEvent(event)
 	if errDispatch != nil {
 		return nil, errDispatch

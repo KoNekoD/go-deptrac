@@ -3,9 +3,9 @@ package subscribers
 import (
 	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
+	events2 "github.com/KoNekoD/go-deptrac/pkg/domain/events"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/stopwatch"
 	"github.com/KoNekoD/go-deptrac/pkg/emitters"
-	"github.com/KoNekoD/go-deptrac/pkg/events"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 )
 
@@ -35,7 +35,7 @@ func (s *ConsoleSubscriber) InvokeEventSubscriber(rawEvent interface{}, stopProp
 		if s.output.IsVerbose() {
 			s.printMessageWithTime("ast_contract", "<info>AstMap created in %01.2f sec.</>", "<info>AstMap created.</>")
 		}
-	case *events.AstFileAnalysedEvent:
+	case *events2.AstFileAnalysedEvent:
 		if s.output.IsVerbose() {
 			s.output.WriteLineFormatted(results.StringOrArrayOfStrings{String: fmt.Sprintf("Parsing File %s", event.File)})
 		}
@@ -53,7 +53,7 @@ func (s *ConsoleSubscriber) InvokeEventSubscriber(rawEvent interface{}, stopProp
 		if s.output.IsVerbose() {
 			s.printMessageWithTime("deps", "<info>Dependencies emitted in %01.2f sec.</>", "<info>Dependencies emitted.</>")
 		}
-	case *events.PreFlattenEvent:
+	case *events2.PreFlattenEvent:
 		if s.output.IsVerbose() {
 			err := s.stopwatchStart("flatten")
 			if err != nil {
@@ -61,7 +61,7 @@ func (s *ConsoleSubscriber) InvokeEventSubscriber(rawEvent interface{}, stopProp
 			}
 			s.output.WriteLineFormatted(results.StringOrArrayOfStrings{String: "start flatten dependencies"})
 		}
-	case *events.PostFlattenEvent:
+	case *events2.PostFlattenEvent:
 		if s.output.IsVerbose() {
 			s.printMessageWithTime("flatten", "<info>Dependencies flattened in %01.2f sec.</>", "<info>Dependencies flattened.</>")
 		}

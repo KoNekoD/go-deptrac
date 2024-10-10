@@ -3,8 +3,8 @@ package subscribers
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/analysis_results/issues"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/events"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
-	"github.com/KoNekoD/go-deptrac/pkg/events"
 )
 
 type DependsOnDisallowedLayer struct {
