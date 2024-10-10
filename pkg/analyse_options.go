@@ -1,4 +1,4 @@
-package rules
+package pkg
 
 type AnalyseOptions struct {
 	NoProgress      bool

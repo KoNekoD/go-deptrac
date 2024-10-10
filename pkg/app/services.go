@@ -11,6 +11,7 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/dependencies_collectors"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/emitters"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/input_collectors"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/parsers"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/types"
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/commands"
@@ -25,9 +26,6 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/formatters"
 	"github.com/KoNekoD/go-deptrac/pkg/hooks"
 	"github.com/KoNekoD/go-deptrac/pkg/layers"
-	"github.com/KoNekoD/go-deptrac/pkg/parsers"
-	"github.com/KoNekoD/go-deptrac/pkg/results"
-	"github.com/KoNekoD/go-deptrac/pkg/rules"
 	"github.com/elliotchance/orderedmap/v2"
 	"os"
 	"strings"
@@ -51,7 +49,7 @@ func Services(builder *ContainerBuilder) error {
 		verboseBoolFlag != nil && *verboseBoolFlag == true,
 		debugBoolFlag != nil && *debugBoolFlag == true,
 	)
-	symfonyOutput := results.NewSymfonyOutput(style)
+	symfonyOutput := pkg.NewSymfonyOutput(style)
 
 	timeStopwatch := stopwatch.NewStopwatch()
 
@@ -203,7 +201,7 @@ func Services(builder *ContainerBuilder) error {
 		formatter = &formatterTmp
 	}
 
-	analyseOptions := rules.NewAnalyseOptions(
+	analyseOptions := pkg.NewAnalyseOptions(
 		nil != noProgress && *noProgress == true,
 		*formatter,
 		output,

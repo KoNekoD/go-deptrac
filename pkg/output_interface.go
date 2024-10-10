@@ -1,4 +1,4 @@
-package results
+package pkg
 
 // OutputInterface - Wrapper around Symfony OutputInterface.
 type OutputInterface interface {

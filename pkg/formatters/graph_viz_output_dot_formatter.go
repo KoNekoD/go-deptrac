@@ -2,7 +2,7 @@ package formatters
 
 import (
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/results"
+	"github.com/KoNekoD/go-deptrac/pkg"
 	"os"
 	"path/filepath"
 
@@ -24,7 +24,7 @@ func (f *GraphVizOutputDotFormatter) GetName() string {
 	return "graphviz-dot"
 }
 
-func (f *GraphVizOutputDotFormatter) output(g *graphviz.Graphviz, graph *cgraph.Graph, output results.OutputInterface, input OutputFormatterInput) error {
+func (f *GraphVizOutputDotFormatter) output(g *graphviz.Graphviz, graph *cgraph.Graph, output pkg.OutputInterface, input OutputFormatterInput) error {
 	dumpDotPath := input.OutputPath
 	if dumpDotPath == nil || *dumpDotPath == "" {
 		return fmt.Errorf("no '--output' defined for GraphViz formatter")
@@ -42,6 +42,6 @@ func (f *GraphVizOutputDotFormatter) output(g *graphviz.Graphviz, graph *cgraph.
 	//	return fmt.Errorf("unable to write DOT data to file_supportive: %v", err)
 	//}
 
-	output.WriteLineFormatted(results.StringOrArrayOfStrings{String: fmt.Sprintf("<info>Script dumped to %s</>", filepath.Clean(*dumpDotPath))})
+	output.WriteLineFormatted(pkg.StringOrArrayOfStrings{String: fmt.Sprintf("<info>Script dumped to %s</>", filepath.Clean(*dumpDotPath))})
 	return nil
 }

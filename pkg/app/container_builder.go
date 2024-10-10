@@ -7,6 +7,7 @@ import (
 	services2 "github.com/KoNekoD/go-deptrac/pkg/application/services"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/collectors_resolvers"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/input_collectors"
+	parsers2 "github.com/KoNekoD/go-deptrac/pkg/application/services/parsers"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/types"
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/commands"
@@ -20,9 +21,6 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/formatters"
 	"github.com/KoNekoD/go-deptrac/pkg/hooks"
 	"github.com/KoNekoD/go-deptrac/pkg/layers"
-	"github.com/KoNekoD/go-deptrac/pkg/parsers"
-	"github.com/KoNekoD/go-deptrac/pkg/results"
-	"github.com/KoNekoD/go-deptrac/pkg/rules"
 )
 
 type ContainerBuilder struct {
@@ -41,7 +39,7 @@ type ContainerBuilder struct {
 	AstFileReferenceInMemoryCache          *ast_map.AstFileReferenceInMemoryCache
 	TypeResolver                           *types.TypeResolver
 	ReferenceExtractors                    []extractors.ReferenceExtractorInterface
-	ParserInterface                        parsers.ParserInterface
+	ParserInterface                        parsers2.ParserInterface
 	LayerProvider                          *layers.LayerProvider
 	EventHelper                            *dispatchers.EventHelper
 	AllowDependencyHandler                 *event_handlers2.AllowDependency
@@ -56,7 +54,7 @@ type ContainerBuilder struct {
 	VerboseBoolFlag                        *bool
 	DebugBoolFlag                          *bool
 	Style                                  *formatters.Style
-	SymfonyOutput                          *results.SymfonyOutput
+	SymfonyOutput                          *pkg.SymfonyOutput
 	TimeStopwatch                          *stopwatch.Stopwatch
 	AstMapExtractor                        *ast_map.AstMapExtractor
 	InheritanceFlattener                   *flatteners.InheritanceFlattener
@@ -64,7 +62,7 @@ type ContainerBuilder struct {
 	TokenResolver                          *services2.TokenResolver
 	CollectorResolver                      *collectors_resolvers.CollectorResolver
 	LayerResolver                          layers.LayerResolverInterface
-	NikicPhpParser                         *parsers.NikicPhpParser
+	NikicPhpParser                         *parsers2.NikicPhpParser
 	CollectorProvider                      *services2.CollectorProvider
 	DependencyLayersAnalyser               *analysers.DependencyLayersAnalyser
 	TokenInLayerAnalyser                   *analysers.TokenInLayerAnalyser
@@ -77,7 +75,7 @@ type ContainerBuilder struct {
 	AnalyseRunner                          *AnalyseRunner
 	AnalyseCommand                         *commands.AnalyseCommand
 	NodeNamer                              *services.NodeNamer
-	AnalyseOptions                         *rules.AnalyseOptions
+	AnalyseOptions                         *pkg.AnalyseOptions
 }
 
 func NewContainerBuilder(workingDirectory string) *ContainerBuilder {

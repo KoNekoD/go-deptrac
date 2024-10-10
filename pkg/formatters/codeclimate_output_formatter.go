@@ -4,11 +4,11 @@ import (
 	"crypto/sha1"
 	"encoding/json"
 	"fmt"
+	"github.com/KoNekoD/go-deptrac/pkg"
 	results2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/violations_rules"
 	enums2 "github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
-	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"os"
 )
 
@@ -25,7 +25,7 @@ func (f *CodeclimateOutputFormatter) GetName() string {
 	return "codeclimate"
 }
 
-func (f *CodeclimateOutputFormatter) Finish(outputResult results2.OutputResult, output results.OutputInterface, input OutputFormatterInput) error {
+func (f *CodeclimateOutputFormatter) Finish(outputResult results2.OutputResult, output pkg.OutputInterface, input OutputFormatterInput) error {
 	formatterConfig := enums2.NewConfigurationCodeclimateFromArray(f.config)
 	var violations []map[string]interface{}
 
@@ -55,7 +55,7 @@ func (f *CodeclimateOutputFormatter) Finish(outputResult results2.OutputResult, 
 		if err != nil {
 			return err
 		}
-		output.WriteLineFormatted(results.StringOrArrayOfStrings{String: fmt.Sprintf("<info>Codeclimate Report dumped to %s</>", *input.OutputPath)})
+		output.WriteLineFormatted(pkg.StringOrArrayOfStrings{String: fmt.Sprintf("<info>Codeclimate Report dumped to %s</>", *input.OutputPath)})
 		return nil
 	}
 

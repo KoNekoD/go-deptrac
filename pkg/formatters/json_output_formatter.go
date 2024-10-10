@@ -3,10 +3,10 @@ package formatters
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/KoNekoD/go-deptrac/pkg"
 	results2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
-	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"os"
 	"path/filepath"
 )
@@ -21,7 +21,7 @@ func (f *JsonOutputFormatter) GetName() string {
 	return "json"
 }
 
-func (f *JsonOutputFormatter) Finish(outputResult results2.OutputResult, output results.OutputInterface, input OutputFormatterInput) error {
+func (f *JsonOutputFormatter) Finish(outputResult results2.OutputResult, output pkg.OutputInterface, input OutputFormatterInput) error {
 	jsonArray := make(map[string]interface{})
 	violations := make(map[string]FileViolations)
 
@@ -66,7 +66,7 @@ func (f *JsonOutputFormatter) Finish(outputResult results2.OutputResult, output 
 		if err := os.WriteFile(*input.OutputPath, jsonData, 0644); err != nil {
 			return err
 		}
-		output.WriteLineFormatted(results.StringOrArrayOfStrings{String: fmt.Sprintf("<info>JSON Report dumped to %s</>", filepath.Clean(*input.OutputPath))})
+		output.WriteLineFormatted(pkg.StringOrArrayOfStrings{String: fmt.Sprintf("<info>JSON Report dumped to %s</>", filepath.Clean(*input.OutputPath))})
 		return nil
 	}
 

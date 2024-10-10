@@ -2,9 +2,9 @@ package formatters
 
 import (
 	"fmt"
+	"github.com/KoNekoD/go-deptrac/pkg"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/formatters_configs"
 	results2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
-	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"os"
 	"strings"
 )
@@ -32,7 +32,7 @@ func (f *MermaidJSOutputFormatter) GetName() string {
 	return "mermaidjs"
 }
 
-func (f *MermaidJSOutputFormatter) Finish(result results2.OutputResult, output results.OutputInterface, input OutputFormatterInput) error {
+func (f *MermaidJSOutputFormatter) Finish(result results2.OutputResult, output pkg.OutputInterface, input OutputFormatterInput) error {
 	graph := f.parseResults(result)
 	violations := result.Violations()
 	var buffer strings.Builder

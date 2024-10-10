@@ -2,7 +2,7 @@ package formatters
 
 import (
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/results"
+	"github.com/KoNekoD/go-deptrac/pkg"
 	"os/exec"
 	"runtime"
 	"time"
@@ -27,7 +27,7 @@ func (f *GraphVizOutputDisplayFormatter) GetName() string {
 	return "graphviz-display"
 }
 
-func (f *GraphVizOutputDisplayFormatter) output(g *graphviz.Graphviz, graph *cgraph.Graph, output results.OutputInterface, input OutputFormatterInput) error {
+func (f *GraphVizOutputDisplayFormatter) output(g *graphviz.Graphviz, graph *cgraph.Graph, output pkg.OutputInterface, input OutputFormatterInput) error {
 	filename, err := f.getTempImage(g, graph)
 	if err != nil {
 		return fmt.Errorf("unable to create temp file_supportive for output: %v", err)

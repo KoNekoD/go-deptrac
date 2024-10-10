@@ -2,10 +2,10 @@ package formatters
 
 import (
 	"fmt"
+	"github.com/KoNekoD/go-deptrac/pkg"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/formatters_configs"
 	results2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/violations_rules"
-	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"github.com/goccy/go-graphviz"
 	"github.com/goccy/go-graphviz/cgraph"
 	"os"
@@ -21,7 +21,7 @@ func NewGraphVizOutputFormatter(config FormatterConfiguration) *GraphVizOutputFo
 	return &GraphVizOutputFormatter{config: extractedConfig}
 }
 
-func (f *GraphVizOutputFormatter) Finish(result results2.OutputResult, output results.OutputInterface, input OutputFormatterInput) error {
+func (f *GraphVizOutputFormatter) Finish(result results2.OutputResult, output pkg.OutputInterface, input OutputFormatterInput) error {
 	layerViolations := f.calculateViolations(result.Violations())
 	layersDependOnLayers := f.calculateLayerDependencies(result.AllRules())
 
@@ -147,7 +147,7 @@ func (f *GraphVizOutputFormatter) addNodesToGraph(graph *cgraph.Graph, nodes map
 	}
 }
 
-func (f *GraphVizOutputFormatter) output(g *graphviz.Graphviz, graph *cgraph.Graph, output results.OutputInterface, input OutputFormatterInput) error {
+func (f *GraphVizOutputFormatter) output(g *graphviz.Graphviz, graph *cgraph.Graph, output pkg.OutputInterface, input OutputFormatterInput) error {
 	filename, err := f.getTempImage(g, graph)
 	if err != nil {
 		return fmt.Errorf("unable to create temp file_supportive for output: %v", err)
@@ -157,11 +157,11 @@ func (f *GraphVizOutputFormatter) output(g *graphviz.Graphviz, graph *cgraph.Gra
 		if err := os.Rename(filename, *input.OutputPath); err != nil {
 			return fmt.Errorf("unable to move temp file_supportive to output path: %v", err)
 		}
-		output.WriteLineFormatted(results.StringOrArrayOfStrings{String: fmt.Sprintf("<info>GraphViz Report saved to %s</>", filepath.Clean(*input.OutputPath))})
+		output.WriteLineFormatted(pkg.StringOrArrayOfStrings{String: fmt.Sprintf("<info>GraphViz Report saved to %s</>", filepath.Clean(*input.OutputPath))})
 		return nil
 	}
 
-	output.WriteLineFormatted(results.StringOrArrayOfStrings{String: fmt.Sprintf("<info>GraphViz temp image created at %s</>", filename)})
+	output.WriteLineFormatted(pkg.StringOrArrayOfStrings{String: fmt.Sprintf("<info>GraphViz temp image created at %s</>", filename)})
 	return nil
 }
 

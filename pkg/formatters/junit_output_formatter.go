@@ -3,10 +3,10 @@ package formatters
 import (
 	"encoding/xml"
 	"fmt"
+	"github.com/KoNekoD/go-deptrac/pkg"
 	results2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
-	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"os"
 	"path/filepath"
 )
@@ -23,7 +23,7 @@ func (f *JUnitOutputFormatter) GetName() string {
 	return "junit"
 }
 
-func (f *JUnitOutputFormatter) Finish(result results2.OutputResult, output results.OutputInterface, input OutputFormatterInput) error {
+func (f *JUnitOutputFormatter) Finish(result results2.OutputResult, output pkg.OutputInterface, input OutputFormatterInput) error {
 	xmlData, err := f.createXML(result)
 	if err != nil {
 		return err
@@ -38,7 +38,7 @@ func (f *JUnitOutputFormatter) Finish(result results2.OutputResult, output resul
 		return err
 	}
 
-	output.WriteLineFormatted(results.StringOrArrayOfStrings{String: fmt.Sprintf("<info>JUnit Report dumped to %s</>", filepath.Clean(*dumpXmlPath))})
+	output.WriteLineFormatted(pkg.StringOrArrayOfStrings{String: fmt.Sprintf("<info>JUnit Report dumped to %s</>", filepath.Clean(*dumpXmlPath))})
 	return nil
 }
 

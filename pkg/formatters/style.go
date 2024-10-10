@@ -2,7 +2,7 @@ package formatters
 
 import (
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/results"
+	"github.com/KoNekoD/go-deptrac/pkg"
 	"github.com/gookit/color"
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/jedib0t/go-pretty/v6/text"
@@ -33,27 +33,27 @@ func (s *Style) Section(message string) {
 	color.Printf("<comment>%s</>\n", strings.Repeat("-", len(message)))
 }
 
-func (s *Style) Success(message results.StringOrArrayOfStrings) {
+func (s *Style) Success(message pkg.StringOrArrayOfStrings) {
 	color.Printf("<success>%s</>", message.ToString())
 }
 
-func (s *Style) Error(message results.StringOrArrayOfStrings) {
+func (s *Style) Error(message pkg.StringOrArrayOfStrings) {
 	color.Printf("<error>%s</>", message.ToString())
 }
 
-func (s *Style) Warning(message results.StringOrArrayOfStrings) {
+func (s *Style) Warning(message pkg.StringOrArrayOfStrings) {
 	color.Printf("<warning>%s</>", message.ToString())
 }
 
-func (s *Style) Note(message results.StringOrArrayOfStrings) {
+func (s *Style) Note(message pkg.StringOrArrayOfStrings) {
 	color.Printf("<note>%s</>", message.ToString())
 }
 
-func (s *Style) Caution(message results.StringOrArrayOfStrings) {
+func (s *Style) Caution(message pkg.StringOrArrayOfStrings) {
 	color.Printf("<danger>%s</>", message.ToString())
 }
 
-func (s *Style) DefinitionList(list []results.StringOrArrayOfStringsOrTableSeparator) {
+func (s *Style) DefinitionList(list []pkg.StringOrArrayOfStringsOrTableSeparator) {
 	headers := make([]string, 0)
 	row := make([]string, 0)
 	for _, value := range list {

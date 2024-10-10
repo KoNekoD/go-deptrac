@@ -2,7 +2,7 @@ package formatters
 
 import (
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/results"
+	"github.com/KoNekoD/go-deptrac/pkg"
 	"os"
 	"path/filepath"
 
@@ -24,7 +24,7 @@ func (f *GraphVizOutputImageFormatter) GetName() string {
 	return "graphviz-image"
 }
 
-func (f *GraphVizOutputImageFormatter) output(g *graphviz.Graphviz, graph *cgraph.Graph, output results.OutputInterface, input OutputFormatterInput) error {
+func (f *GraphVizOutputImageFormatter) output(g *graphviz.Graphviz, graph *cgraph.Graph, output pkg.OutputInterface, input OutputFormatterInput) error {
 	dumpImagePath := input.OutputPath
 	if dumpImagePath == nil || *dumpImagePath == "" {
 		return fmt.Errorf("no '--output' defined for GraphViz formatter")
@@ -39,7 +39,7 @@ func (f *GraphVizOutputImageFormatter) output(g *graphviz.Graphviz, graph *cgrap
 		return fmt.Errorf("unable to display output: %v", err)
 	}
 
-	output.WriteLineFormatted(results.StringOrArrayOfStrings{String: fmt.Sprintf("<info>Image dumped to %s</>", *dumpImagePath)})
+	output.WriteLineFormatted(pkg.StringOrArrayOfStrings{String: fmt.Sprintf("<info>Image dumped to %s</>", *dumpImagePath)})
 	return nil
 }
 

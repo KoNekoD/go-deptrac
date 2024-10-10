@@ -2,10 +2,10 @@ package dependencies_collectors
 
 import (
 	"fmt"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/parsers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
-	"github.com/KoNekoD/go-deptrac/pkg/parsers"
 )
 
 type MethodCollector struct {

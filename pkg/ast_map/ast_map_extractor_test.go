@@ -2,9 +2,9 @@ package ast_map
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/input_collectors"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/parsers"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/types"
 	"github.com/KoNekoD/go-deptrac/pkg/extractors"
-	"github.com/KoNekoD/go-deptrac/pkg/parsers"
 	"os"
 	"testing"
 )

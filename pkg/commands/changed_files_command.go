@@ -1,9 +1,9 @@
 package commands
 
 import (
+	"github.com/KoNekoD/go-deptrac/pkg"
 	"github.com/KoNekoD/go-deptrac/pkg/app"
 	"github.com/KoNekoD/go-deptrac/pkg/formatters"
-	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
@@ -37,7 +37,7 @@ func NewChangedFilesCommand(runner *app.ChangedFilesRunner) *cobra.Command {
 }
 
 func (cmd *ChangedFilesCommand) run(cobraCmd *cobra.Command, args []string) error {
-	symfonyOutput := results.NewSymfonyOutput(formatters.NewStyle(cobraCmd.Flags().Changed("verbose"), cobraCmd.Flags().Changed("debug")))
+	symfonyOutput := pkg.NewSymfonyOutput(formatters.NewStyle(cobraCmd.Flags().Changed("verbose"), cobraCmd.Flags().Changed("debug")))
 
 	files, err := cobraCmd.Flags().GetStringArray(argFiles)
 	if err != nil {

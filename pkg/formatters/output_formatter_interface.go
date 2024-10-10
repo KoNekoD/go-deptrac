@@ -1,9 +1,9 @@
 package formatters
 
 import (
+	"github.com/KoNekoD/go-deptrac/pkg"
 	results2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
-	"github.com/KoNekoD/go-deptrac/pkg/results"
 )
 
 type OutputFormatterInterface interface {
@@ -11,5 +11,5 @@ type OutputFormatterInterface interface {
 	GetName() enums.OutputFormatterType
 
 	// Finish - Renders the final result_contract.
-	Finish(result *results2.OutputResult, output results.OutputInterface, outputFormatterInput *OutputFormatterInput) error
+	Finish(result *results2.OutputResult, output pkg.OutputInterface, outputFormatterInput *OutputFormatterInput) error
 }
