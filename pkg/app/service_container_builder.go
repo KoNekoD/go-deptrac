@@ -3,8 +3,8 @@ package app
 import (
 	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/application/event_handlers"
-	"github.com/KoNekoD/go-deptrac/pkg/configs"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/configs"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
 	"os"
 	"path/filepath"

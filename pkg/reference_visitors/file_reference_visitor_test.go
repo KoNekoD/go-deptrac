@@ -1,7 +1,9 @@
-package references
+package reference_visitors
 
 import (
 	"fmt"
+	"github.com/KoNekoD/go-deptrac/pkg/extractors"
+	"github.com/KoNekoD/go-deptrac/pkg/references_builders"
 	"github.com/KoNekoD/go-deptrac/pkg/types"
 	_ "github.com/KoNekoD/go-deptrac/resources"
 	"go/ast"
@@ -19,10 +21,10 @@ func TestFileReferenceVisitorOk(t *testing.T) {
 		t.Error(err)
 	}
 
-	referenceExtractorInterfaces := make([]ReferenceExtractorInterface, 0)
+	referenceExtractorInterfaces := make([]extractors.ReferenceExtractorInterface, 0)
 
 	fileReferenceVisitor := NewFileReferenceVisitor(
-		CreateFileReferenceBuilder(file),
+		references_builders.CreateFileReferenceBuilder(file),
 		types.NewTypeResolver(
 			nil,
 		),

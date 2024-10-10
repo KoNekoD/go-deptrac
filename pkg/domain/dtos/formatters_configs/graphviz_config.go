@@ -1,15 +1,15 @@
 package formatters_configs
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 )
 
 type GraphvizConfig struct {
 	name          string
 	PointToGroups bool
-	HiddenLayers  []*dtos.Layer
-	Groups        map[string][]*dtos.Layer
+	HiddenLayers  []*rules.Layer
+	Groups        map[string][]*rules.Layer
 }
 
 func (g *GraphvizConfig) HasHiddenLayer(name string) bool {
@@ -35,8 +35,8 @@ func newGraphvizConfig() *GraphvizConfig {
 	return &GraphvizConfig{
 		name:          "graphviz",
 		PointToGroups: false,
-		HiddenLayers:  make([]*dtos.Layer, 0),
-		Groups:        make(map[string][]*dtos.Layer),
+		HiddenLayers:  make([]*rules.Layer, 0),
+		Groups:        make(map[string][]*rules.Layer),
 	}
 }
 
@@ -53,12 +53,12 @@ func (g *GraphvizConfig) SetPointToGroups(pointToGroups *bool) *GraphvizConfig {
 	return g
 }
 
-func (g *GraphvizConfig) SetHiddenLayers(layerConfigs ...*dtos.Layer) *GraphvizConfig {
+func (g *GraphvizConfig) SetHiddenLayers(layerConfigs ...*rules.Layer) *GraphvizConfig {
 	g.HiddenLayers = append(g.HiddenLayers, layerConfigs...)
 	return g
 }
 
-func (g *GraphvizConfig) SetGroups(name string, layerConfigs ...*dtos.Layer) *GraphvizConfig {
+func (g *GraphvizConfig) SetGroups(name string, layerConfigs ...*rules.Layer) *GraphvizConfig {
 	g.Groups[name] = append(g.Groups[name], layerConfigs...)
 	return g
 }

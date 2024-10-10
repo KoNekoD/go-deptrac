@@ -2,20 +2,19 @@ package configs
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/collectors_configs"
-	formatters_configs2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/formatters_configs"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/formatters_configs"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
-	"github.com/KoNekoD/go-deptrac/pkg/rules"
 	"github.com/pkg/errors"
 )
 
 type DeptracConfig struct {
 	Paths                          []string
-	Analyser                       *dtos.AnalyserConfig
-	Formatters                     map[enums.FormatterType]formatters_configs2.FormatterConfigInterface
-	Layers                         []*dtos.Layer
+	Analyser                       *AnalyserConfig
+	Formatters                     map[enums.FormatterType]formatters_configs.FormatterConfigInterface
+	Layers                         []*rules.Layer
 	Rulesets                       map[string]*rules.Ruleset
 	IgnoreUncoveredInternalStructs bool
 	SkipViolations                 map[string][]string
@@ -99,19 +98,19 @@ func (c *DeptracConfig) SetupDeptracMapData(data map[string]interface{}) error {
 	}
 	layersList := c.Layers
 
-	formattersList := make(map[enums.FormatterType]formatters_configs2.FormatterConfigInterface)
+	formattersList := make(map[enums.FormatterType]formatters_configs.FormatterConfigInterface)
 	if parsedDeptracFormatters, ok := data["formatters"]; ok {
 		for formatterKey, formatterRawRaw := range parsedDeptracFormatters.(map[string]interface{}) {
 			formatterRaw := formatterRawRaw.(map[string]interface{})
 			switch formatterKey {
 			case string(enums.FormatterTypeCodeclimateConfig):
-				formattersList[enums.FormatterTypeCodeclimateConfig] = formatters_configs2.CreateCodeclimateConfig(
+				formattersList[enums.FormatterTypeCodeclimateConfig] = formatters_configs.CreateCodeclimateConfig(
 					formatterRaw["failure"].(*enums.CodeclimateLevelEnum),
 					formatterRaw["skipped"].(*enums.CodeclimateLevelEnum),
 					formatterRaw["uncovered"].(*enums.CodeclimateLevelEnum),
 				)
 			case string(enums.FormatterTypeGraphvizConfig):
-				hiddenLayers := make([]*dtos.Layer, 0)
+				hiddenLayers := make([]*rules.Layer, 0)
 
 				for _, hiddenLayer := range formatterRaw["hiddenLayers"].([]string) {
 					for _, layer := range layersList {
@@ -122,14 +121,14 @@ func (c *DeptracConfig) SetupDeptracMapData(data map[string]interface{}) error {
 					}
 				}
 
-				formatterGraphvizConfig := formatters_configs2.CreateGraphvizConfig().
+				formatterGraphvizConfig := formatters_configs.CreateGraphvizConfig().
 					SetPointToGroups(formatterRaw["point_to_groups"].(*bool)).
 					SetHiddenLayers(hiddenLayers...)
 
 				formattersList[enums.FormatterTypeGraphvizConfig] = formatterGraphvizConfig
 
 				for groupLayerName, groupRaw := range formatterRaw["groups"].(map[string][]string) {
-					groupLayer := make([]*dtos.Layer, 0)
+					groupLayer := make([]*rules.Layer, 0)
 
 					for _, layerName := range groupRaw {
 						for _, layer := range layersList {
@@ -143,13 +142,13 @@ func (c *DeptracConfig) SetupDeptracMapData(data map[string]interface{}) error {
 					formatterGraphvizConfig.SetGroups(groupLayerName, groupLayer...)
 				}
 			case string(enums.FormatterTypeMermaidJsConfig):
-				formatterMermaidJsConfig := formatters_configs2.CreateMermaidJsConfig().
+				formatterMermaidJsConfig := formatters_configs.CreateMermaidJsConfig().
 					SetDirection(formatterRaw["direction"].(string))
 
 				formattersList[enums.FormatterTypeMermaidJsConfig] = formatterMermaidJsConfig
 
 				for groupLayerName, groupRaw := range formatterRaw["groups"].(map[string][]string) {
-					groupLayer := make([]*dtos.Layer, 0)
+					groupLayer := make([]*rules.Layer, 0)
 
 					for _, layerName := range groupRaw {
 						for _, layer := range layersList {
@@ -170,7 +169,7 @@ func (c *DeptracConfig) SetupDeptracMapData(data map[string]interface{}) error {
 
 	if rulesetsData, ok := data["ruleset"]; ok {
 		for rulesetLayerName, rulesetLayersNames := range rulesetsData.(map[string]interface{}) {
-			var rulesetOwningLayer *dtos.Layer
+			var rulesetOwningLayer *rules.Layer
 
 			for _, layer := range layersList {
 				if layer.Name == rulesetLayerName {
@@ -179,7 +178,7 @@ func (c *DeptracConfig) SetupDeptracMapData(data map[string]interface{}) error {
 				}
 			}
 
-			rulesetLayers := make([]*dtos.Layer, 0)
+			rulesetLayers := make([]*rules.Layer, 0)
 
 			if rulesetLayersNames != nil { // If not ~
 				for _, layerNameRaw := range rulesetLayersNames.([]interface{}) {
@@ -217,7 +216,7 @@ func (c *DeptracConfig) SetupDeptracMapData(data map[string]interface{}) error {
 		analyzerTypes = analyzerTypesDefault
 	}
 
-	analyser := dtos.Create(analyzerTypes, &internalTag)
+	analyser := Create(analyzerTypes, &internalTag)
 
 	paths := make([]string, 0)
 	if dataPaths, ok := data["paths"]; ok {
@@ -270,7 +269,7 @@ func (c *DeptracConfig) SetupLayersData(layers interface{}) error {
 }
 
 func (c *DeptracConfig) SetupLayersListData(list []interface{}) error {
-	layersList := make([]*dtos.Layer, 0)
+	layersList := make([]*rules.Layer, 0)
 
 	for _, layerRawRaw := range list {
 		layerRaw := layerRawRaw.(map[string]interface{})
@@ -313,7 +312,7 @@ func (c *DeptracConfig) SetupLayersListData(list []interface{}) error {
 			return errors.New("invalid layer definition: name must be a string")
 		}
 
-		layer := dtos.NewLayer(layerNameStr, collectorConfigs)
+		layer := rules.NewLayer(layerNameStr, collectorConfigs)
 
 		layersList = append(layersList, layer)
 	}

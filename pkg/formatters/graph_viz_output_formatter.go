@@ -6,7 +6,6 @@ import (
 	results2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
-	"github.com/KoNekoD/go-deptrac/pkg/rules"
 	"github.com/goccy/go-graphviz"
 	"github.com/goccy/go-graphviz/cgraph"
 	"os"
@@ -68,7 +67,7 @@ func (f *GraphVizOutputFormatter) calculateLayerDependencies(rulesList []violati
 	layersDependOnLayers := make(map[string]map[string]int)
 	for _, rule := range rulesList {
 		switch r := rule.(type) {
-		case rules.CoveredRuleInterface:
+		case violations_rules.CoveredRuleInterface:
 			layerA := r.GetDependerLayer()
 			layerB := r.GetDependentLayer()
 

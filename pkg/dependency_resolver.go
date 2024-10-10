@@ -4,8 +4,8 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/emitters"
 	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_map"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/configs"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	events2 "github.com/KoNekoD/go-deptrac/pkg/domain/events"
@@ -14,13 +14,13 @@ import (
 )
 
 type DependencyResolver struct {
-	config               *dtos.AnalyserConfig
+	config               *configs.AnalyserConfig
 	inheritanceFlattener *flatteners.InheritanceFlattener
 	emitterLocator       map[enums.EmitterType]emitters.DependencyEmitterInterface
 	eventDispatcher      dispatchers.EventDispatcherInterface
 }
 
-func NewDependencyResolver(typesConfig *dtos.AnalyserConfig, emitterLocator map[enums.EmitterType]emitters.DependencyEmitterInterface, inheritanceFlattener *flatteners.InheritanceFlattener, eventDispatcher dispatchers.EventDispatcherInterface) *DependencyResolver {
+func NewDependencyResolver(typesConfig *configs.AnalyserConfig, emitterLocator map[enums.EmitterType]emitters.DependencyEmitterInterface, inheritanceFlattener *flatteners.InheritanceFlattener, eventDispatcher dispatchers.EventDispatcherInterface) *DependencyResolver {
 	return &DependencyResolver{
 		config:               typesConfig,
 		emitterLocator:       emitterLocator,

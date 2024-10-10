@@ -1,4 +1,4 @@
-package dtos
+package configs
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"

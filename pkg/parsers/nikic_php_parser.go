@@ -4,7 +4,9 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/services"
-	"github.com/KoNekoD/go-deptrac/pkg/references"
+	"github.com/KoNekoD/go-deptrac/pkg/extractors"
+	"github.com/KoNekoD/go-deptrac/pkg/reference_visitors"
+	"github.com/KoNekoD/go-deptrac/pkg/references_builders"
 	"github.com/KoNekoD/go-deptrac/pkg/types"
 	"github.com/pkg/errors"
 	"go/ast"
@@ -51,10 +53,10 @@ type NikicPhpParser struct {
 	cache        ast_map.AstFileReferenceCacheInterface
 	typeResolver *types.TypeResolver
 	nodeNamer    *services.NodeNamer
-	extractors   []references.ReferenceExtractorInterface
+	extractors   []extractors.ReferenceExtractorInterface
 }
 
-func NewNikicPhpParser(cache ast_map.AstFileReferenceCacheInterface, typeResolver *types.TypeResolver, nodeNamer *services.NodeNamer, extractors []references.ReferenceExtractorInterface) *NikicPhpParser {
+func NewNikicPhpParser(cache ast_map.AstFileReferenceCacheInterface, typeResolver *types.TypeResolver, nodeNamer *services.NodeNamer, extractors []extractors.ReferenceExtractorInterface) *NikicPhpParser {
 	return &NikicPhpParser{
 		classAstMap:  make(map[string]*ast.Ident),
 		cache:        cache,
@@ -73,8 +75,8 @@ func (p *NikicPhpParser) ParseFile(file string) (*tokens_references.FileReferenc
 		return v, nil
 	}
 
-	fileReferenceBuilder := references.CreateFileReferenceBuilder(file)
-	visitor := references.NewFileReferenceVisitor(fileReferenceBuilder, p.typeResolver, p.nodeNamer, p.extractors...)
+	fileReferenceBuilder := references_builders.CreateFileReferenceBuilder(file)
+	visitor := reference_visitors.NewFileReferenceVisitor(fileReferenceBuilder, p.typeResolver, p.nodeNamer, p.extractors...)
 	rootNode := p.loadNodesFromFile(file)
 
 	ast.Walk(visitor, rootNode)

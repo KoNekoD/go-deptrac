@@ -2,8 +2,8 @@ package layers
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
-	"github.com/KoNekoD/go-deptrac/pkg/rules"
 	"strings"
 )
 

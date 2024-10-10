@@ -2,8 +2,8 @@ package ast_map
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/input_collectors"
+	"github.com/KoNekoD/go-deptrac/pkg/extractors"
 	"github.com/KoNekoD/go-deptrac/pkg/parsers"
-	"github.com/KoNekoD/go-deptrac/pkg/references"
 	"github.com/KoNekoD/go-deptrac/pkg/types"
 	"os"
 	"testing"
@@ -43,7 +43,7 @@ func TestAstMapExtractorExtractWorkedFine(t *testing.T) {
 				nil,
 			),
 			nil,
-			[]references.ReferenceExtractorInterface{},
+			[]extractors.ReferenceExtractorInterface{},
 		),
 		nil,
 	)

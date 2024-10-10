@@ -7,7 +7,6 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
-	"github.com/KoNekoD/go-deptrac/pkg/rules"
 	"github.com/KoNekoD/go-deptrac/pkg/tokens"
 	"golang.org/x/exp/maps"
 	"strings"
@@ -69,10 +68,10 @@ func (r *ChangedFilesRunner) Run(files []string, withDependencies bool, output r
 func (r *ChangedFilesRunner) calculateLayerDependencies(rulesList []violations_rules.RuleInterface) map[string]map[string]string {
 	layersDependOnLayers := make(map[string]map[string]string)
 	for _, rule := range rulesList {
-		if _, ok := rule.(rules.CoveredRuleInterface); !ok {
+		if _, ok := rule.(violations_rules.CoveredRuleInterface); !ok {
 			continue
 		}
-		rule := rule.(rules.CoveredRuleInterface)
+		rule := rule.(violations_rules.CoveredRuleInterface)
 		layerA := rule.GetDependerLayer()
 		layerB := rule.GetDependentLayer()
 		if _, ok := layersDependOnLayers[layerB]; !ok {

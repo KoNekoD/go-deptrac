@@ -1,21 +1,21 @@
 package formatters_configs
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 )
 
 type MermaidJsConfig struct {
 	name      string
 	Direction string
-	Groups    map[string][]*dtos.Layer
+	Groups    map[string][]*rules.Layer
 }
 
 func CreateMermaidJsConfig() *MermaidJsConfig {
 	return &MermaidJsConfig{
 		name:      "mermaidjs",
 		Direction: "TD",
-		Groups:    make(map[string][]*dtos.Layer),
+		Groups:    make(map[string][]*rules.Layer),
 	}
 }
 
@@ -28,7 +28,7 @@ func (m *MermaidJsConfig) SetDirection(direction string) *MermaidJsConfig {
 	return m
 }
 
-func (m *MermaidJsConfig) SetGroups(name string, layerConfigs ...*dtos.Layer) *MermaidJsConfig {
+func (m *MermaidJsConfig) SetGroups(name string, layerConfigs ...*rules.Layer) *MermaidJsConfig {
 	for _, config := range layerConfigs {
 		m.Groups[name] = append(m.Groups[name], config)
 	}

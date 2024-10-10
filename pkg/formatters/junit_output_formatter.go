@@ -7,7 +7,6 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
-	"github.com/KoNekoD/go-deptrac/pkg/rules"
 	"os"
 	"path/filepath"
 )
@@ -131,7 +130,7 @@ func (f *JUnitOutputFormatter) groupRulesByLayer(outputResult results2.OutputRes
 	layers := make(map[string][]violations_rules.RuleInterface)
 	for _, rule := range outputResult.AllRules() {
 		switch r := rule.(type) {
-		case rules.CoveredRuleInterface:
+		case violations_rules.CoveredRuleInterface:
 			layers[r.GetDependerLayer()] = append(layers[r.GetDependerLayer()], rule)
 		case *violations_rules.Uncovered:
 			layers[r.Layer] = append(layers[r.Layer], rule)

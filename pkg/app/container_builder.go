@@ -9,17 +9,17 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/input_collectors"
 	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/commands"
-	"github.com/KoNekoD/go-deptrac/pkg/configs"
 	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/configs"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/services"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/stopwatch"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
+	"github.com/KoNekoD/go-deptrac/pkg/extractors"
 	"github.com/KoNekoD/go-deptrac/pkg/flatteners"
 	"github.com/KoNekoD/go-deptrac/pkg/formatters"
 	"github.com/KoNekoD/go-deptrac/pkg/hooks"
 	"github.com/KoNekoD/go-deptrac/pkg/layers"
 	"github.com/KoNekoD/go-deptrac/pkg/parsers"
-	"github.com/KoNekoD/go-deptrac/pkg/references"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
 	"github.com/KoNekoD/go-deptrac/pkg/tokens"
@@ -41,7 +41,7 @@ type ContainerBuilder struct {
 	CacheableFileSubscriber                *event_handlers2.CacheableFile
 	AstFileReferenceInMemoryCache          *ast_map.AstFileReferenceInMemoryCache
 	TypeResolver                           *types.TypeResolver
-	ReferenceExtractors                    []references.ReferenceExtractorInterface
+	ReferenceExtractors                    []extractors.ReferenceExtractorInterface
 	ParserInterface                        parsers.ParserInterface
 	LayerProvider                          *layers.LayerProvider
 	EventHelper                            *dispatchers.EventHelper
@@ -72,7 +72,7 @@ type ContainerBuilder struct {
 	LayerForTokenAnalyser                  *tokens.LayerForTokenAnalyser
 	UnassignedTokenAnalyser                *tokens.UnassignedTokenAnalyser
 	LayerDependenciesAnalyser              *analysers.LayerDependenciesAnalyser
-	RulesetUsageAnalyser                   *rules.RulesetUsageAnalyser
+	RulesetUsageAnalyser                   *analysers.RulesetUsageAnalyser
 	FormatterProvider                      *formatters.FormatterProvider
 	FormatterConfiguration                 *formatters.FormatterConfiguration
 	AnalyseRunner                          *AnalyseRunner

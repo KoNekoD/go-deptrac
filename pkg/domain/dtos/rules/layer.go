@@ -1,4 +1,4 @@
-package dtos
+package rules
 
 import "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/collectors_configs"
 

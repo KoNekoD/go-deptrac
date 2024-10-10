@@ -2,7 +2,7 @@ package event_handlers
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/dispatchers"
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/configs"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/events"
 )
@@ -12,7 +12,7 @@ type DependsOnInternalToken struct {
 	internalTag *string
 }
 
-func NewDependsOnInternalToken(eventHelper *dispatchers.EventHelper, analyser *dtos.AnalyserConfig) *DependsOnInternalToken {
+func NewDependsOnInternalToken(eventHelper *dispatchers.EventHelper, analyser *configs.AnalyserConfig) *DependsOnInternalToken {
 	return &DependsOnInternalToken{eventHelper: eventHelper, internalTag: analyser.InternalTag}
 }
 

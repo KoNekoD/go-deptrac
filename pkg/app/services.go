@@ -19,12 +19,12 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/services"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/stopwatch"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
+	"github.com/KoNekoD/go-deptrac/pkg/extractors"
 	"github.com/KoNekoD/go-deptrac/pkg/flatteners"
 	"github.com/KoNekoD/go-deptrac/pkg/formatters"
 	"github.com/KoNekoD/go-deptrac/pkg/hooks"
 	"github.com/KoNekoD/go-deptrac/pkg/layers"
 	"github.com/KoNekoD/go-deptrac/pkg/parsers"
-	"github.com/KoNekoD/go-deptrac/pkg/references"
 	"github.com/KoNekoD/go-deptrac/pkg/results"
 	"github.com/KoNekoD/go-deptrac/pkg/rules"
 	"github.com/KoNekoD/go-deptrac/pkg/tokens"
@@ -83,7 +83,7 @@ func Services(builder *ContainerBuilder) error {
 		builder.AstFileReferenceCacheInterface = astFileReferenceInMemoryCache
 	}
 	typeResolver := types.NewTypeResolver(nodeNamer)
-	referenceExtractors := []references.ReferenceExtractorInterface{
+	referenceExtractors := []extractors.ReferenceExtractorInterface{
 		/**
 
 		TODO: Implement all reference extractors
@@ -266,7 +266,7 @@ func Services(builder *ContainerBuilder) error {
 	layerForTokenAnalyser := tokens.NewLayerForTokenAnalyser(astMapExtractor, tokenResolver, layerResolver)
 	unassignedTokenAnalyser := tokens.NewUnassignedTokenAnalyser(astMapExtractor, tokenResolver, layerResolver, builderConfiguration.Analyser)
 	layerDependenciesAnalyser := analysers.NewLayerDependenciesAnalyser(astMapExtractor, tokenResolver, dependencyResolver, layerResolver)
-	rulesetUsageAnalyser := rules.NewRulesetUsageAnalyser(layerProvider, layerResolver, astMapExtractor, dependencyResolver, tokenResolver, builderConfiguration.Layers)
+	rulesetUsageAnalyser := analysers.NewRulesetUsageAnalyser(layerProvider, layerResolver, astMapExtractor, dependencyResolver, tokenResolver, builderConfiguration.Layers)
 
 	/*
 	 * Console

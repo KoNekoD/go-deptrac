@@ -1,4 +1,4 @@
-package references
+package references_builders
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
