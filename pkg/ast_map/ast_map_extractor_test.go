@@ -1,6 +1,7 @@
 package ast_map
 
 import (
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/ast_file_reference_cache"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/input_collectors"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/parsers"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/types"
@@ -38,7 +39,7 @@ func TestAstMapExtractorExtractWorkedFine(t *testing.T) {
 
 	astLoader := NewAstLoader(
 		parsers.NewNikicPhpParser(
-			NewAstFileReferenceInMemoryCache(),
+			ast_file_reference_cache.NewAstFileReferenceInMemoryCache(),
 			types.NewTypeResolver(
 				nil,
 			),

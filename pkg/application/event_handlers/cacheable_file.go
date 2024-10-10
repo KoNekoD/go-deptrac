@@ -1,12 +1,15 @@
 package event_handlers
 
-import "github.com/KoNekoD/go-deptrac/pkg/ast_map"
+import (
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/ast_file_reference_cache"
+	"github.com/KoNekoD/go-deptrac/pkg/ast_map"
+)
 
 type CacheableFile struct {
-	deferredCache ast_map.AstFileReferenceDeferredCacheInterface
+	deferredCache ast_file_reference_cache.AstFileReferenceDeferredCacheInterface
 }
 
-func NewCacheableFile(deferredCache ast_map.AstFileReferenceDeferredCacheInterface) *CacheableFile {
+func NewCacheableFile(deferredCache ast_file_reference_cache.AstFileReferenceDeferredCacheInterface) *CacheableFile {
 	return &CacheableFile{deferredCache: deferredCache}
 }
 

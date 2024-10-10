@@ -1,4 +1,4 @@
-package ast_map
+package ast_file_reference_cache
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"

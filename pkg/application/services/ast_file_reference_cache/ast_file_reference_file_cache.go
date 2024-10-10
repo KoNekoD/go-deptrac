@@ -1,4 +1,4 @@
-package ast_map
+package ast_file_reference_cache
 
 import (
 	"encoding/json"

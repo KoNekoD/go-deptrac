@@ -5,6 +5,7 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/analysers"
 	event_handlers2 "github.com/KoNekoD/go-deptrac/pkg/application/event_handlers"
 	services2 "github.com/KoNekoD/go-deptrac/pkg/application/services"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/ast_file_reference_cache"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/collectors_resolvers"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/input_collectors"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/layers_resolvers"
@@ -30,11 +31,11 @@ type ContainerBuilder struct {
 	YmlFileLoader                          *pkg.YmlFileLoader
 	Dumper                                 *utils.Dumper
 	AstLoader                              *ast_map.AstLoader
-	AstFileReferenceFileCache              *ast_map.AstFileReferenceFileCache
-	AstFileReferenceDeferredCacheInterface ast_map.AstFileReferenceDeferredCacheInterface
-	AstFileReferenceCacheInterface         ast_map.AstFileReferenceCacheInterface
+	AstFileReferenceFileCache              *ast_file_reference_cache.AstFileReferenceFileCache
+	AstFileReferenceDeferredCacheInterface ast_file_reference_cache.AstFileReferenceDeferredCacheInterface
+	AstFileReferenceCacheInterface         ast_file_reference_cache.AstFileReferenceCacheInterface
 	CacheableFileSubscriber                *event_handlers2.CacheableFile
-	AstFileReferenceInMemoryCache          *ast_map.AstFileReferenceInMemoryCache
+	AstFileReferenceInMemoryCache          *ast_file_reference_cache.AstFileReferenceInMemoryCache
 	TypeResolver                           *types.TypeResolver
 	ReferenceExtractors                    []extractors.ReferenceExtractorInterface
 	ParserInterface                        parsers2.ParserInterface

@@ -7,6 +7,7 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/analysers"
 	event_handlers2 "github.com/KoNekoD/go-deptrac/pkg/application/event_handlers"
 	services2 "github.com/KoNekoD/go-deptrac/pkg/application/services"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/ast_file_reference_cache"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/collectors_resolvers"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/dependencies_collectors"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/emitters"
@@ -73,7 +74,7 @@ func Services(builder *ContainerBuilder) error {
 	/*
 	 * AST
 	 */
-	astFileReferenceInMemoryCache := ast_map.NewAstFileReferenceInMemoryCache()
+	astFileReferenceInMemoryCache := ast_file_reference_cache.NewAstFileReferenceInMemoryCache()
 	if builder.AstFileReferenceCacheInterface == nil {
 		builder.AstFileReferenceCacheInterface = astFileReferenceInMemoryCache
 	}
