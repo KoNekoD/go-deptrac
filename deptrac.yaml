@@ -16,6 +16,7 @@ deptrac:
       - function
       - function_superglobal
       - function_call
+      - use
 
   formatters:
     graphviz:
@@ -39,129 +40,22 @@ deptrac:
 
   layers:
     # Domains
-    - name: Analyser
+    - name: domain
       collectors:
         - type: directory
-          value: pkg/core/analyser_contract/.*
-    - name: Ast
+          value: pkg/domain/.*
+    - name: application
       collectors:
         - type: directory
-          value: pkg/core/ast_contract/.*
-        - type: composer
-          private: true
-          composerPath: composer.json
-          composerLockPath: composer.lock
-          packages:
-            - phpstan/phpdoc-parser
-            - nikic/php-parser
-            - phpdocumentor/type-resolver
-    - name: Console
+          value: pkg/application/.*
+    - name: infrastructure
       collectors:
         - type: directory
-          value: pkg/supportive/console_supportive/.*
-    - name: Dependency
-      collectors:
-        - type: directory
-          value: pkg/core/dependency_contract/.*
-    - name: DependencyInjection
-      collectors:
-        - type: directory
-          value: pkg/supportive/dependency_injection_supportive/.*
-    - name: Contract
-      collectors:
-        - type: directory
-          value: pkg/contract/.*
-    - name: InputCollector
-      collectors:
-        - type: directory
-          value: pkg/core/input_collector_core/.*
-    - name: Layer
-      collectors:
-        - type: directory
-          value: pkg/core/layer_contract/.*
-    - name: OutputFormatter
-      collectors:
-        - type: directory
-          value: pkg/supportive/output_formatter_contract/.*
-        - type: composer
-          private: true
-          composerPath: composer.json
-          composerLockPath: composer.lock
-          packages:
-            - phpdocumentor/graphviz
-    - name: File
-      collectors:
-        - type: directory
-          value: pkg/supportive/file_supportive/.*
-    - name: Time
-      collectors:
-        - type: directory
-          value: pkg/supportive/time/.*
-    - name: Supportive
-      collectors:
-        - type: bool
-          must_not:
-            - type: directory
-              value: pkg/supportive/.*/.*
-          must:
-            - type: directory
-              value: pkg/supportive/.*
-    - name: Symfony
-      collectors:
-        - type: composer
-          composerPath: composer.json
-          composerLockPath: composer.lock
-          packages:
-            - symfony/config_contract
-            - symfony/console_supportive
-            - symfony/dependency_contract-injection
-            - symfony/event-dispatcher
-            - symfony/filesystem
-            - symfony/finder
-            - symfony/yaml
+          value: pkg/infrastructure/.*
 
   ruleset:
-    Layer:
-      - Ast
-      - Symfony
-      - Contract
-    Console:
-      - Analyser
-      - OutputFormatter
-      - DependencyInjection
-      - File
-      - Time
-      - Symfony
-      - Contract
-    Dependency:
-      - Ast
-      - Contract
-      - DependencyInjection
-    Analyser:
-      - Layer
-      - Dependency
-      - Ast
-      - Symfony
-      - Contract
-      - DependencyInjection
-    OutputFormatter:
-      - DependencyInjection
-      - Symfony
-      - Contract
-    Ast:
-      - File
-      - InputCollector
-      - Symfony
-      - Contract
-      - DependencyInjection
-    InputCollector:
-      - File
-      - Symfony
-    DependencyInjection:
-      - Symfony
-      - Console
-      - Contract
-    Contract:
-      - Symfony
-    File:
-      - Symfony
+    application:
+      - domain
+    infrastructure:
+      - application
+      - domain
