@@ -1,4 +1,4 @@
-package options
+package commands_options
 
 type AnalyseOptions struct {
 	NoProgress      bool

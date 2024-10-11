@@ -16,12 +16,11 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/layers_resolvers"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/parsers"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/types"
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/options"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/commands_options"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/events"
 	domainServices "github.com/KoNekoD/go-deptrac/pkg/domain/services"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/stopwatch"
-	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/commands"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services/dispatchers"
@@ -71,7 +70,7 @@ func Services(builder *ContainerBuilder) error {
 	}
 
 	ymlFileLoader := services.NewYmlFileLoader()
-	dumper := utils.NewDumper("/deptrac_template.yaml")
+	dumper := domainServices.NewDumper("/deptrac_template.yaml")
 
 	/*
 	 * AST
@@ -202,7 +201,7 @@ func Services(builder *ContainerBuilder) error {
 		formatter = &formatterTmp
 	}
 
-	analyseOptions := options.NewAnalyseOptions(
+	analyseOptions := commands_options.NewAnalyseOptions(
 		nil != noProgress && *noProgress == true,
 		*formatter,
 		output,

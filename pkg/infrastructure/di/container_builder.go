@@ -12,11 +12,10 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/layers_resolvers"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/parsers"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/types"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/commands_options"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/configs"
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/options"
 	domainServices "github.com/KoNekoD/go-deptrac/pkg/domain/services"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/stopwatch"
-	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/commands"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services/dispatchers"
@@ -31,7 +30,7 @@ type ContainerBuilder struct {
 	EventDispatcher                        dispatchers.EventDispatcherInterface
 	FileInputCollector                     input_collectors.InputCollector
 	YmlFileLoader                          *services.YmlFileLoader
-	Dumper                                 *utils.Dumper
+	Dumper                                 *domainServices.Dumper
 	AstLoader                              *ast_map.AstLoader
 	AstFileReferenceFileCache              *ast_file_reference_cache.AstFileReferenceFileCache
 	AstFileReferenceDeferredCacheInterface ast_file_reference_cache.AstFileReferenceDeferredCacheInterface
@@ -76,7 +75,7 @@ type ContainerBuilder struct {
 	AnalyseRunner                          *runners.AnalyseRunner
 	AnalyseCommand                         *commands.AnalyseCommand
 	NodeNamer                              *domainServices.NodeNamer
-	AnalyseOptions                         *options.AnalyseOptions
+	AnalyseOptions                         *commands_options.AnalyseOptions
 }
 
 func NewContainerBuilder(workingDirectory string) *ContainerBuilder {

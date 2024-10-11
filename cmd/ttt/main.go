@@ -1,12 +1,14 @@
 package main
 
-import "fmt"
-
-type TTT struct {
-}
+import (
+	"fmt"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/commands_options"
+	"github.com/alexflint/go-arg"
+)
 
 func main() {
-	t := &TTT{}
+	options := commands_options.InitOptions{}
+	arg.MustParse(&options)
 
-	fmt.Printf("%T\n", t)
+	fmt.Println(options)
 }

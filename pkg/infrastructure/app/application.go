@@ -85,7 +85,6 @@ func (a *Application) doRun() (int, error) {
 		currentWorkingDirectory+DirectorySeparator+"deptrac.yaml",
 		"Location of Depfile containing the configuration",
 	)
-
 	flag.Parse()
 
 	var (
