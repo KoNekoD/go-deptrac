@@ -4,20 +4,20 @@ import (
 	"crypto/sha1"
 	"encoding/json"
 	"fmt"
-	results2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/violations_rules"
-	enums2 "github.com/KoNekoD/go-deptrac/pkg/domain/enums"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
 	"os"
 )
 
 type CodeclimateOutputFormatter struct {
-	config map[enums2.SeverityType]interface{}
+	config map[enums.SeverityType]interface{}
 }
 
 func NewCodeclimateOutputFormatter(config FormatterConfiguration) *CodeclimateOutputFormatter {
-	extractedConfig := config.GetConfigFor("codeclimate").(interface{}).(map[enums2.SeverityType]interface{})
+	extractedConfig := config.GetConfigFor("codeclimate").(interface{}).(map[enums.SeverityType]interface{})
 	return &CodeclimateOutputFormatter{config: extractedConfig}
 }
 
@@ -25,27 +25,27 @@ func (f *CodeclimateOutputFormatter) GetName() string {
 	return "codeclimate"
 }
 
-func (f *CodeclimateOutputFormatter) Finish(outputResult results2.OutputResult, output services.OutputInterface, input OutputFormatterInput) error {
-	formatterConfig := enums2.NewConfigurationCodeclimateFromArray(f.config)
-	var violations []map[string]interface{}
+func (f *CodeclimateOutputFormatter) Finish(outputResult results.OutputResult, output services.OutputInterface, input OutputFormatterInput) error {
+	formatterConfig := enums.NewConfigurationCodeclimateFromArray(f.config)
+	var violationsList []map[string]interface{}
 
 	if input.ReportSkipped {
-		for _, rule := range outputResult.AllOf(enums2.TypeSkippedViolation) {
-			f.addSkipped(&violations, rule.(*violations.SkippedViolation), formatterConfig)
+		for _, rule := range outputResult.AllOf(enums.TypeSkippedViolation) {
+			f.addSkipped(&violationsList, rule.(*violations_rules.SkippedViolation), formatterConfig)
 		}
 	}
 
 	if input.ReportUncovered {
-		for _, rule := range outputResult.AllOf(enums2.TypeUncovered) {
-			f.addUncovered(&violations, rule.(*violations.Uncovered), formatterConfig)
+		for _, rule := range outputResult.AllOf(enums.TypeUncovered) {
+			f.addUncovered(&violationsList, rule.(*violations_rules.Uncovered), formatterConfig)
 		}
 	}
 
-	for _, rule := range outputResult.AllOf(enums2.TypeViolation) {
-		f.addFailure(&violations, rule.(*violations.Violation), formatterConfig)
+	for _, rule := range outputResult.AllOf(enums.TypeViolation) {
+		f.addFailure(&violationsList, rule.(*violations_rules.Violation), formatterConfig)
 	}
 
-	jsonData, err := json.MarshalIndent(violations, "", "  ")
+	jsonData, err := json.MarshalIndent(violationsList, "", "  ")
 	if err != nil {
 		return fmt.Errorf("unable to render codeclimate output: %v", err)
 	}
@@ -63,7 +63,7 @@ func (f *CodeclimateOutputFormatter) Finish(outputResult results2.OutputResult, 
 	return nil
 }
 
-func (f *CodeclimateOutputFormatter) addFailure(violations *[]map[string]interface{}, violation *violations_rules.Violation, config *enums2.ConfigurationCodeclimate) {
+func (f *CodeclimateOutputFormatter) addFailure(violations *[]map[string]interface{}, violation *violations_rules.Violation, config *enums.ConfigurationCodeclimate) {
 	*violations = append(*violations, f.buildRuleArray(violation, f.getFailureMessage(violation), config.GetSeverity("failure")))
 }
 
@@ -72,7 +72,7 @@ func (f *CodeclimateOutputFormatter) getFailureMessage(violation *violations_rul
 	return utils.AsPtr(fmt.Sprintf("%s must not depend on %s (%s on %s)", dependency.GetDepender(), dependency.GetDependent(), violation.GetDependerLayer(), violation.GetDependentLayer()))
 }
 
-func (f *CodeclimateOutputFormatter) addSkipped(violations *[]map[string]interface{}, violation *violations_rules.SkippedViolation, config *enums2.ConfigurationCodeclimate) {
+func (f *CodeclimateOutputFormatter) addSkipped(violations *[]map[string]interface{}, violation *violations_rules.SkippedViolation, config *enums.ConfigurationCodeclimate) {
 	*violations = append(*violations, f.buildRuleArray(violation, f.getWarningMessage(violation), config.GetSeverity("skipped")))
 }
 
@@ -81,7 +81,7 @@ func (f *CodeclimateOutputFormatter) getWarningMessage(violation *violations_rul
 	return utils.AsPtr(fmt.Sprintf("%s should not depend on %s (%s on %s)", dependency.GetDepender(), dependency.GetDependent(), violation.GetDependerLayer(), violation.GetDependentLayer()))
 }
 
-func (f *CodeclimateOutputFormatter) addUncovered(violations *[]map[string]interface{}, violation *violations_rules.Uncovered, config *enums2.ConfigurationCodeclimate) {
+func (f *CodeclimateOutputFormatter) addUncovered(violations *[]map[string]interface{}, violation *violations_rules.Uncovered, config *enums.ConfigurationCodeclimate) {
 	*violations = append(*violations, f.buildRuleArray(violation, f.getUncoveredMessage(violation), config.GetSeverity("uncovered")))
 }
 

@@ -3,7 +3,7 @@ package formatters
 import (
 	"encoding/xml"
 	"fmt"
-	results2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
@@ -23,7 +23,7 @@ func (f *JUnitOutputFormatter) GetName() string {
 	return "junit"
 }
 
-func (f *JUnitOutputFormatter) Finish(result results2.OutputResult, output services.OutputInterface, input OutputFormatterInput) error {
+func (f *JUnitOutputFormatter) Finish(result results.OutputResult, output services.OutputInterface, input OutputFormatterInput) error {
 	xmlData, err := f.createXML(result)
 	if err != nil {
 		return err
@@ -42,7 +42,7 @@ func (f *JUnitOutputFormatter) Finish(result results2.OutputResult, output servi
 	return nil
 }
 
-func (f *JUnitOutputFormatter) createXML(outputResult results2.OutputResult) (string, error) {
+func (f *JUnitOutputFormatter) createXML(outputResult results.OutputResult) (string, error) {
 	testSuites := TestSuites{}
 	if outputResult.HasErrors() {
 		errorSuite := TestSuite{
@@ -126,7 +126,7 @@ func (f *JUnitOutputFormatter) createXML(outputResult results2.OutputResult) (st
 	return xml.Header + string(xmlData), nil
 }
 
-func (f *JUnitOutputFormatter) groupRulesByLayer(outputResult results2.OutputResult) map[string][]violations_rules.RuleInterface {
+func (f *JUnitOutputFormatter) groupRulesByLayer(outputResult results.OutputResult) map[string][]violations_rules.RuleInterface {
 	layers := make(map[string][]violations_rules.RuleInterface)
 	for _, rule := range outputResult.AllRules() {
 		switch r := rule.(type) {

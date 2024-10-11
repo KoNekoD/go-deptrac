@@ -3,6 +3,7 @@ package app
 import (
 	"flag"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
+	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/di"
 	"github.com/gookit/color"
 	"os"
 	"slices"
@@ -98,7 +99,7 @@ func (a *Application) doRun() (int, error) {
 
 	cache := cacheFile
 
-	factory := NewServiceContainerBuilder(currentWorkingDirectory)
+	factory := di.NewServiceContainerBuilder(currentWorkingDirectory)
 
 	if !slices.Contains([]string{"init", "list", "help", "completion"}, commandArgument) {
 		factory, err = factory.WithConfig(config)

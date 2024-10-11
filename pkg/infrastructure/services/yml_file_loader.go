@@ -1,7 +1,7 @@
 package services
 
 import (
-	apperrors2 "github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
 	"gopkg.in/yaml.v3"
 )
 
@@ -22,7 +22,7 @@ func (y *YmlFileLoader) ParseFile(file string) (*ParseFileResult, error) {
 
 	err := yaml.Unmarshal([]byte(file), &yamlMap)
 	if err != nil {
-		return nil, apperrors2.NewFileCannotBeParsedAsYamlExceptionFromFilenameAndException(file, err)
+		return nil, apperrors.NewFileCannotBeParsedAsYamlExceptionFromFilenameAndException(file, err)
 	}
 
 	_, ok1 := yamlMap["parameters"]
@@ -30,7 +30,7 @@ func (y *YmlFileLoader) ParseFile(file string) (*ParseFileResult, error) {
 	_, ok3 := yamlMap["imports"]
 
 	if !ok1 || !ok2 || !ok3 {
-		return nil, apperrors2.NewParsedYamlIsNotAnArrayExceptionFromFilename(file)
+		return nil, apperrors.NewParsedYamlIsNotAnArrayExceptionFromFilename(file)
 	}
 
 	result := &ParseFileResult{

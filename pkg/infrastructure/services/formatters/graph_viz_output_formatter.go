@@ -3,7 +3,7 @@ package formatters
 import (
 	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/formatters_configs"
-	results2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
 	"github.com/goccy/go-graphviz"
@@ -21,7 +21,7 @@ func NewGraphVizOutputFormatter(config FormatterConfiguration) *GraphVizOutputFo
 	return &GraphVizOutputFormatter{config: extractedConfig}
 }
 
-func (f *GraphVizOutputFormatter) Finish(result results2.OutputResult, output services.OutputInterface, input OutputFormatterInput) error {
+func (f *GraphVizOutputFormatter) Finish(result results.OutputResult, output services.OutputInterface, input OutputFormatterInput) error {
 	layerViolations := f.calculateViolations(result.Violations())
 	layersDependOnLayers := f.calculateLayerDependencies(result.AllRules())
 

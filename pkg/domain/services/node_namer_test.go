@@ -2,12 +2,12 @@ package services_test
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/services"
-	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/app"
+	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/di"
 	"testing"
 )
 
 func TestOk(t *testing.T) {
-	namer := app.ProvideTestContainerService("NodeNamer").(*services.NodeNamer)
+	namer := di.ProvideTestContainerService("NodeNamer").(*services.NodeNamer)
 
 	name, err := namer.GetRootPackageName("pkg/supportive/console_supportive/application")
 

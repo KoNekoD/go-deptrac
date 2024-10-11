@@ -3,7 +3,7 @@ package formatters
 import (
 	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/formatters_configs"
-	results2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
 	"os"
 	"strings"
@@ -32,7 +32,7 @@ func (f *MermaidJSOutputFormatter) GetName() string {
 	return "mermaidjs"
 }
 
-func (f *MermaidJSOutputFormatter) Finish(result results2.OutputResult, output services.OutputInterface, input OutputFormatterInput) error {
+func (f *MermaidJSOutputFormatter) Finish(result results.OutputResult, output services.OutputInterface, input OutputFormatterInput) error {
 	graph := f.parseResults(result)
 	violations := result.Violations()
 	var buffer strings.Builder
@@ -93,7 +93,7 @@ func (f *MermaidJSOutputFormatter) Finish(result results2.OutputResult, output s
 	return nil
 }
 
-func (f *MermaidJSOutputFormatter) parseResults(result results2.OutputResult) map[string]map[string]int {
+func (f *MermaidJSOutputFormatter) parseResults(result results.OutputResult) map[string]map[string]int {
 	graph := make(map[string]map[string]int)
 	for _, rule := range result.Allowed() {
 		dependerLayer := rule.GetDependerLayer()

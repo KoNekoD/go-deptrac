@@ -3,9 +3,9 @@ package formatters
 import (
 	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
-	results2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/violations_rules"
-	enums2 "github.com/KoNekoD/go-deptrac/pkg/domain/enums"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
 	"strings"
 )
@@ -16,16 +16,16 @@ func NewGithubActionsOutputFormatter() *GithubActionsOutputFormatter {
 	return &GithubActionsOutputFormatter{}
 }
 
-func (g *GithubActionsOutputFormatter) GetName() enums2.OutputFormatterType {
-	return enums2.GithubActions
+func (g *GithubActionsOutputFormatter) GetName() enums.OutputFormatterType {
+	return enums.GithubActions
 }
 
-func (g *GithubActionsOutputFormatter) Finish(outputResult *results2.OutputResult, output services.OutputInterface, outputFormatterInput *OutputFormatterInput) error {
-	for _, rule := range outputResult.AllOf(enums2.TypeViolation) {
+func (g *GithubActionsOutputFormatter) Finish(outputResult *results.OutputResult, output services.OutputInterface, outputFormatterInput *OutputFormatterInput) error {
+	for _, rule := range outputResult.AllOf(enums.TypeViolation) {
 		g.printViolation(rule, output)
 	}
 	if outputFormatterInput.ReportSkipped {
-		for _, rule := range outputResult.AllOf(enums2.TypeSkippedViolation) {
+		for _, rule := range outputResult.AllOf(enums.TypeSkippedViolation) {
 			g.printViolation(rule, output)
 		}
 	}
@@ -53,7 +53,7 @@ func (g *GithubActionsOutputFormatter) determineLogLevel(rule violations_rules.R
 	}
 }
 
-func (g *GithubActionsOutputFormatter) printUncovered(result *results2.OutputResult, output services.OutputInterface, reportAsError bool) {
+func (g *GithubActionsOutputFormatter) printUncovered(result *results.OutputResult, output services.OutputInterface, reportAsError bool) {
 	for _, u := range result.Uncovered() {
 		dependency := u.GetDependency()
 
@@ -86,13 +86,13 @@ func (g *GithubActionsOutputFormatter) multilinePathMessage(dep dependencies.Dep
 	return strings.Join(lines, " ->%0A")
 }
 
-func (g *GithubActionsOutputFormatter) printErrors(result *results2.OutputResult, output services.OutputInterface) {
+func (g *GithubActionsOutputFormatter) printErrors(result *results.OutputResult, output services.OutputInterface) {
 	for _, e := range result.Errors {
 		output.WriteLineFormatted(services.StringOrArrayOfStrings{String: fmt.Sprintf("::error ::%s", e.ToString())})
 	}
 }
 
-func (g *GithubActionsOutputFormatter) printWarnings(result *results2.OutputResult, output services.OutputInterface) {
+func (g *GithubActionsOutputFormatter) printWarnings(result *results.OutputResult, output services.OutputInterface) {
 	for _, warning := range result.Warnings {
 		output.WriteLineFormatted(services.StringOrArrayOfStrings{String: fmt.Sprintf("::warning ::%s", warning.ToString())})
 	}

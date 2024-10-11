@@ -4,8 +4,8 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/application/services"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/layers_resolvers"
-	ast_map2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_map"
-	tokens2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
+	dtosAstMap "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_map"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/pkg/errors"
 	"golang.org/x/exp/maps"
@@ -48,8 +48,8 @@ func (a *LayerForTokenAnalyser) FindLayerForToken(tokenName string, tokenType en
 	}
 }
 
-func (a *LayerForTokenAnalyser) findLayersForReferences(referencesAny any, tokenName string, astMap *ast_map2.AstMap) (map[string][]string, error) {
-	references := referencesAny.([]tokens2.TokenReferenceInterface)
+func (a *LayerForTokenAnalyser) findLayersForReferences(referencesAny any, tokenName string, astMap *dtosAstMap.AstMap) (map[string][]string, error) {
+	references := referencesAny.([]tokens_references.TokenReferenceInterface)
 	if len(references) == 0 {
 		return make(map[string][]string), nil
 	}

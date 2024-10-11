@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
-	results2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
@@ -21,7 +21,7 @@ func (f *ConsoleOutputFormatter) GetName() string {
 	return "console_supportive"
 }
 
-func (f *ConsoleOutputFormatter) Finish(outputResult results2.OutputResult, output services.OutputInterface, input OutputFormatterInput) {
+func (f *ConsoleOutputFormatter) Finish(outputResult results.OutputResult, output services.OutputInterface, input OutputFormatterInput) {
 	for _, rule := range outputResult.AllOf(enums.TypeViolation) {
 		f.printViolation(rule.(*violations_rules.Violation), output)
 	}
@@ -91,7 +91,7 @@ func (f *ConsoleOutputFormatter) printMultilinePath(output services.OutputInterf
 	output.WriteLineFormatted(services.StringOrArrayOfStrings{String: buffer.String()})
 }
 
-func (f *ConsoleOutputFormatter) printSummary(result results2.OutputResult, output services.OutputInterface) {
+func (f *ConsoleOutputFormatter) printSummary(result results.OutputResult, output services.OutputInterface) {
 	violationCount := len(result.Violations())
 	skippedViolationCount := len(result.SkippedViolations())
 	uncoveredCount := len(result.Uncovered())
@@ -109,7 +109,7 @@ func (f *ConsoleOutputFormatter) printSummary(result results2.OutputResult, outp
 	output.WriteLineFormatted(services.StringOrArrayOfStrings{String: fmt.Sprintf("<fg=%s>Errors: %d</>", f.getColor(errorsCount > 0, "red", "default"), errorsCount)})
 }
 
-func (f *ConsoleOutputFormatter) printUncovered(result results2.OutputResult, output services.OutputInterface) {
+func (f *ConsoleOutputFormatter) printUncovered(result results.OutputResult, output services.OutputInterface) {
 	uncovered := result.Uncovered()
 	if len(uncovered) == 0 {
 		return
@@ -139,14 +139,14 @@ func (f *ConsoleOutputFormatter) printFileOccurrence(output services.OutputInter
 	output.WriteLineFormatted(services.StringOrArrayOfStrings{String: fmt.Sprintf("%s:%d", fileOccurrence.FilePath, fileOccurrence.Line)})
 }
 
-func (f *ConsoleOutputFormatter) printErrors(result results2.OutputResult, output services.OutputInterface) {
+func (f *ConsoleOutputFormatter) printErrors(result results.OutputResult, output services.OutputInterface) {
 	output.WriteLineFormatted(services.StringOrArrayOfStrings{String: ""})
 	for _, err := range result.Errors {
 		output.WriteLineFormatted(services.StringOrArrayOfStrings{String: fmt.Sprintf("<fg=red>[ERROR]</> %s", err)})
 	}
 }
 
-func (f *ConsoleOutputFormatter) printWarnings(result results2.OutputResult, output services.OutputInterface) {
+func (f *ConsoleOutputFormatter) printWarnings(result results.OutputResult, output services.OutputInterface) {
 	output.WriteLineFormatted(services.StringOrArrayOfStrings{String: ""})
 	for _, warning := range result.Warnings {
 		output.WriteLineFormatted(services.StringOrArrayOfStrings{String: fmt.Sprintf("<fg=yellow>[WARNING]</> %s", warning)})

@@ -1,13 +1,13 @@
-package app
+package di
 
 import (
 	"flag"
 	"fmt"
-	event_handlers2 "github.com/KoNekoD/go-deptrac/pkg/application/event_handlers"
-	services2 "github.com/KoNekoD/go-deptrac/pkg/application/services"
-	analysers2 "github.com/KoNekoD/go-deptrac/pkg/application/services/analysers"
+	"github.com/KoNekoD/go-deptrac/pkg/application/event_handlers"
+	applicationServices "github.com/KoNekoD/go-deptrac/pkg/application/services"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/analysers"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/ast_file_reference_cache"
-	ast_map2 "github.com/KoNekoD/go-deptrac/pkg/application/services/ast_map"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/collectors_resolvers"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/dependencies_collectors"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/emitters"
@@ -17,25 +17,26 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/parsers"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/types"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/options"
-	enums2 "github.com/KoNekoD/go-deptrac/pkg/domain/enums"
-	events2 "github.com/KoNekoD/go-deptrac/pkg/domain/events"
-	"github.com/KoNekoD/go-deptrac/pkg/domain/services"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/events"
+	domainServices "github.com/KoNekoD/go-deptrac/pkg/domain/services"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/stopwatch"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/commands"
-	services3 "github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
-	dispatchers2 "github.com/KoNekoD/go-deptrac/pkg/infrastructure/services/dispatchers"
-	formatters2 "github.com/KoNekoD/go-deptrac/pkg/infrastructure/services/formatters"
+	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
+	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services/dispatchers"
+	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services/formatters"
+	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services/runners"
 	"github.com/elliotchance/orderedmap/v2"
 	"os"
 	"strings"
 )
 
-func getDefaultFormatter() enums2.OutputFormatterType {
+func getDefaultFormatter() enums.OutputFormatterType {
 	if os.Getenv("GITHUB_ACTIONS") != "" {
-		return formatters2.NewGithubActionsOutputFormatter().GetName()
+		return formatters.NewGithubActionsOutputFormatter().GetName()
 	}
-	return formatters2.NewTableOutputFormatter().GetName()
+	return formatters.NewTableOutputFormatter().GetName()
 }
 
 func Services(builder *ContainerBuilder) error {
@@ -45,20 +46,20 @@ func Services(builder *ContainerBuilder) error {
 	projectDirectory := builder.ProjectDirectory
 	verboseBoolFlag := flag.Bool("verbose", true, "Verbose mode")
 	debugBoolFlag := flag.Bool("debug", false, "Debug mode")
-	style := formatters2.NewStyle(
+	style := formatters.NewStyle(
 		verboseBoolFlag != nil && *verboseBoolFlag == true,
 		debugBoolFlag != nil && *debugBoolFlag == true,
 	)
-	symfonyOutput := services3.NewSymfonyOutput(style)
+	symfonyOutput := services.NewSymfonyOutput(style)
 
 	timeStopwatch := stopwatch.NewStopwatch()
 
-	nodeNamer := services.NewNodeNamer(projectDirectory)
+	nodeNamer := domainServices.NewNodeNamer(projectDirectory)
 
 	/*
 	 * Utilities
 	 */
-	eventDispatcher := dispatchers2.NewEventDispatcher(debugBoolFlag != nil && *debugBoolFlag == true)
+	eventDispatcher := dispatchers.NewEventDispatcher(debugBoolFlag != nil && *debugBoolFlag == true)
 
 	fileInputCollector, err := input_collectors.NewFileInputCollector(
 		builderConfiguration.Paths,
@@ -69,7 +70,7 @@ func Services(builder *ContainerBuilder) error {
 		return err
 	}
 
-	ymlFileLoader := services3.NewYmlFileLoader()
+	ymlFileLoader := services.NewYmlFileLoader()
 	dumper := utils.NewDumper("/deptrac_template.yaml")
 
 	/*
@@ -98,28 +99,28 @@ func Services(builder *ContainerBuilder) error {
 	}
 	nikicPhpParser := parsers.NewNikicPhpParser(builder.AstFileReferenceCacheInterface, typeResolver, nodeNamer, referenceExtractors)
 	parserInterface := nikicPhpParser
-	astLoader := ast_map2.NewAstLoader(parserInterface, eventDispatcher)
+	astLoader := ast_map.NewAstLoader(parserInterface, eventDispatcher)
 
 	/*
 	 * Dependency
 	 */
-	dependencyEmitters := map[enums2.EmitterType]emitters.DependencyEmitterInterface{
-		enums2.EmitterTypeClassToken:               emitters.NewClassDependencyEmitter(),
-		enums2.EmitterTypeClassSuperGlobalToken:    emitters.NewClassSuperglobalDependencyEmitter(),
-		enums2.EmitterTypeFileToken:                emitters.NewFileDependencyEmitter(),
-		enums2.EmitterTypeFunctionToken:            emitters.NewFunctionDependencyEmitter(),
-		enums2.EmitterTypeFunctionCall:             emitters.NewFunctionCallDependencyEmitter(),
-		enums2.EmitterTypeFunctionSuperGlobalToken: emitters.NewFunctionSuperglobalDependencyEmitter(),
-		enums2.EmitterTypeUseToken:                 emitters.NewUsesDependencyEmitter(),
+	dependencyEmitters := map[enums.EmitterType]emitters.DependencyEmitterInterface{
+		enums.EmitterTypeClassToken:               emitters.NewClassDependencyEmitter(),
+		enums.EmitterTypeClassSuperGlobalToken:    emitters.NewClassSuperglobalDependencyEmitter(),
+		enums.EmitterTypeFileToken:                emitters.NewFileDependencyEmitter(),
+		enums.EmitterTypeFunctionToken:            emitters.NewFunctionDependencyEmitter(),
+		enums.EmitterTypeFunctionCall:             emitters.NewFunctionCallDependencyEmitter(),
+		enums.EmitterTypeFunctionSuperGlobalToken: emitters.NewFunctionSuperglobalDependencyEmitter(),
+		enums.EmitterTypeUseToken:                 emitters.NewUsesDependencyEmitter(),
 	}
-	inheritanceFlattener := services2.NewInheritanceFlattener()
-	dependencyResolver := services2.NewDependencyResolver(builderConfiguration.Analyser, dependencyEmitters, inheritanceFlattener, eventDispatcher)
-	tokenResolver := services2.NewTokenResolver()
+	inheritanceFlattener := applicationServices.NewInheritanceFlattener()
+	dependencyResolver := applicationServices.NewDependencyResolver(builderConfiguration.Analyser, dependencyEmitters, inheritanceFlattener, eventDispatcher)
+	tokenResolver := applicationServices.NewTokenResolver()
 
-	astMapExtractor := ast_map2.NewAstMapExtractor(fileInputCollector, astLoader)
+	astMapExtractor := ast_map.NewAstMapExtractor(fileInputCollector, astLoader)
 
-	layerProvider := services2.NewLayerProvider(builderConfiguration.Rulesets)
-	eventHelper := dispatchers2.NewEventHelper(builderConfiguration.SkipViolations, layerProvider)
+	layerProvider := applicationServices.NewLayerProvider(builderConfiguration.Rulesets)
+	eventHelper := dispatchers.NewEventHelper(builderConfiguration.SkipViolations, layerProvider)
 
 	/*
 	 * Events (before first possible event)
@@ -127,43 +128,43 @@ func Services(builder *ContainerBuilder) error {
 	/*
 	 * Events
 	 */
-	event_handlers2.Map = orderedmap.NewOrderedMap[string, *orderedmap.OrderedMap[int, []event_handlers2.EventHandlerInterface]]()
+	event_handlers.Map = orderedmap.NewOrderedMap[string, *orderedmap.OrderedMap[int, []event_handlers.EventHandlerInterface]]()
 
 	// Events
-	uncoveredDependentHandler := event_handlers2.NewUncoveredDependent(builderConfiguration.IgnoreUncoveredInternalStructs)
-	matchingLayersHandler := event_handlers2.NewMatchingLayers()
-	allowDependencyHandler := event_handlers2.NewAllowDependency()
-	consoleSubscriber := event_handlers2.NewConsole(symfonyOutput, timeStopwatch)
-	progressSubscriber := event_handlers2.NewProgress(symfonyOutput)
-	dependsOnDisallowedLayer := event_handlers2.NewDependsOnDisallowedLayer(eventHelper)
-	dependsOnPrivateLayer := event_handlers2.NewDependsOnPrivateLayer(eventHelper)
-	dependsOnInternalToken := event_handlers2.NewDependsOnInternalToken(eventHelper, builderConfiguration.Analyser)
-	unmatchedSkippedViolations := event_handlers2.NewUnmatchedSkippedViolations(eventHelper)
+	uncoveredDependentHandler := event_handlers.NewUncoveredDependent(builderConfiguration.IgnoreUncoveredInternalStructs)
+	matchingLayersHandler := event_handlers.NewMatchingLayers()
+	allowDependencyHandler := event_handlers.NewAllowDependency()
+	consoleSubscriber := event_handlers.NewConsole(symfonyOutput, timeStopwatch)
+	progressSubscriber := event_handlers.NewProgress(symfonyOutput)
+	dependsOnDisallowedLayer := event_handlers.NewDependsOnDisallowedLayer(eventHelper)
+	dependsOnPrivateLayer := event_handlers.NewDependsOnPrivateLayer(eventHelper)
+	dependsOnInternalToken := event_handlers.NewDependsOnInternalToken(eventHelper, builderConfiguration.Analyser)
+	unmatchedSkippedViolations := event_handlers.NewUnmatchedSkippedViolations(eventHelper)
 
-	processEvent := &events2.ProcessEvent{}
-	postProcessEvent := &events2.PostProcessEvent{}
-	preCreateAstMapEvent := &events2.PreCreateAstMapEvent{}
-	postCreateAstMapEvent := &events2.PostCreateAstMapEvent{}
+	processEvent := &events.ProcessEvent{}
+	postProcessEvent := &events.PostProcessEvent{}
+	preCreateAstMapEvent := &events.PreCreateAstMapEvent{}
+	postCreateAstMapEvent := &events.PostCreateAstMapEvent{}
 	// Events Handlers
 	// TODO: Тут надо реализовать глобальный хук на параметры deptrac чтобы сделать что-то вида "param('skip_violations')"
-	event_handlers2.Reg(processEvent, allowDependencyHandler, -100)
-	event_handlers2.Reg(processEvent, dependsOnPrivateLayer, -3)
-	event_handlers2.Reg(processEvent, dependsOnInternalToken, -2)
-	event_handlers2.Reg(processEvent, dependsOnDisallowedLayer, -1)
-	event_handlers2.Reg(processEvent, matchingLayersHandler, 1)
-	event_handlers2.Reg(processEvent, uncoveredDependentHandler, 2)
-	event_handlers2.Reg(postProcessEvent, unmatchedSkippedViolations, event_handlers2.DefaultPriority)
+	event_handlers.Reg(processEvent, allowDependencyHandler, -100)
+	event_handlers.Reg(processEvent, dependsOnPrivateLayer, -3)
+	event_handlers.Reg(processEvent, dependsOnInternalToken, -2)
+	event_handlers.Reg(processEvent, dependsOnDisallowedLayer, -1)
+	event_handlers.Reg(processEvent, matchingLayersHandler, 1)
+	event_handlers.Reg(processEvent, uncoveredDependentHandler, 2)
+	event_handlers.Reg(postProcessEvent, unmatchedSkippedViolations, event_handlers.DefaultPriority)
 	if cacheableFileSubscriber != nil {
-		event_handlers2.Reg(preCreateAstMapEvent, cacheableFileSubscriber, event_handlers2.DefaultPriority)
-		event_handlers2.Reg(postCreateAstMapEvent, cacheableFileSubscriber, event_handlers2.DefaultPriority)
+		event_handlers.Reg(preCreateAstMapEvent, cacheableFileSubscriber, event_handlers.DefaultPriority)
+		event_handlers.Reg(postCreateAstMapEvent, cacheableFileSubscriber, event_handlers.DefaultPriority)
 	}
 
 	/*
 	 * OutputFormatter
 	 */
-	outputFormatter := map[enums2.OutputFormatterType]formatters2.OutputFormatterInterface{
-		enums2.Table:         formatters2.NewTableOutputFormatter(),
-		enums2.GithubActions: formatters2.NewGithubActionsOutputFormatter(),
+	outputFormatter := map[enums.OutputFormatterType]formatters.OutputFormatterInterface{
+		enums.Table:         formatters.NewTableOutputFormatter(),
+		enums.GithubActions: formatters.NewGithubActionsOutputFormatter(),
 		// TODO:
 		// $services->set(ConsoleOutputFormatter::class)->tag('output_formatter_contract');
 		// $services->set(JUnitOutputFormatter::class)->tag('output_formatter_contract');
@@ -177,8 +178,8 @@ func Services(builder *ContainerBuilder) error {
 		// $services->set(CodeclimateOutputFormatter::class)->tag('output_formatter_contract');
 		// $services->set(MermaidJSOutputFormatter::class)->tag('output_formatter_contract');
 	}
-	formatterProvider := formatters2.NewFormatterProvider(outputFormatter)
-	formatterConfiguration := formatters2.NewFormatterConfiguration(builderConfiguration.Formatters)
+	formatterProvider := formatters.NewFormatterProvider(outputFormatter)
+	formatterConfiguration := formatters.NewFormatterConfiguration(builderConfiguration.Formatters)
 
 	//
 	knownFormattersStr := make([]string, 0)
@@ -188,7 +189,7 @@ func Services(builder *ContainerBuilder) error {
 	var (
 		formatterUsagePossible = strings.Join(knownFormattersStr, ", ")
 		formatterUsage         = fmt.Sprintf("Format in which to print the result_contract of the analysis. Possible: [\"%s\"]", formatterUsagePossible)
-		formatter              = flag.String("formatter", string(enums2.Table), formatterUsage)
+		formatter              = flag.String("formatter", string(enums.Table), formatterUsage)
 		output                 = flag.String("output", "", "Output file_supportive path for formatter (if applicable)")
 		noProgress             = flag.Bool("no-progress", false, "Do not show progress bar")
 		reportSkipped          = flag.Bool("report-skipped", false, "Report skipped violations")
@@ -209,7 +210,7 @@ func Services(builder *ContainerBuilder) error {
 		nil != reportUncovered && *reportUncovered == true,
 		nil != failOnUncovered && *failOnUncovered == true,
 	)
-	event_handlers2.RegForAnalyseCommand(consoleSubscriber, progressSubscriber, !analyseOptions.NoProgress)
+	event_handlers.RegForAnalyseCommand(consoleSubscriber, progressSubscriber, !analyseOptions.NoProgress)
 	//
 
 	/*
@@ -227,48 +228,48 @@ func Services(builder *ContainerBuilder) error {
 	if err != nil {
 		return err
 	}
-	collectorProvider := services2.NewCollectorProvider()
+	collectorProvider := applicationServices.NewCollectorProvider()
 	collectorResolver := collectors_resolvers.NewCollectorResolver(collectorProvider)
 	layerResolver := layers_resolvers.NewLayerResolver(collectorResolver, builderConfiguration.Layers)
-	collectors := map[enums2.CollectorType]dependencies_collectors.CollectorInterface{
+	collectors := map[enums.CollectorType]dependencies_collectors.CollectorInterface{
 		//AttributeCollector
-		enums2.CollectorTypeTypeBool:           dependencies_collectors.NewBoolCollector(collectorResolver),
-		enums2.CollectorTypeTypeClass:          dependencies_collectors.NewClassCollector(),
-		enums2.CollectorTypeTypeClasslike:      dependencies_collectors.NewClassLikeCollector(),
-		enums2.CollectorTypeTypeClassNameRegex: dependencies_collectors.NewClassNameRegexCollector(),
+		enums.CollectorTypeTypeBool:           dependencies_collectors.NewBoolCollector(collectorResolver),
+		enums.CollectorTypeTypeClass:          dependencies_collectors.NewClassCollector(),
+		enums.CollectorTypeTypeClasslike:      dependencies_collectors.NewClassLikeCollector(),
+		enums.CollectorTypeTypeClassNameRegex: dependencies_collectors.NewClassNameRegexCollector(),
 		//CollectorType.TypeTagValueRegex: TagValueRegexCollector.NewTagValueRegexCollector(),
-		enums2.CollectorTypeTypeDirectory: dependencies_collectors.NewDirectoryCollector(),
+		enums.CollectorTypeTypeDirectory: dependencies_collectors.NewDirectoryCollector(),
 		//CollectorType.TypeExtends: ExtendsCollector.NewExtendsCollector(collectorResolver),
-		enums2.CollectorTypeTypeFunctionName: dependencies_collectors.NewFunctionNameCollector(),
-		enums2.CollectorTypeTypeGlob:         dependencies_collectors.NewGlobCollector(projectDirectory),
+		enums.CollectorTypeTypeFunctionName: dependencies_collectors.NewFunctionNameCollector(),
+		enums.CollectorTypeTypeGlob:         dependencies_collectors.NewGlobCollector(projectDirectory),
 		//ImplementsCollector
-		enums2.CollectorTypeTypeInheritance: inheritanceLevelCollector,
-		enums2.CollectorTypeTypeInterface:   dependencies_collectors.NewInterfaceCollector(),
-		enums2.CollectorTypeTypeInherits:    inheritsCollector,
-		enums2.CollectorTypeTypeLayer:       dependencies_collectors.NewLayerCollector(layerResolver),
-		enums2.CollectorTypeTypeMethod:      dependencies_collectors.NewMethodCollector(nikicPhpParser),
-		enums2.CollectorTypeTypeSuperGlobal: dependencies_collectors.NewSuperglobalCollector(),
-		enums2.CollectorTypeTypeTrait:       dependencies_collectors.NewTraitCollector(),
-		enums2.CollectorTypeTypeUses:        usesCollector,
+		enums.CollectorTypeTypeInheritance: inheritanceLevelCollector,
+		enums.CollectorTypeTypeInterface:   dependencies_collectors.NewInterfaceCollector(),
+		enums.CollectorTypeTypeInherits:    inheritsCollector,
+		enums.CollectorTypeTypeLayer:       dependencies_collectors.NewLayerCollector(layerResolver),
+		enums.CollectorTypeTypeMethod:      dependencies_collectors.NewMethodCollector(nikicPhpParser),
+		enums.CollectorTypeTypeSuperGlobal: dependencies_collectors.NewSuperglobalCollector(),
+		enums.CollectorTypeTypeTrait:       dependencies_collectors.NewTraitCollector(),
+		enums.CollectorTypeTypeUses:        usesCollector,
 		//CollectorType.TypePhpInternal: PhpInternalCollector
-		enums2.CollectorTypeTypeComposer: dependencies_collectors.NewComposerCollector(),
+		enums.CollectorTypeTypeComposer: dependencies_collectors.NewComposerCollector(),
 	}
 	collectorProvider.Set(collectors)
 
 	/*
 	 * SetAnalyser
 	 */
-	dependencyLayersAnalyser := analysers2.NewDependencyLayersAnalyser(astMapExtractor, dependencyResolver, tokenResolver, layerResolver, eventDispatcher)
-	tokenInLayerAnalyser := analysers2.NewTokenInLayerAnalyser(astMapExtractor, tokenResolver, layerResolver, builderConfiguration.Analyser)
-	layerForTokenAnalyser := analysers2.NewLayerForTokenAnalyser(astMapExtractor, tokenResolver, layerResolver)
-	unassignedTokenAnalyser := analysers2.NewUnassignedTokenAnalyser(astMapExtractor, tokenResolver, layerResolver, builderConfiguration.Analyser)
-	layerDependenciesAnalyser := analysers2.NewLayerDependenciesAnalyser(astMapExtractor, tokenResolver, dependencyResolver, layerResolver)
-	rulesetUsageAnalyser := analysers2.NewRulesetUsageAnalyser(layerProvider, layerResolver, astMapExtractor, dependencyResolver, tokenResolver, builderConfiguration.Layers)
+	dependencyLayersAnalyser := analysers.NewDependencyLayersAnalyser(astMapExtractor, dependencyResolver, tokenResolver, layerResolver, eventDispatcher)
+	tokenInLayerAnalyser := analysers.NewTokenInLayerAnalyser(astMapExtractor, tokenResolver, layerResolver, builderConfiguration.Analyser)
+	layerForTokenAnalyser := analysers.NewLayerForTokenAnalyser(astMapExtractor, tokenResolver, layerResolver)
+	unassignedTokenAnalyser := analysers.NewUnassignedTokenAnalyser(astMapExtractor, tokenResolver, layerResolver, builderConfiguration.Analyser)
+	layerDependenciesAnalyser := analysers.NewLayerDependenciesAnalyser(astMapExtractor, tokenResolver, dependencyResolver, layerResolver)
+	rulesetUsageAnalyser := analysers.NewRulesetUsageAnalyser(layerProvider, layerResolver, astMapExtractor, dependencyResolver, tokenResolver, builderConfiguration.Layers)
 
 	/*
 	 * Console
 	 */
-	analyseRunner := NewAnalyseRunner(dependencyLayersAnalyser, formatterProvider)
+	analyseRunner := runners.NewAnalyseRunner(dependencyLayersAnalyser, formatterProvider)
 	analyseCommand := commands.NewAnalyseCommand(analyseRunner, eventDispatcher, formatterProvider, *verboseBoolFlag, *debugBoolFlag, consoleSubscriber, progressSubscriber, analyseOptions)
 
 	// TODO: other commands

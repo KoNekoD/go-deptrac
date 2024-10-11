@@ -7,9 +7,9 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/layers_resolvers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/issues"
-	tokens2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
-	events2 "github.com/KoNekoD/go-deptrac/pkg/domain/events"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/events"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services/dispatchers"
 )
 
@@ -53,7 +53,7 @@ func (a *DependencyLayersAnalyser) Analyse() (*results.AnalysisResult, error) {
 
 		if v, ok55 := dependerRef.(*tokens_references.FunctionReference); ok55 {
 			t := v.GetToken()
-			if tt, ok66 := t.(*tokens2.FunctionToken); ok66 {
+			if tt, ok66 := t.(*tokens.FunctionToken); ok66 {
 				if tt.FunctionName == "ParseFile" {
 					fmt.Println()
 				}
@@ -83,7 +83,7 @@ func (a *DependencyLayersAnalyser) Analyse() (*results.AnalysisResult, error) {
 		}
 
 		for _, dependerLayer := range dependerLayers {
-			event := events2.NewProcessEvent(dependency, dependerRef, dependerLayer, dependentRef, dependentLayers, analysisResult)
+			event := events.NewProcessEvent(dependency, dependerRef, dependerLayer, dependentRef, dependentLayers, analysisResult)
 			err := a.eventDispatcher.DispatchEvent(event)
 			if err != nil {
 				return nil, err
@@ -96,7 +96,7 @@ func (a *DependencyLayersAnalyser) Analyse() (*results.AnalysisResult, error) {
 		analysisResult.AddWarning(warning)
 	}
 
-	event := events2.NewPostProcessEvent(analysisResult)
+	event := events.NewPostProcessEvent(analysisResult)
 	errDispatch := a.eventDispatcher.DispatchEvent(event)
 	if errDispatch != nil {
 		return nil, errDispatch

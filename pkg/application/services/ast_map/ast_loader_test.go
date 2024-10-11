@@ -2,7 +2,7 @@ package ast_map
 
 import (
 	"encoding/json"
-	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/app"
+	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/di"
 	"os"
 	"path"
 	"runtime"
@@ -10,8 +10,8 @@ import (
 )
 
 func TestAstLoaderCreateAstMap(t *testing.T) {
-	app.UseVoidConfig()
-	loader := app.ProvideTestContainerService("AstLoader").(*AstLoader)
+	di.UseVoidConfig()
+	loader := di.ProvideTestContainerService("AstLoader").(*AstLoader)
 
 	_, filename, _, _ := runtime.Caller(0)
 	dir := path.Join(path.Dir(filename), "../resources")

@@ -2,7 +2,7 @@ package dispatchers
 
 import (
 	"fmt"
-	subscribers2 "github.com/KoNekoD/go-deptrac/pkg/application/event_handlers"
+	"github.com/KoNekoD/go-deptrac/pkg/application/event_handlers"
 	"reflect"
 	"slices"
 )
@@ -20,7 +20,7 @@ func NewEventDispatcher(isDebug bool) EventDispatcherInterface {
 func (d *EventDispatcher) DispatchEvent(event interface{}) error {
 	typeName := reflect.TypeOf(event).String()
 
-	subscribers, ok := subscribers2.Map.Get(typeName)
+	handlers, ok := event_handlers.Map.Get(typeName)
 
 	if !ok {
 		return nil // No subscribers registered for this event
@@ -31,14 +31,14 @@ func (d *EventDispatcher) DispatchEvent(event interface{}) error {
 		stop = true
 	}
 
-	subscribersPriorities := subscribers.Keys()
+	subscribersPriorities := handlers.Keys()
 
 	// Sort high to low priority
 	slices.Sort(subscribersPriorities)
 	slices.Reverse(subscribersPriorities)
 
 	for _, priority := range subscribersPriorities {
-		subscribersByPriority, okGet := subscribers.Get(priority)
+		subscribersByPriority, okGet := handlers.Get(priority)
 		if !okGet {
 			continue
 		}

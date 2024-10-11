@@ -1,4 +1,4 @@
-package app
+package runners
 
 import (
 	"encoding/json"
@@ -6,10 +6,10 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/analysers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/options"
-	results2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
-	formatters2 "github.com/KoNekoD/go-deptrac/pkg/infrastructure/services/formatters"
+	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services/formatters"
 	"github.com/hashicorp/go-multierror"
 	"strings"
 )
@@ -17,10 +17,10 @@ import (
 // AnalyseRunner - Should only be used by AnalyseCommand
 type AnalyseRunner struct {
 	analyzer          *analysers.DependencyLayersAnalyser
-	formatterProvider *formatters2.FormatterProvider
+	formatterProvider *formatters.FormatterProvider
 }
 
-func NewAnalyseRunner(analyzer *analysers.DependencyLayersAnalyser, formatterProvider *formatters2.FormatterProvider) *AnalyseRunner {
+func NewAnalyseRunner(analyzer *analysers.DependencyLayersAnalyser, formatterProvider *formatters.FormatterProvider) *AnalyseRunner {
 	return &AnalyseRunner{
 		analyzer:          analyzer,
 		formatterProvider: formatterProvider,
@@ -37,7 +37,7 @@ func (r *AnalyseRunner) Run(options *options.AnalyseOptions, output services.Out
 		r.printFormatterNotFoundException(output, options.Formatter)
 		return apperrors.NewCommandRunExceptionInvalidFormatter()
 	}
-	formatterInput := formatters2.NewOutputFormatterInput(*options.Output, options.ReportSkipped, options.ReportUncovered, options.FailOnUncovered)
+	formatterInput := formatters.NewOutputFormatterInput(*options.Output, options.ReportSkipped, options.ReportUncovered, options.FailOnUncovered)
 	r.printCollectViolations(output)
 
 	analysisResult, errAnalyse := r.analyzer.Analyse()
@@ -45,7 +45,7 @@ func (r *AnalyseRunner) Run(options *options.AnalyseOptions, output services.Out
 		r.printAnalysisException(output, multierror.Append(errAnalyse))
 		return apperrors.NewCommandRunExceptionAnalyserException(errAnalyse)
 	}
-	result := results2.NewOutputResultFromAnalysisResult(analysisResult)
+	result := results.NewOutputResultFromAnalysisResult(analysisResult)
 	r.printFormattingStart(output)
 	errFinish := formatter.Finish(result, output, formatterInput)
 	if errFinish != nil {

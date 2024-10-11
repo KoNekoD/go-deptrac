@@ -7,7 +7,7 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/configs"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
-	events2 "github.com/KoNekoD/go-deptrac/pkg/domain/events"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/events"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services/dispatchers"
 	"reflect"
 )
@@ -41,27 +41,27 @@ func (r *DependencyResolver) Resolve(astMap *ast_map.AstMap) (*dependencies.Depe
 			return nil, apperrors.NewInvalidEmitterConfigurationExceptionIsNotEmitter(string(typeConfig), dependencyEmitterInterface)
 		}
 
-		err := r.eventDispatcher.DispatchEvent(events2.NewPreEmitEvent(dependencyEmitterInterface.GetName()))
+		err := r.eventDispatcher.DispatchEvent(events.NewPreEmitEvent(dependencyEmitterInterface.GetName()))
 		if err != nil {
 			return nil, err
 		}
 
 		dependencyEmitterInterface.ApplyDependencies(*astMap, result)
 
-		errDispatchPostEmit := r.eventDispatcher.DispatchEvent(events2.NewPostEmitEvent())
+		errDispatchPostEmit := r.eventDispatcher.DispatchEvent(events.NewPostEmitEvent())
 		if errDispatchPostEmit != nil {
 			return nil, errDispatchPostEmit
 		}
 	}
 
-	errDispatchPreFlatten := r.eventDispatcher.DispatchEvent(events2.NewPreFlattenEvent())
+	errDispatchPreFlatten := r.eventDispatcher.DispatchEvent(events.NewPreFlattenEvent())
 	if errDispatchPreFlatten != nil {
 		return nil, errDispatchPreFlatten
 	}
 
 	r.inheritanceFlattener.FlattenDependencies(*astMap, result)
 
-	errDispatchPostFlatten := r.eventDispatcher.DispatchEvent(events2.NewPostFlattenEvent())
+	errDispatchPostFlatten := r.eventDispatcher.DispatchEvent(events.NewPostFlattenEvent())
 	if errDispatchPostFlatten != nil {
 		return nil, errDispatchPostFlatten
 	}

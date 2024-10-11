@@ -3,13 +3,13 @@ package analysers
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/application/services"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/ast_map"
-	layers2 "github.com/KoNekoD/go-deptrac/pkg/application/services/layers_resolvers"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/layers_resolvers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/rules"
 )
 
 type RulesetUsageAnalyser struct {
 	layerProvider      *services.LayerProvider
-	layerResolver      layers2.LayerResolverInterface
+	layerResolver      layers_resolvers.LayerResolverInterface
 	astMapExtractor    *ast_map.AstMapExtractor
 	dependencyResolver *services.DependencyResolver
 	tokenResolver      *services.TokenResolver
@@ -18,7 +18,7 @@ type RulesetUsageAnalyser struct {
 
 func NewRulesetUsageAnalyser(
 	layerProvider *services.LayerProvider,
-	layerResolver layers2.LayerResolverInterface,
+	layerResolver layers_resolvers.LayerResolverInterface,
 	astMapExtractor *ast_map.AstMapExtractor,
 	dependencyResolver *services.DependencyResolver,
 	tokenResolver *services.TokenResolver,

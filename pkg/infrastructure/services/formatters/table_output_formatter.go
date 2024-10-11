@@ -3,7 +3,7 @@ package formatters
 import (
 	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
-	results2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
@@ -23,7 +23,7 @@ func (t *TableOutputFormatter) GetName() enums.OutputFormatterType {
 	return enums.Table
 }
 
-func (t *TableOutputFormatter) Finish(outputResult *results2.OutputResult, output services.OutputInterface, outputFormatterInput *OutputFormatterInput) error {
+func (t *TableOutputFormatter) Finish(outputResult *results.OutputResult, output services.OutputInterface, outputFormatterInput *OutputFormatterInput) error {
 	groupedRules := make(map[string][]violations_rules.RuleInterface)
 
 	for _, ruleItem := range outputResult.Violations() {
@@ -111,7 +111,7 @@ func (t *TableOutputFormatter) formatMultilinePath(dep dependencies.DependencyIn
 	return strings.Join(lines, " -> \n")
 }
 
-func (t *TableOutputFormatter) printSummary(result *results2.OutputResult, output services.OutputInterface, reportUncoveredAsError bool) {
+func (t *TableOutputFormatter) printSummary(result *results.OutputResult, output services.OutputInterface, reportUncoveredAsError bool) {
 	violationCount := len(result.Violations())
 	skippedViolationCount := len(result.SkippedViolations())
 	uncoveredCount := len(result.Uncovered())
@@ -180,7 +180,7 @@ func (t *TableOutputFormatter) uncoveredRow(rule *violations_rules.Uncovered, re
 	return []string{color.Sprintf("<fg=%s>Uncovered</>", uncoveredFg), message}
 }
 
-func (t *TableOutputFormatter) printErrors(result *results2.OutputResult, output services.OutputInterface) {
+func (t *TableOutputFormatter) printErrors(result *results.OutputResult, output services.OutputInterface) {
 	errors := make([]string, 0)
 
 	for _, e := range result.Errors {
@@ -190,7 +190,7 @@ func (t *TableOutputFormatter) printErrors(result *results2.OutputResult, output
 	output.GetStyle().Table([]string{color.Sprint("<fg=red>Errors</>")}, [][]string{errors})
 }
 
-func (t *TableOutputFormatter) printWarnings(result *results2.OutputResult, output services.OutputInterface) {
+func (t *TableOutputFormatter) printWarnings(result *results.OutputResult, output services.OutputInterface) {
 	warnings := make([]string, 0)
 
 	for _, w := range result.Warnings {

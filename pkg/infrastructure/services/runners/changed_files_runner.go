@@ -1,9 +1,9 @@
-package app
+package runners
 
 import (
-	analysers2 "github.com/KoNekoD/go-deptrac/pkg/application/services/analysers"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/analysers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
-	results2 "github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
@@ -13,11 +13,11 @@ import (
 
 // ChangedFilesRunner - Should only be used by ChangedFilesCommand
 type ChangedFilesRunner struct {
-	layerForTokenAnalyser    *analysers2.LayerForTokenAnalyser
-	dependencyLayersAnalyser *analysers2.DependencyLayersAnalyser
+	layerForTokenAnalyser    *analysers.LayerForTokenAnalyser
+	dependencyLayersAnalyser *analysers.DependencyLayersAnalyser
 }
 
-func NewChangedFilesRunner(layerForTokenAnalyser *analysers2.LayerForTokenAnalyser, dependencyLayersAnalyser *analysers2.DependencyLayersAnalyser) *ChangedFilesRunner {
+func NewChangedFilesRunner(layerForTokenAnalyser *analysers.LayerForTokenAnalyser, dependencyLayersAnalyser *analysers.DependencyLayersAnalyser) *ChangedFilesRunner {
 	return &ChangedFilesRunner{
 		layerForTokenAnalyser:    layerForTokenAnalyser,
 		dependencyLayersAnalyser: dependencyLayersAnalyser,
@@ -43,7 +43,7 @@ func (r *ChangedFilesRunner) Run(files []string, withDependencies bool, output s
 		if err != nil {
 			return apperrors.NewCommandRunExceptionAnalyserException(err)
 		}
-		analysisResult := results2.NewOutputResultFromAnalysisResult(analyseResult)
+		analysisResult := results.NewOutputResultFromAnalysisResult(analyseResult)
 		layersDependOnLayers := r.calculateLayerDependencies(analysisResult.AllRules())
 		layerDependencies := make(map[string]string)
 		for _, layer := range layers {
