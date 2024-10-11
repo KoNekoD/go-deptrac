@@ -29,3 +29,5 @@ func (t *FileToken) ToString() string {
 
 	return t.path
 }
+
+func (t *FileToken) tokenInterface() {}

@@ -1,4 +1,4 @@
-package ast_map
+package ast_inherits
 
 import (
 	"fmt"

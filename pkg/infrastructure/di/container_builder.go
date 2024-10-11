@@ -8,10 +8,10 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/ast_file_reference_cache"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/collectors_resolvers"
-	"github.com/KoNekoD/go-deptrac/pkg/application/services/extractors"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/input_collectors"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/layers_resolvers"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/parsers"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/references_extractors"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/types"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/commands_options"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/configs"
@@ -38,7 +38,7 @@ type ContainerBuilder struct {
 	CacheableFileSubscriber                *event_handlers.CacheableFile
 	AstFileReferenceInMemoryCache          *ast_file_reference_cache.AstFileReferenceInMemoryCache
 	TypeResolver                           *types.TypeResolver
-	ReferenceExtractors                    []extractors.ReferenceExtractorInterface
+	ReferenceExtractors                    []references_extractors.ReferenceExtractorInterface
 	ParserInterface                        parsers.ParserInterface
 	LayerProvider                          *applicationServices.LayerProvider
 	EventHelper                            *applicationServices.EventHelper

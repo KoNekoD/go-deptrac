@@ -1,14 +1,13 @@
 package di
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/app"
 	"os"
 	"reflect"
 )
 
 var currentWorkingDirectory, _ = os.Getwd()
 
-var TestConfigFile = currentWorkingDirectory + app.DirectorySeparator + "deptrac.yaml"
+var TestConfigFile = currentWorkingDirectory + "/deptrac.yaml"
 
 func UseVoidConfig() {
 	TestConfigFile = "resources/deptrac-empty.yaml"

@@ -2,9 +2,9 @@ package parsers
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/ast_file_reference_cache"
-	"github.com/KoNekoD/go-deptrac/pkg/application/services/extractors"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/reference_visitors"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/references_builders"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/references_extractors"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/types"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/services"
@@ -53,10 +53,10 @@ type NikicPhpParser struct {
 	cache        ast_file_reference_cache.AstFileReferenceCacheInterface
 	typeResolver *types.TypeResolver
 	nodeNamer    *services.NodeNamer
-	extractors   []extractors.ReferenceExtractorInterface
+	extractors   []references_extractors.ReferenceExtractorInterface
 }
 
-func NewNikicPhpParser(cache ast_file_reference_cache.AstFileReferenceCacheInterface, typeResolver *types.TypeResolver, nodeNamer *services.NodeNamer, extractors []extractors.ReferenceExtractorInterface) *NikicPhpParser {
+func NewNikicPhpParser(cache ast_file_reference_cache.AstFileReferenceCacheInterface, typeResolver *types.TypeResolver, nodeNamer *services.NodeNamer, extractors []references_extractors.ReferenceExtractorInterface) *NikicPhpParser {
 	return &NikicPhpParser{
 		classAstMap:  make(map[string]*ast.Ident),
 		cache:        cache,

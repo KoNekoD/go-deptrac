@@ -2,9 +2,8 @@ package emitters
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos"
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_map"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_maps"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
 	"strings"
@@ -20,7 +19,7 @@ func (u *UsesDependencyEmitter) GetName() string {
 	return "UsesDependencyEmitter"
 }
 
-func (u *UsesDependencyEmitter) ApplyDependencies(astMap ast_map.AstMap, dependencyList *dependencies.DependencyList) {
+func (u *UsesDependencyEmitter) ApplyDependencies(astMap ast_maps.AstMap, dependencyList *dependencies.DependencyList) {
 	references := make([]tokens_references.TaggedTokenReferenceInterface, 0)
 	for _, structLikeReference := range astMap.GetClassLikeReferences() {
 		references = append(references, structLikeReference)
@@ -52,7 +51,7 @@ func (u *UsesDependencyEmitter) ApplyDependencies(astMap ast_map.AstMap, depende
 	}
 
 }
-func (u *UsesDependencyEmitter) IsFQDN(dependency *tokens.DependencyToken, FQDNIndex *dtos.FQDNIndexNode) bool {
+func (u *UsesDependencyEmitter) IsFQDN(dependency *dependencies.DependencyToken, FQDNIndex *dtos.FQDNIndexNode) bool {
 	dependencyFQDN := dependency.Token.ToString()
 	pathSplit := strings.Split(dependencyFQDN, "\\")
 	value := FQDNIndex.GetNestedNode(pathSplit)

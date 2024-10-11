@@ -1,8 +1,9 @@
-package app
+package tests
 
 import (
 	"flag"
 	"fmt"
+	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/app"
 	"os"
 	"testing"
 )
@@ -14,7 +15,7 @@ func TestApplicationOk(t *testing.T) {
 	}
 	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
 
-	NewApplication().Run()
+	app.NewApp().Run()
 
 	fmt.Println("", "")
 }

@@ -1,4 +1,4 @@
-package dependencies_collectors
+package services
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"

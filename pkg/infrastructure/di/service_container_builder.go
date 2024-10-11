@@ -2,7 +2,7 @@ package di
 
 import (
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/application/event_handlers"
+	"github.com/KoNekoD/go-deptrac/pkg/application/event_dispatchers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/configs"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
@@ -82,8 +82,8 @@ func (b *ServiceContainerBuilder) Build(cacheOverride *string, clearCache bool) 
 
 	// Debug event subscriber
 	if b.containerBuilder.DebugBoolFlag != nil && *b.containerBuilder.DebugBoolFlag == true {
-		for _, key := range event_handlers.Map.Keys() {
-			mapByPriorities, _ := event_handlers.Map.Get(key)
+		for _, key := range event_dispatchers.Map.Keys() {
+			mapByPriorities, _ := event_dispatchers.Map.Get(key)
 
 			for _, priority := range mapByPriorities.Keys() {
 				subscribers, _ := mapByPriorities.Get(priority)

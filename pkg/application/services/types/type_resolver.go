@@ -54,6 +54,23 @@ func (r *TypeResolver) resolvePHPParserType(scope *TypeScope, node ast.Expr) []s
 		return r.resolveInterfaceType(scope, v)
 	case *ast.FuncType:
 		return r.resolveFieldList(scope, v.Results, v.TypeParams, v.Results)
+	case *ast.CallExpr:
+		return r.resolvePHPParserType(scope, v.Fun)
+	case *ast.IndexListExpr:
+		return r.ResolvePHPParserTypes(scope, append(v.Indices, v.X)...)
+	case nil:
+		return make([]string, 0)
+	case *ast.StructType:
+		return r.resolveFieldList(scope, v.Fields)
+	case *ast.IndexExpr:
+		return r.ResolvePHPParserTypes(scope, v.X, v.Index)
+	case *ast.BasicLit:
+		return make([]string, 0)
+	case *ast.TypeAssertExpr:
+		return r.ResolvePHPParserTypes(scope, v.X, v.Type)
+	case *ast.FuncLit:
+		return r.resolveFieldList(scope, v.Type.TypeParams, v.Type.Params, v.Type.Results)
+
 	default:
 		panic("5")
 	}
@@ -169,7 +186,7 @@ func (r *TypeResolver) resolveFields(scope *TypeScope, fields ...*ast.Field) []s
 				resolvedUse := scope.GetUse(name.Name)
 
 				if resolvedUse == nil {
-					panic("4")
+					return make([]string, 0)
 				}
 
 				resolved = append(resolved, *resolvedUse)

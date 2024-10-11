@@ -43,3 +43,5 @@ func (t *FunctionToken) ToString() string {
 func (t *FunctionToken) Equals(token *FunctionToken) bool {
 	return t.FunctionName == token.FunctionName
 }
+
+func (t *FunctionToken) tokenInterface() {}

@@ -12,10 +12,10 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/collectors_resolvers"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/dependencies_collectors"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/emitters"
-	"github.com/KoNekoD/go-deptrac/pkg/application/services/extractors"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/input_collectors"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/layers_resolvers"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/parsers"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/references_extractors"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/types"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/commands_options"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
@@ -80,11 +80,11 @@ func Services(builder *ContainerBuilder) error {
 		builder.AstFileReferenceCacheInterface = astFileReferenceInMemoryCache
 	}
 	typeResolver := types.NewTypeResolver(nodeNamer)
-	referenceExtractors := []extractors.ReferenceExtractorInterface{
-		extractors.NewFunctionLikeExtractor(typeResolver),
-		extractors.NewPropertyExtractor(typeResolver),
-		extractors.NewKeywordExtractor(typeResolver),
-		extractors.NewFunctionCallResolver(typeResolver),
+	referenceExtractors := []references_extractors.ReferenceExtractorInterface{
+		references_extractors.NewFunctionLikeExtractor(typeResolver),
+		references_extractors.NewPropertyExtractor(typeResolver),
+		references_extractors.NewKeywordExtractor(typeResolver),
+		references_extractors.NewFunctionCallResolver(typeResolver),
 	}
 	nikicPhpParser := parsers.NewNikicPhpParser(builder.AstFileReferenceCacheInterface, typeResolver, nodeNamer, referenceExtractors)
 	parserInterface := nikicPhpParser
@@ -117,7 +117,7 @@ func Services(builder *ContainerBuilder) error {
 	/*
 	 * Events
 	 */
-	event_handlers.Map = orderedmap.NewOrderedMap[string, *orderedmap.OrderedMap[int, []event_handlers.EventHandlerInterface]]()
+	event_dispatchers.Map = orderedmap.NewOrderedMap[string, *orderedmap.OrderedMap[int, []event_dispatchers.EventHandlerInterface]]()
 
 	// Events
 	uncoveredDependentHandler := event_handlers.NewUncoveredDependent(builderConfiguration.IgnoreUncoveredInternalStructs)
@@ -136,16 +136,16 @@ func Services(builder *ContainerBuilder) error {
 	postCreateAstMapEvent := &events.PostCreateAstMapEvent{}
 	// Events Handlers
 	// TODO: Тут надо реализовать глобальный хук на параметры deptrac чтобы сделать что-то вида "param('skip_violations')"
-	event_handlers.Reg(processEvent, allowDependencyHandler, -100)
-	event_handlers.Reg(processEvent, dependsOnPrivateLayer, -3)
-	event_handlers.Reg(processEvent, dependsOnInternalToken, -2)
-	event_handlers.Reg(processEvent, dependsOnDisallowedLayer, -1)
-	event_handlers.Reg(processEvent, matchingLayersHandler, 1)
-	event_handlers.Reg(processEvent, uncoveredDependentHandler, 2)
-	event_handlers.Reg(postProcessEvent, unmatchedSkippedViolations, event_handlers.DefaultPriority)
+	event_dispatchers.Reg(processEvent, allowDependencyHandler, -100)
+	event_dispatchers.Reg(processEvent, dependsOnPrivateLayer, -3)
+	event_dispatchers.Reg(processEvent, dependsOnInternalToken, -2)
+	event_dispatchers.Reg(processEvent, dependsOnDisallowedLayer, -1)
+	event_dispatchers.Reg(processEvent, matchingLayersHandler, 1)
+	event_dispatchers.Reg(processEvent, uncoveredDependentHandler, 2)
+	event_dispatchers.Reg(postProcessEvent, unmatchedSkippedViolations, event_dispatchers.DefaultPriority)
 	if cacheableFileSubscriber != nil {
-		event_handlers.Reg(preCreateAstMapEvent, cacheableFileSubscriber, event_handlers.DefaultPriority)
-		event_handlers.Reg(postCreateAstMapEvent, cacheableFileSubscriber, event_handlers.DefaultPriority)
+		event_dispatchers.Reg(preCreateAstMapEvent, cacheableFileSubscriber, event_dispatchers.DefaultPriority)
+		event_dispatchers.Reg(postCreateAstMapEvent, cacheableFileSubscriber, event_dispatchers.DefaultPriority)
 	}
 
 	/*
@@ -199,7 +199,7 @@ func Services(builder *ContainerBuilder) error {
 		nil != reportUncovered && *reportUncovered == true,
 		nil != failOnUncovered && *failOnUncovered == true,
 	)
-	event_handlers.RegForAnalyseCommand(consoleSubscriber, progressSubscriber, !analyseOptions.NoProgress)
+	RegForAnalyseCommand(consoleSubscriber, progressSubscriber, !analyseOptions.NoProgress)
 	//
 
 	/*
@@ -220,7 +220,7 @@ func Services(builder *ContainerBuilder) error {
 	collectorProvider := applicationServices.NewCollectorProvider()
 	collectorResolver := collectors_resolvers.NewCollectorResolver(collectorProvider)
 	layerResolver := layers_resolvers.NewLayerResolver(collectorResolver, builderConfiguration.Layers)
-	collectors := map[enums.CollectorType]dependencies_collectors.CollectorInterface{
+	collectors := map[enums.CollectorType]domainServices.CollectorInterface{
 		//AttributeCollector
 		enums.CollectorTypeTypeBool:           dependencies_collectors.NewBoolCollector(collectorResolver),
 		enums.CollectorTypeTypeClass:          dependencies_collectors.NewClassCollector(),
@@ -322,4 +322,34 @@ func Services(builder *ContainerBuilder) error {
 	builder.AnalyseOptions = analyseOptions
 
 	return nil
+}
+
+func RegForAnalyseCommand(consoleSubscriber *event_handlers.Console, progressSubscriber *event_handlers.Progress, withProgress bool) {
+	processEvent := &events.ProcessEvent{}
+	postProcessEvent := &events.PostProcessEvent{}
+	preCreateAstMapEvent := &events.PreCreateAstMapEvent{}
+	postCreateAstMapEvent := &events.PostCreateAstMapEvent{}
+	astFileAnalysedEvent := &events.AstFileAnalysedEvent{}
+	astFileSyntaxErrorEvent := &events.AstFileSyntaxErrorEvent{}
+	preEmitEvent := &events.PreEmitEvent{}
+	postEmitEvent := &events.PostEmitEvent{}
+	preFlattenEvent := &events.PreFlattenEvent{}
+	postFlattenEvent := &events.PostFlattenEvent{}
+
+	event_dispatchers.Reg(preCreateAstMapEvent, consoleSubscriber, event_dispatchers.DefaultPriority)
+	event_dispatchers.Reg(postCreateAstMapEvent, consoleSubscriber, event_dispatchers.DefaultPriority)
+	event_dispatchers.Reg(processEvent, consoleSubscriber, event_dispatchers.DefaultPriority)
+	event_dispatchers.Reg(postProcessEvent, consoleSubscriber, event_dispatchers.DefaultPriority)
+	event_dispatchers.Reg(astFileAnalysedEvent, consoleSubscriber, event_dispatchers.DefaultPriority)
+	event_dispatchers.Reg(astFileSyntaxErrorEvent, consoleSubscriber, event_dispatchers.DefaultPriority)
+	event_dispatchers.Reg(preEmitEvent, consoleSubscriber, event_dispatchers.DefaultPriority)
+	event_dispatchers.Reg(postEmitEvent, consoleSubscriber, event_dispatchers.DefaultPriority)
+	event_dispatchers.Reg(preFlattenEvent, consoleSubscriber, event_dispatchers.DefaultPriority)
+	event_dispatchers.Reg(postFlattenEvent, consoleSubscriber, event_dispatchers.DefaultPriority)
+
+	if withProgress {
+		event_dispatchers.Reg(preCreateAstMapEvent, progressSubscriber, event_dispatchers.DefaultPriority)
+		event_dispatchers.Reg(postCreateAstMapEvent, progressSubscriber, 1)
+		event_dispatchers.Reg(astFileAnalysedEvent, progressSubscriber, event_dispatchers.DefaultPriority)
+	}
 }

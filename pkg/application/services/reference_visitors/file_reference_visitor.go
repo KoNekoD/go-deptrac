@@ -1,8 +1,8 @@
 package reference_visitors
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/application/services/extractors"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/references_builders"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services/references_extractors"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/types"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/services"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/utils"
@@ -13,7 +13,7 @@ import (
 )
 
 type FileReferenceVisitor struct {
-	dependencyResolvers  []extractors.ReferenceExtractorInterface
+	dependencyResolvers  []references_extractors.ReferenceExtractorInterface
 	currentTypeScope     *types.TypeScope
 	currentReference     references_builders.ReferenceBuilderInterface
 	fileReferenceBuilder *references_builders.FileReferenceBuilder
@@ -23,7 +23,7 @@ type FileReferenceVisitor struct {
 	nestingStack         []ast.Node
 }
 
-func NewFileReferenceVisitor(fileReferenceBuilder *references_builders.FileReferenceBuilder, resolver *types.TypeResolver, nodeNamer *services.NodeNamer, extractors ...extractors.ReferenceExtractorInterface) *FileReferenceVisitor {
+func NewFileReferenceVisitor(fileReferenceBuilder *references_builders.FileReferenceBuilder, resolver *types.TypeResolver, nodeNamer *services.NodeNamer, extractors ...references_extractors.ReferenceExtractorInterface) *FileReferenceVisitor {
 	return &FileReferenceVisitor{
 		currentReference:     fileReferenceBuilder,
 		fileReferenceBuilder: fileReferenceBuilder,

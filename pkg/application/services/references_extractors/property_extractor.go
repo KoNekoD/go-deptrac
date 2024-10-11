@@ -1,4 +1,4 @@
-package extractors
+package references_extractors
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/references_builders"

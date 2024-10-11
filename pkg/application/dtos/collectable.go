@@ -1,14 +1,14 @@
 package dtos
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/application/services/dependencies_collectors"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/services"
 )
 
 type Collectable struct {
-	Collector  dependencies_collectors.CollectorInterface
+	Collector  services.CollectorInterface
 	Attributes map[string]interface{}
 }
 
-func NewCollectable(collector dependencies_collectors.CollectorInterface, attributes map[string]interface{}) *Collectable {
+func NewCollectable(collector services.CollectorInterface, attributes map[string]interface{}) *Collectable {
 	return &Collectable{Collector: collector, Attributes: attributes}
 }

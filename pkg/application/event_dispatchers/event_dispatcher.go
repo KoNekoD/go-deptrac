@@ -2,7 +2,7 @@ package event_dispatchers
 
 import (
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/application/event_handlers"
+	"github.com/elliotchance/orderedmap/v2"
 	"reflect"
 	"slices"
 )
@@ -16,15 +16,13 @@ type EventDispatcher struct {
 }
 
 func NewEventDispatcher(isDebug bool) EventDispatcherInterface {
-	return &EventDispatcher{
-		isDebug: isDebug,
-	}
+	return &EventDispatcher{isDebug: isDebug}
 }
 
 func (d *EventDispatcher) DispatchEvent(event interface{}) error {
 	typeName := reflect.TypeOf(event).String()
 
-	handlers, ok := event_handlers.Map.Get(typeName)
+	handlers, ok := Map.Get(typeName)
 
 	if !ok {
 		return nil // No subscribers registered for this event
@@ -66,4 +64,34 @@ func (d *EventDispatcher) DispatchEvent(event interface{}) error {
 	}
 
 	return nil
+}
+
+type EventHandlerInterface interface {
+	HandleEvent(rawEvent interface{}, stopPropagation func()) error
+}
+
+var Map *orderedmap.OrderedMap[string, *orderedmap.OrderedMap[int, []EventHandlerInterface]]
+
+const DefaultPriority = 0
+
+func Reg(event interface{}, sub EventHandlerInterface, priority int) {
+	eventTypeof := reflect.TypeOf(event)
+	eventType := eventTypeof.String()
+
+	// Get or create event type row
+	e, ok := Map.Get(eventType)
+	if !ok {
+		e = orderedmap.NewOrderedMap[int, []EventHandlerInterface]()
+		Map.Set(eventType, e)
+	}
+
+	// Get or create priority column
+	subs, ok := e.Get(priority)
+	if !ok {
+		subs = []EventHandlerInterface{}
+	}
+
+	subs = append(subs, sub)
+
+	e.Set(priority, subs)
 }

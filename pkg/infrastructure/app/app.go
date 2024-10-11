@@ -9,46 +9,36 @@ import (
 	"slices"
 )
 
-const Version = "@git-version@"
+func Run() {
+	NewApp().Run()
+}
 
-type Application struct {
+type App struct {
 	defaultCommand string
 }
 
-func NewApplication() *Application {
-	return &Application{}
+func NewApp() *App {
+	return &App{}
 }
 
-func (a *Application) Run() {
+func (a *App) Run() {
 	_, err := a.doRun()
 	if err != nil {
 		color.Printf("\n<fg=167;bg=232>" + err.Error() + "</>\n")
 	}
 }
 
-func (a *Application) getDefaultInputDefinition() {
+func (a *App) getDefaultInputDefinition() {
 	// $definition = parent::getDefaultInputDefinition();
 
 	// return $definition;
 }
 
-const DirectorySeparator = "/"
-
-func (a *Application) doRun() (int, error) {
+func (a *App) doRun() (int, error) {
 	currentWorkingDirectory, err := os.Getwd()
 	if err != nil {
 		return 0, apperrors.NewCannotGetCurrentWorkingDirectoryExceptionCannotGetCWD()
 	}
-
-	// try {
-	//     $input->bind($this->getDefinition());
-	// } catch (ExceptionInterface) {
-	//     // Errors must be ignored, full binding/validation happens later when the command is known.
-	// }
-
-	// if (null === $input->getArgument('command') && \true === $input->getOption('version')) {
-	//     return parent::doRun($input, $output);
-	// }
 
 	var help bool
 	flag.BoolVar(
@@ -82,7 +72,7 @@ func (a *Application) doRun() (int, error) {
 	flag.StringVar(
 		&configFile,
 		"config",
-		currentWorkingDirectory+DirectorySeparator+"deptrac.yaml",
+		currentWorkingDirectory+"/deptrac.yaml",
 		"Location of Depfile containing the configuration",
 	)
 	flag.Parse()
@@ -91,7 +81,7 @@ func (a *Application) doRun() (int, error) {
 		commandArgument = flag.Arg(0)
 	)
 
-	config := currentWorkingDirectory + DirectorySeparator + "deptrac.yaml"
+	config := currentWorkingDirectory + "/deptrac.yaml"
 	if configFile != "" {
 		config = configFile
 	}
@@ -138,6 +128,6 @@ func (a *Application) doRun() (int, error) {
 	return 0, nil
 }
 
-func (a *Application) setDefaultCommand(command string) {
+func (a *App) setDefaultCommand(command string) {
 	a.defaultCommand = command
 }

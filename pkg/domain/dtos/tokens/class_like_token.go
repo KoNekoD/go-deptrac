@@ -33,3 +33,5 @@ func (t *ClassLikeToken) ToString() string {
 func (t *ClassLikeToken) Equals(token *ClassLikeToken) bool {
 	return t.ClassName == token.ClassName
 }
+
+func (t *ClassLikeToken) tokenInterface() {}

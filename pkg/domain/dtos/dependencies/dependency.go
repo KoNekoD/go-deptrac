@@ -11,10 +11,6 @@ type Dependency struct {
 }
 
 func NewDependency(depender tokens.TokenInterface, dependent tokens.TokenInterface, context *DependencyContext) *Dependency {
-	if dependent.ToString() == "" {
-		panic("1")
-	}
-
 	return &Dependency{depender: depender, dependent: dependent, context: context}
 }
 

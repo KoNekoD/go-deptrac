@@ -1,10 +1,10 @@
 package tokens_references
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
 )
 
 type TokenReferenceWithDependenciesInterface interface {
 	TokenReferenceInterface
-	GetDependencies() []*tokens.DependencyToken
+	GetDependencies() []*dependencies.DependencyToken
 }

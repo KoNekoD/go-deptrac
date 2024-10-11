@@ -1,4 +1,4 @@
-package extractors
+package references_extractors
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/references_builders"
@@ -21,7 +21,7 @@ func (e *FunctionCallResolver) ProcessNode(node ast.Node, referenceBuilder refer
 		return
 	}
 
-	for _, classLikeName := range e.typeResolver.ResolvePHPParserTypes(typeScope, typedNode.Fun) {
+	for _, classLikeName := range e.typeResolver.ResolvePHPParserTypes(typeScope, typedNode) {
 		referenceBuilder.UnresolvedFunctionCall(classLikeName, utils.GetLineByPosition(typeScope.FilePath, int(typedNode.Fun.Pos())))
 	}
 }

@@ -2,7 +2,7 @@ package references_builders
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos"
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_map"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_inherits"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
@@ -11,7 +11,7 @@ import (
 type ClassLikeReferenceBuilder struct {
 	*ReferenceBuilder
 
-	inherits []*ast_map.AstInherit
+	inherits []*ast_inherits.AstInherit
 
 	classLikeToken *tokens.ClassLikeToken
 	classLikeType  *enums.ClassLikeType
@@ -21,7 +21,7 @@ type ClassLikeReferenceBuilder struct {
 func NewClassLikeReferenceBuilder(tokenTemplates []string, filepath string, classLikeToken *tokens.ClassLikeToken, classLikeType *enums.ClassLikeType, tags map[string][]string) *ClassLikeReferenceBuilder {
 	return &ClassLikeReferenceBuilder{
 		ReferenceBuilder: NewReferenceBuilder(tokenTemplates, filepath),
-		inherits:         make([]*ast_map.AstInherit, 0),
+		inherits:         make([]*ast_inherits.AstInherit, 0),
 		classLikeToken:   classLikeToken,
 		classLikeType:    classLikeType,
 		tags:             tags,
@@ -54,16 +54,16 @@ func (b *ClassLikeReferenceBuilder) Build() *tokens_references.ClassLikeReferenc
 }
 
 func (b *ClassLikeReferenceBuilder) Extends(classLikeName string, occursAtLine int) *ClassLikeReferenceBuilder {
-	b.inherits = append(b.inherits, ast_map.NewAstInherit(tokens.NewClassLikeTokenFromFQCN(classLikeName), dtos.NewFileOccurrence(b.Filepath, occursAtLine), enums.AstInheritTypeExtends, make([]*ast_map.AstInherit, 0)))
+	b.inherits = append(b.inherits, ast_inherits.NewAstInherit(tokens.NewClassLikeTokenFromFQCN(classLikeName), dtos.NewFileOccurrence(b.Filepath, occursAtLine), enums.AstInheritTypeExtends, make([]*ast_inherits.AstInherit, 0)))
 	return b
 }
 
 func (b *ClassLikeReferenceBuilder) Implements(classLikeName string, occursAtLine int) *ClassLikeReferenceBuilder {
-	b.inherits = append(b.inherits, ast_map.NewAstInherit(tokens.NewClassLikeTokenFromFQCN(classLikeName), dtos.NewFileOccurrence(b.Filepath, occursAtLine), enums.AstInheritTypeImplements, make([]*ast_map.AstInherit, 0)))
+	b.inherits = append(b.inherits, ast_inherits.NewAstInherit(tokens.NewClassLikeTokenFromFQCN(classLikeName), dtos.NewFileOccurrence(b.Filepath, occursAtLine), enums.AstInheritTypeImplements, make([]*ast_inherits.AstInherit, 0)))
 	return b
 }
 
 func (b *ClassLikeReferenceBuilder) Trait(classLikeName string, occursAtLine int) *ClassLikeReferenceBuilder {
-	b.inherits = append(b.inherits, ast_map.NewAstInherit(tokens.NewClassLikeTokenFromFQCN(classLikeName), dtos.NewFileOccurrence(b.Filepath, occursAtLine), enums.AstInheritTypeUses, make([]*ast_map.AstInherit, 0)))
+	b.inherits = append(b.inherits, ast_inherits.NewAstInherit(tokens.NewClassLikeTokenFromFQCN(classLikeName), dtos.NewFileOccurrence(b.Filepath, occursAtLine), enums.AstInheritTypeUses, make([]*ast_inherits.AstInherit, 0)))
 	return b
 }

@@ -1,7 +1,8 @@
-package ast_map
+package ast_maps
 
 import (
 	"fmt"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_inherits"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"strings"
@@ -100,12 +101,12 @@ func (a *AstMap) GetFileReferenceForToken(filePath *tokens.FileToken) *tokens_re
 	return v
 }
 
-func (a *AstMap) GetClassInherits(structLikeName *tokens.ClassLikeToken) []*AstInherit {
+func (a *AstMap) GetClassInherits(structLikeName *tokens.ClassLikeToken) []*ast_inherits.AstInherit {
 	structReference := a.GetClassReferenceForToken(structLikeName)
 	if structReference == nil {
 		return nil
 	}
-	inherits := make([]*AstInherit, 0)
+	inherits := make([]*ast_inherits.AstInherit, 0)
 	for _, dep := range structReference.Inherits {
 		inherits = append(inherits, dep)
 		outArr := a.recursivelyResolveDependencies(dep, nil, nil)
@@ -117,25 +118,25 @@ func (a *AstMap) GetClassInherits(structLikeName *tokens.ClassLikeToken) []*AstI
 }
 
 type stack struct {
-	s []*AstInherit
+	s []*ast_inherits.AstInherit
 }
 
-func (s *stack) Push(v *AstInherit) {
+func (s *stack) Push(v *ast_inherits.AstInherit) {
 	s.s = append(s.s, v)
 }
 
-func (s *stack) Pop() *AstInherit {
+func (s *stack) Pop() *ast_inherits.AstInherit {
 	v := s.s[len(s.s)-1]
 	s.s = s.s[:len(s.s)-1]
 	return v
 }
 
-func (a *AstMap) recursivelyResolveDependencies(inheritDependency *AstInherit, alreadyResolved map[string]bool, pathStack *stack) []*AstInherit {
+func (a *AstMap) recursivelyResolveDependencies(inheritDependency *ast_inherits.AstInherit, alreadyResolved map[string]bool, pathStack *stack) []*ast_inherits.AstInherit {
 	if alreadyResolved == nil {
 		alreadyResolved = make(map[string]bool)
 	}
 	if pathStack == nil {
-		pathStack = &stack{s: make([]*AstInherit, 0)}
+		pathStack = &stack{s: make([]*ast_inherits.AstInherit, 0)}
 		pathStack.Push(inheritDependency)
 	}
 	structName := inheritDependency.ClassLikeName.ToString()
@@ -147,7 +148,7 @@ func (a *AstMap) recursivelyResolveDependencies(inheritDependency *AstInherit, a
 	if structReference == nil {
 		return nil
 	}
-	out := make([]*AstInherit, 0)
+	out := make([]*ast_inherits.AstInherit, 0)
 	for _, inherit := range structReference.Inherits {
 		alreadyResolved[structName] = true
 		path := pathStack.s

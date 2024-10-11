@@ -1,17 +1,18 @@
 package tokens_references
 
 import (
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
 )
 
 type FunctionReference struct {
 	*TaggedTokenReference
 	functionName  *tokens.FunctionToken
-	Dependencies  []*tokens.DependencyToken
+	Dependencies  []*dependencies.DependencyToken
 	fileReference *FileReference
 }
 
-func NewFunctionReference(functionName *tokens.FunctionToken, dependencies []*tokens.DependencyToken, tags map[string][]string, fileReference *FileReference) *FunctionReference {
+func NewFunctionReference(functionName *tokens.FunctionToken, dependencies []*dependencies.DependencyToken, tags map[string][]string, fileReference *FileReference) *FunctionReference {
 	for _, dependency := range dependencies {
 		if dependency.Token.ToString() == "" {
 			panic("1")
@@ -38,6 +39,6 @@ func (r *FunctionReference) GetToken() tokens.TokenInterface {
 	return r.functionName
 }
 
-func (r *FunctionReference) GetDependencies() []*tokens.DependencyToken {
+func (r *FunctionReference) GetDependencies() []*dependencies.DependencyToken {
 	return r.Dependencies
 }

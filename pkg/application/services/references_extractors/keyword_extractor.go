@@ -1,4 +1,4 @@
-package extractors
+package references_extractors
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/references_builders"
@@ -17,7 +17,7 @@ func NewKeywordExtractor(typeResolver *types.TypeResolver) *KeywordExtractor {
 
 func (e *KeywordExtractor) ProcessNode(node ast.Node, referenceBuilder references_builders.ReferenceBuilderInterface, typeScope *types.TypeScope) {
 	if assertTypedNode, ok := node.(*ast.TypeAssertExpr); ok {
-		for _, classLikeName := range e.typeResolver.ResolvePHPParserTypes(typeScope, assertTypedNode.Type) {
+		for _, classLikeName := range e.typeResolver.ResolvePHPParserTypes(typeScope, append([]ast.Expr{assertTypedNode.Type, assertTypedNode.X})...) {
 			referenceBuilder.Instanceof(classLikeName, utils.GetLineByPosition(typeScope.FilePath, int(assertTypedNode.Type.Pos())))
 		}
 	}

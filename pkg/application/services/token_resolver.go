@@ -1,7 +1,7 @@
 package services
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_map"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_maps"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 )
@@ -12,7 +12,7 @@ func NewTokenResolver() *TokenResolver {
 	return &TokenResolver{}
 }
 
-func (r *TokenResolver) Resolve(token tokens.TokenInterface, astMap *ast_map.AstMap) tokens_references.TokenReferenceInterface {
+func (r *TokenResolver) Resolve(token tokens.TokenInterface, astMap *ast_maps.AstMap) tokens_references.TokenReferenceInterface {
 	switch v := token.(type) {
 	case *tokens.ClassLikeToken:
 		return astMap.GetClassReferenceForToken(v)

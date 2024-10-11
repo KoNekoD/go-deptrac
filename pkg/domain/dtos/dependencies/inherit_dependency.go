@@ -1,7 +1,7 @@
 package dependencies
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_map"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_inherits"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
 )
 
@@ -9,10 +9,10 @@ type InheritDependency struct {
 	depender           *tokens.ClassLikeToken
 	dependent          tokens.TokenInterface
 	originalDependency DependencyInterface
-	inheritPath        *ast_map.AstInherit
+	inheritPath        *ast_inherits.AstInherit
 }
 
-func NewInheritDependency(depender *tokens.ClassLikeToken, dependent tokens.TokenInterface, originalDependency DependencyInterface, inheritPath *ast_map.AstInherit) *InheritDependency {
+func NewInheritDependency(depender *tokens.ClassLikeToken, dependent tokens.TokenInterface, originalDependency DependencyInterface, inheritPath *ast_inherits.AstInherit) *InheritDependency {
 	return &InheritDependency{depender: depender, dependent: dependent, originalDependency: originalDependency, inheritPath: inheritPath}
 }
 

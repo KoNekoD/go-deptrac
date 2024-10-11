@@ -1,25 +1,25 @@
 package services
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/application/services/dependencies_collectors"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
+	"github.com/KoNekoD/go-deptrac/pkg/domain/services"
 	"golang.org/x/exp/maps"
 )
 
 type CollectorProvider struct {
-	collectors map[enums.CollectorType]dependencies_collectors.CollectorInterface
+	collectors map[enums.CollectorType]services.CollectorInterface
 }
 
 func NewCollectorProvider() *CollectorProvider {
 	return &CollectorProvider{}
 }
 
-func (p *CollectorProvider) Set(collectors map[enums.CollectorType]dependencies_collectors.CollectorInterface) *CollectorProvider {
+func (p *CollectorProvider) Set(collectors map[enums.CollectorType]services.CollectorInterface) *CollectorProvider {
 	p.collectors = collectors
 	return p
 }
 
-func (p *CollectorProvider) Get(id enums.CollectorType) dependencies_collectors.CollectorInterface {
+func (p *CollectorProvider) Get(id enums.CollectorType) services.CollectorInterface {
 	return p.collectors[id]
 }
 

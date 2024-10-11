@@ -85,5 +85,5 @@ func (s *Console) printMessageWithTime(event string, messageWithTime string, mes
 		return
 	}
 
-	s.output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: fmt.Sprintf(messageWithTime, period.ToSeconds())})
+	s.output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: fmt.Sprintf(messageWithTime, period.ToFloatSeconds())})
 }

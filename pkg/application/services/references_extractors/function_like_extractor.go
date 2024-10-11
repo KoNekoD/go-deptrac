@@ -1,4 +1,4 @@
-package extractors
+package references_extractors
 
 import (
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/references_builders"
@@ -33,15 +33,17 @@ func (e *FunctionLikeExtractor) ProcessNode(node ast.Node, referenceBuilder refe
 		}
 	}
 
-	for _, returnType := range typedNode.Results.List {
-		if nil == returnType.Type {
-			continue
-		}
+	if nil != typedNode.Results {
+		for _, returnType := range typedNode.Results.List {
+			if nil == returnType.Type {
+				continue
+			}
 
-		for _, classLikeName := range e.typeResolver.ResolvePHPParserTypes(typeScope, returnType.Type) {
-			pos := int(returnType.Type.Pos())
+			for _, classLikeName := range e.typeResolver.ResolvePHPParserTypes(typeScope, returnType.Type) {
+				pos := int(returnType.Type.Pos())
 
-			referenceBuilder.ReturnType(classLikeName, utils.GetLineByPosition(typeScope.FilePath, pos))
+				referenceBuilder.ReturnType(classLikeName, utils.GetLineByPosition(typeScope.FilePath, pos))
+			}
 		}
 	}
 }

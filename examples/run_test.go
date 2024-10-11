@@ -15,20 +15,20 @@ func TestRunSimpleCleanarch(t *testing.T) {
 		configArg := "--config=examples/simple_clean_arch/deptrac.yaml"
 		os.Args = []string{"", configArg, "analyse"}
 		flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
-		app.NewApplication().Run()
+		app.NewApp().Run()
 	})
 
 	t.Run("simple_invalid_mvc", func(t *testing.T) {
 		configArg := "--config=examples/simple_invalid_mvc/deptrac.yaml"
 		os.Args = []string{"", configArg, "analyse"}
 		flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
-		app.NewApplication().Run()
+		app.NewApp().Run()
 	})
 
 	t.Run("simple_mvc", func(t *testing.T) {
 		configArg := "--config=examples/simple_mvc/deptrac.yaml"
 		os.Args = []string{"", configArg, "analyse"}
 		flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
-		app.NewApplication().Run()
+		app.NewApp().Run()
 	})
 }

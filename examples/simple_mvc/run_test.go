@@ -21,6 +21,6 @@ func TestRun(t *testing.T) {
 	//	t.Fatal(err)
 	//}
 
-	app.NewApplication().
+	app.NewApp().
 		Run()
 }
