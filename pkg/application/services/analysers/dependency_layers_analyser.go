@@ -1,15 +1,12 @@
 package analysers
 
 import (
-	"fmt"
 	"github.com/KoNekoD/go-deptrac/pkg/application/event_dispatchers"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/layers_resolvers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/issues"
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens"
-	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/events"
 )
 
@@ -50,15 +47,6 @@ func (a *DependencyLayersAnalyser) Analyse() (*results.AnalysisResult, error) {
 	for _, dependency := range dependencies.GetDependenciesAndInheritDependencies() {
 		depender := dependency.GetDepender()
 		dependerRef := a.tokenResolver.Resolve(depender, astMap)
-
-		if v, ok55 := dependerRef.(*tokens_references.FunctionReference); ok55 {
-			t := v.GetToken()
-			if tt, ok66 := t.(*tokens.FunctionToken); ok66 {
-				if tt.FunctionName == "ParseFile" {
-					fmt.Println()
-				}
-			}
-		}
 
 		dependerLayersMap, err := a.layerResolver.GetLayersForReference(dependerRef)
 		if err != nil {
