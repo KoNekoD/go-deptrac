@@ -25,7 +25,7 @@ func (d *DebugDependenciesRunner) Run(output services.OutputStyleInterface, laye
 	}
 
 	for targetLayer, violations := range uncoveredMap {
-		output.Table([]string{targetLayer}, utils.Map(violations, d.FormatRow))
+		output.Table([]string{targetLayer}, utils.MapSlice(violations, d.FormatRow))
 	}
 
 	return nil
