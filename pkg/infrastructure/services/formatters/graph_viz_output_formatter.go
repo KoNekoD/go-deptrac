@@ -2,10 +2,10 @@ package formatters
 
 import (
 	"fmt"
+	services2 "github.com/KoNekoD/go-deptrac/pkg/application/services"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/formatters_configs"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/violations_rules"
-	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
 	"github.com/goccy/go-graphviz"
 	"github.com/goccy/go-graphviz/cgraph"
 	"os"
@@ -21,7 +21,7 @@ func NewGraphVizOutputFormatter(config FormatterConfiguration) *GraphVizOutputFo
 	return &GraphVizOutputFormatter{config: extractedConfig}
 }
 
-func (f *GraphVizOutputFormatter) Finish(result results.OutputResult, output services.OutputInterface, input OutputFormatterInput) error {
+func (f *GraphVizOutputFormatter) Finish(result results.OutputResult, output services2.OutputInterface, input OutputFormatterInput) error {
 	layerViolations := f.calculateViolations(result.Violations())
 	layersDependOnLayers := f.calculateLayerDependencies(result.AllRules())
 
@@ -147,7 +147,7 @@ func (f *GraphVizOutputFormatter) addNodesToGraph(graph *cgraph.Graph, nodes map
 	}
 }
 
-func (f *GraphVizOutputFormatter) output(g *graphviz.Graphviz, graph *cgraph.Graph, output services.OutputInterface, input OutputFormatterInput) error {
+func (f *GraphVizOutputFormatter) output(g *graphviz.Graphviz, graph *cgraph.Graph, output services2.OutputInterface, input OutputFormatterInput) error {
 	filename, err := f.getTempImage(g, graph)
 	if err != nil {
 		return fmt.Errorf("unable to create temp file_supportive for output: %v", err)
@@ -157,11 +157,11 @@ func (f *GraphVizOutputFormatter) output(g *graphviz.Graphviz, graph *cgraph.Gra
 		if err := os.Rename(filename, *input.OutputPath); err != nil {
 			return fmt.Errorf("unable to move temp file_supportive to output path: %v", err)
 		}
-		output.WriteLineFormatted(services.StringOrArrayOfStrings{String: fmt.Sprintf("<info>GraphViz Report saved to %s</>", filepath.Clean(*input.OutputPath))})
+		output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: fmt.Sprintf("<info>GraphViz Report saved to %s</>", filepath.Clean(*input.OutputPath))})
 		return nil
 	}
 
-	output.WriteLineFormatted(services.StringOrArrayOfStrings{String: fmt.Sprintf("<info>GraphViz temp image created at %s</>", filename)})
+	output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: fmt.Sprintf("<info>GraphViz temp image created at %s</>", filename)})
 	return nil
 }
 

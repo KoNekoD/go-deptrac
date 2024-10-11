@@ -2,9 +2,9 @@ package formatters
 
 import (
 	"fmt"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/formatters_configs"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
-	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
 	"os"
 	"strings"
 )

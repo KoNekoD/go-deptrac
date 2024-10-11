@@ -1,9 +1,9 @@
 package formatters
 
 import (
+	services2 "github.com/KoNekoD/go-deptrac/pkg/application/services"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
-	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
 	"github.com/gookit/color"
 	"golang.org/x/exp/maps"
 	"gopkg.in/yaml.v3"
@@ -20,7 +20,7 @@ func NewBaselineOutputFormatter() *BaselineOutputFormatter {
 	return &BaselineOutputFormatter{}
 }
 
-func (b *BaselineOutputFormatter) Finish(outputResult *results.OutputResult, output services.OutputInterface, outputFormatterInput *OutputFormatterInput) error {
+func (b *BaselineOutputFormatter) Finish(outputResult *results.OutputResult, output services2.OutputInterface, outputFormatterInput *OutputFormatterInput) error {
 	groupedViolations := b.collectViolations(outputResult)
 
 	for _, violations := range groupedViolations {
@@ -36,7 +36,7 @@ func (b *BaselineOutputFormatter) Finish(outputResult *results.OutputResult, out
 	if stat, _ := os.Stat(dirname); stat == nil || !stat.IsDir() {
 		if err := os.MkdirAll(dirname, 0777); err != nil {
 			if stat2, _ := os.Stat(dirname); stat2 == nil || !stat2.IsDir() {
-				output.WriteLineFormatted(services.StringOrArrayOfStrings{String: color.Sprintf("<error>Unable to create %s</>", dirname)})
+				output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: color.Sprintf("<error>Unable to create %s</>", dirname)})
 				return err
 			}
 		}
@@ -52,7 +52,7 @@ func (b *BaselineOutputFormatter) Finish(outputResult *results.OutputResult, out
 		return err
 	}
 
-	output.WriteLineFormatted(services.StringOrArrayOfStrings{String: color.Sprintf("<info>Baseline dumped to %s</>", baselineFile)})
+	output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: color.Sprintf("<info>Baseline dumped to %s</>", baselineFile)})
 
 	return nil
 }

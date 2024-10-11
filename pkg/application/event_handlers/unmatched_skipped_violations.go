@@ -2,16 +2,16 @@ package event_handlers
 
 import (
 	"fmt"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/issues"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/events"
-	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services/dispatchers"
 )
 
 type UnmatchedSkippedViolations struct {
-	eventHelper *dispatchers.EventHelper
+	eventHelper *services.EventHelper
 }
 
-func NewUnmatchedSkippedViolations(eventHelper *dispatchers.EventHelper) *UnmatchedSkippedViolations {
+func NewUnmatchedSkippedViolations(eventHelper *services.EventHelper) *UnmatchedSkippedViolations {
 	return &UnmatchedSkippedViolations{eventHelper: eventHelper}
 }
 

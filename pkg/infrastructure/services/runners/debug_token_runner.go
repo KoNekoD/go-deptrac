@@ -2,10 +2,10 @@ package runners
 
 import (
 	"fmt"
+	services2 "github.com/KoNekoD/go-deptrac/pkg/application/services"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/analysers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
-	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
 )
 
 type DebugTokenRunner struct {
@@ -16,14 +16,14 @@ func NewDebugTokenRunner(analyser *analysers.LayerForTokenAnalyser) *DebugTokenR
 	return &DebugTokenRunner{analyser: analyser}
 }
 
-func (r *DebugTokenRunner) Run(output services.OutputInterface, tokenName string, tokenType enums.TokenType) error {
+func (r *DebugTokenRunner) Run(output services2.OutputInterface, tokenName string, tokenType enums.TokenType) error {
 	matches, err := r.analyser.FindLayerForToken(tokenName, tokenType)
 	if err != nil {
 		return apperrors.NewCommandRunExceptionAnalyserException(err)
 	}
 
 	if len(matches) == 0 {
-		output.WriteLineFormatted(services.StringOrArrayOfStrings{String: fmt.Sprintf("Could not find a token matching \"%s\"", tokenName)})
+		output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: fmt.Sprintf("Could not find a token matching \"%s\"", tokenName)})
 		return nil
 	}
 

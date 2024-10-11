@@ -1,15 +1,15 @@
 package event_handlers
 
 import (
+	"github.com/KoNekoD/go-deptrac/pkg/application/services"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/events"
-	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services/dispatchers"
 )
 
 type DependsOnPrivateLayer struct {
-	eventHelper *dispatchers.EventHelper
+	eventHelper *services.EventHelper
 }
 
-func NewDependsOnPrivateLayer(eventHelper *dispatchers.EventHelper) *DependsOnPrivateLayer {
+func NewDependsOnPrivateLayer(eventHelper *services.EventHelper) *DependsOnPrivateLayer {
 	return &DependsOnPrivateLayer{eventHelper: eventHelper}
 }
 

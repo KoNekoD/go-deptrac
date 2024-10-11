@@ -1,6 +1,7 @@
 package di
 
 import (
+	"github.com/KoNekoD/go-deptrac/pkg/application/event_dispatchers"
 	"github.com/KoNekoD/go-deptrac/pkg/application/event_handlers"
 	applicationServices "github.com/KoNekoD/go-deptrac/pkg/application/services"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/analysers"
@@ -18,7 +19,6 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/stopwatch"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/commands"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
-	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services/dispatchers"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services/formatters"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services/runners"
 )
@@ -27,7 +27,7 @@ type ContainerBuilder struct {
 	ProjectDirectory                       string
 	CacheFile                              *string
 	Configuration                          *configs.DeptracConfig
-	EventDispatcher                        dispatchers.EventDispatcherInterface
+	EventDispatcher                        event_dispatchers.EventDispatcherInterface
 	FileInputCollector                     input_collectors.InputCollector
 	YmlFileLoader                          *services.YmlFileLoader
 	Dumper                                 *domainServices.Dumper
@@ -41,7 +41,7 @@ type ContainerBuilder struct {
 	ReferenceExtractors                    []extractors.ReferenceExtractorInterface
 	ParserInterface                        parsers.ParserInterface
 	LayerProvider                          *applicationServices.LayerProvider
-	EventHelper                            *dispatchers.EventHelper
+	EventHelper                            *applicationServices.EventHelper
 	AllowDependencyHandler                 *event_handlers.AllowDependency
 	DependsOnPrivateLayer                  *event_handlers.DependsOnPrivateLayer
 	DependsOnInternalToken                 *event_handlers.DependsOnInternalToken

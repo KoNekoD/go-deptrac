@@ -1,12 +1,12 @@
 package runners
 
 import (
+	services2 "github.com/KoNekoD/go-deptrac/pkg/application/services"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/analysers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
-	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
 	"golang.org/x/exp/maps"
 	"strings"
 )
@@ -24,7 +24,7 @@ func NewChangedFilesRunner(layerForTokenAnalyser *analysers.LayerForTokenAnalyse
 	}
 }
 
-func (r *ChangedFilesRunner) Run(files []string, withDependencies bool, output services.OutputInterface) error {
+func (r *ChangedFilesRunner) Run(files []string, withDependencies bool, output services2.OutputInterface) error {
 	layers := make(map[string]string)
 	for _, file := range files {
 		matches, err := r.layerForTokenAnalyser.FindLayerForToken(file, enums.TokenTypeFile)
@@ -37,7 +37,7 @@ func (r *ChangedFilesRunner) Run(files []string, withDependencies bool, output s
 			}
 		}
 	}
-	output.WriteLineFormatted(services.StringOrArrayOfStrings{String: strings.Join(maps.Keys(layers), ";")})
+	output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: strings.Join(maps.Keys(layers), ";")})
 	if withDependencies {
 		analyseResult, err := r.dependencyLayersAnalyser.Analyse()
 		if err != nil {
@@ -59,7 +59,7 @@ func (r *ChangedFilesRunner) Run(files []string, withDependencies bool, output s
 				layerDependencies[layerDependency] = layersDependOnLayers[layerDependency][layerDependency]
 			}
 		}
-		output.WriteLineFormatted(services.StringOrArrayOfStrings{String: strings.Join(maps.Keys(layerDependencies), ";")})
+		output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: strings.Join(maps.Keys(layerDependencies), ";")})
 	}
 	return nil
 }

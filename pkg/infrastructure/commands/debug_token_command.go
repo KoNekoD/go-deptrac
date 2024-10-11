@@ -1,9 +1,9 @@
 package commands
 
 import (
+	services2 "github.com/KoNekoD/go-deptrac/pkg/application/services"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/commands_options"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
-	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services/runners"
 	"github.com/pkg/errors"
 )
@@ -18,7 +18,7 @@ func NewDebugTokenCommand(runner *runners.DebugTokenRunner, options *commands_op
 	return &DebugTokenCommand{runner: runner, options: options}
 }
 
-func (c *DebugTokenCommand) Run(output services.OutputInterface) error {
+func (c *DebugTokenCommand) Run(output services2.OutputInterface) error {
 	tokenType, err := enums.NewTokenType(c.options.Type)
 	if err != nil {
 		return err
@@ -26,7 +26,7 @@ func (c *DebugTokenCommand) Run(output services.OutputInterface) error {
 
 	err = c.runner.Run(output, c.options.Token, tokenType)
 	if err != nil {
-		output.GetStyle().Error(services.StringOrArrayOfStrings{String: "<fg=red>Token debugging failed.</> error: " + err.Error()})
+		output.GetStyle().Error(services2.StringOrArrayOfStrings{String: "<fg=red>Token debugging failed.</> error: " + err.Error()})
 		return errors.WithStack(err)
 	}
 

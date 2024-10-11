@@ -2,12 +2,12 @@ package formatters
 
 import (
 	"fmt"
+	services2 "github.com/KoNekoD/go-deptrac/pkg/application/services"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
-	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
 	"strings"
 )
 
@@ -21,7 +21,7 @@ func (f *ConsoleOutputFormatter) GetName() string {
 	return "console_supportive"
 }
 
-func (f *ConsoleOutputFormatter) Finish(outputResult results.OutputResult, output services.OutputInterface, input OutputFormatterInput) {
+func (f *ConsoleOutputFormatter) Finish(outputResult results.OutputResult, output services2.OutputInterface, input OutputFormatterInput) {
 	for _, rule := range outputResult.AllOf(enums.TypeViolation) {
 		f.printViolation(rule.(*violations_rules.Violation), output)
 	}
@@ -47,7 +47,7 @@ func (f *ConsoleOutputFormatter) Finish(outputResult results.OutputResult, outpu
 	f.printSummary(outputResult, output)
 }
 
-func (f *ConsoleOutputFormatter) printViolation(rule violations_rules.RuleInterface, output services.OutputInterface) {
+func (f *ConsoleOutputFormatter) printViolation(rule violations_rules.RuleInterface, output services2.OutputInterface) {
 	dep := rule.GetDependency()
 	skippedText := ""
 
@@ -66,7 +66,7 @@ func (f *ConsoleOutputFormatter) printViolation(rule violations_rules.RuleInterf
 	}
 
 	output.WriteLineFormatted(
-		services.StringOrArrayOfStrings{
+		services2.StringOrArrayOfStrings{
 			String: fmt.Sprintf("%s<info>%s</> must not depend on <info>%s</> (%s on %s)",
 				skippedText,
 				dep.GetDepender().ToString(),
@@ -83,15 +83,15 @@ func (f *ConsoleOutputFormatter) printViolation(rule violations_rules.RuleInterf
 	}
 }
 
-func (f *ConsoleOutputFormatter) printMultilinePath(output services.OutputInterface, dep dependencies.DependencyInterface) {
+func (f *ConsoleOutputFormatter) printMultilinePath(output services2.OutputInterface, dep dependencies.DependencyInterface) {
 	var buffer strings.Builder
 	for _, depSerialized := range dep.Serialize() {
 		buffer.WriteString(fmt.Sprintf("\t%s:%d -> \n", depSerialized["name"], depSerialized["line"]))
 	}
-	output.WriteLineFormatted(services.StringOrArrayOfStrings{String: buffer.String()})
+	output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: buffer.String()})
 }
 
-func (f *ConsoleOutputFormatter) printSummary(result results.OutputResult, output services.OutputInterface) {
+func (f *ConsoleOutputFormatter) printSummary(result results.OutputResult, output services2.OutputInterface) {
 	violationCount := len(result.Violations())
 	skippedViolationCount := len(result.SkippedViolations())
 	uncoveredCount := len(result.Uncovered())
@@ -99,27 +99,27 @@ func (f *ConsoleOutputFormatter) printSummary(result results.OutputResult, outpu
 	warningsCount := len(result.Warnings)
 	errorsCount := len(result.Errors)
 
-	output.WriteLineFormatted(services.StringOrArrayOfStrings{String: ""})
-	output.WriteLineFormatted(services.StringOrArrayOfStrings{String: "Report:"})
-	output.WriteLineFormatted(services.StringOrArrayOfStrings{String: fmt.Sprintf("<fg=%s>Violations: %d</>", f.getColor(violationCount > 0, "red", "default"), violationCount)})
-	output.WriteLineFormatted(services.StringOrArrayOfStrings{String: fmt.Sprintf("<fg=%s>Skipped violations: %d</>", f.getColor(skippedViolationCount > 0, "yellow", "default"), skippedViolationCount)})
-	output.WriteLineFormatted(services.StringOrArrayOfStrings{String: fmt.Sprintf("<fg=%s>Uncovered: %d</>", f.getColor(uncoveredCount > 0, "yellow", "default"), uncoveredCount)})
-	output.WriteLineFormatted(services.StringOrArrayOfStrings{String: fmt.Sprintf("<info>Allowed: %d</>", allowedCount)})
-	output.WriteLineFormatted(services.StringOrArrayOfStrings{String: fmt.Sprintf("<fg=%s>Warnings: %d</>", f.getColor(warningsCount > 0, "yellow", "default"), warningsCount)})
-	output.WriteLineFormatted(services.StringOrArrayOfStrings{String: fmt.Sprintf("<fg=%s>Errors: %d</>", f.getColor(errorsCount > 0, "red", "default"), errorsCount)})
+	output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: ""})
+	output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: "Report:"})
+	output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: fmt.Sprintf("<fg=%s>Violations: %d</>", f.getColor(violationCount > 0, "red", "default"), violationCount)})
+	output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: fmt.Sprintf("<fg=%s>Skipped violations: %d</>", f.getColor(skippedViolationCount > 0, "yellow", "default"), skippedViolationCount)})
+	output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: fmt.Sprintf("<fg=%s>Uncovered: %d</>", f.getColor(uncoveredCount > 0, "yellow", "default"), uncoveredCount)})
+	output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: fmt.Sprintf("<info>Allowed: %d</>", allowedCount)})
+	output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: fmt.Sprintf("<fg=%s>Warnings: %d</>", f.getColor(warningsCount > 0, "yellow", "default"), warningsCount)})
+	output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: fmt.Sprintf("<fg=%s>Errors: %d</>", f.getColor(errorsCount > 0, "red", "default"), errorsCount)})
 }
 
-func (f *ConsoleOutputFormatter) printUncovered(result results.OutputResult, output services.OutputInterface) {
+func (f *ConsoleOutputFormatter) printUncovered(result results.OutputResult, output services2.OutputInterface) {
 	uncovered := result.Uncovered()
 	if len(uncovered) == 0 {
 		return
 	}
 
-	output.WriteLineFormatted(services.StringOrArrayOfStrings{String: "<comment>Uncovered dependencies:</>"})
+	output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: "<comment>Uncovered dependencies:</>"})
 	for _, u := range uncovered {
 		dep := u.GetDependency()
 		output.WriteLineFormatted(
-			services.StringOrArrayOfStrings{
+			services2.StringOrArrayOfStrings{
 				String: fmt.Sprintf("<info>%s</> has uncovered dependency_contract on <info>%s</> (%s)",
 					dep.GetDepender().ToString(),
 					dep.GetDependent().ToString(),
@@ -135,21 +135,21 @@ func (f *ConsoleOutputFormatter) printUncovered(result results.OutputResult, out
 	}
 }
 
-func (f *ConsoleOutputFormatter) printFileOccurrence(output services.OutputInterface, fileOccurrence *dtos.FileOccurrence) {
-	output.WriteLineFormatted(services.StringOrArrayOfStrings{String: fmt.Sprintf("%s:%d", fileOccurrence.FilePath, fileOccurrence.Line)})
+func (f *ConsoleOutputFormatter) printFileOccurrence(output services2.OutputInterface, fileOccurrence *dtos.FileOccurrence) {
+	output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: fmt.Sprintf("%s:%d", fileOccurrence.FilePath, fileOccurrence.Line)})
 }
 
-func (f *ConsoleOutputFormatter) printErrors(result results.OutputResult, output services.OutputInterface) {
-	output.WriteLineFormatted(services.StringOrArrayOfStrings{String: ""})
+func (f *ConsoleOutputFormatter) printErrors(result results.OutputResult, output services2.OutputInterface) {
+	output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: ""})
 	for _, err := range result.Errors {
-		output.WriteLineFormatted(services.StringOrArrayOfStrings{String: fmt.Sprintf("<fg=red>[ERROR]</> %s", err)})
+		output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: fmt.Sprintf("<fg=red>[ERROR]</> %s", err)})
 	}
 }
 
-func (f *ConsoleOutputFormatter) printWarnings(result results.OutputResult, output services.OutputInterface) {
-	output.WriteLineFormatted(services.StringOrArrayOfStrings{String: ""})
+func (f *ConsoleOutputFormatter) printWarnings(result results.OutputResult, output services2.OutputInterface) {
+	output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: ""})
 	for _, warning := range result.Warnings {
-		output.WriteLineFormatted(services.StringOrArrayOfStrings{String: fmt.Sprintf("<fg=yellow>[WARNING]</> %s", warning)})
+		output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: fmt.Sprintf("<fg=yellow>[WARNING]</> %s", warning)})
 	}
 }
 

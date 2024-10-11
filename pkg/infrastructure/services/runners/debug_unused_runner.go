@@ -2,9 +2,9 @@ package runners
 
 import (
 	"fmt"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/analysers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
-	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
 )
 
 type DebugUnusedRunner struct {

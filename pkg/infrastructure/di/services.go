@@ -3,6 +3,7 @@ package di
 import (
 	"flag"
 	"fmt"
+	"github.com/KoNekoD/go-deptrac/pkg/application/event_dispatchers"
 	"github.com/KoNekoD/go-deptrac/pkg/application/event_handlers"
 	applicationServices "github.com/KoNekoD/go-deptrac/pkg/application/services"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/analysers"
@@ -23,7 +24,6 @@ import (
 	"github.com/KoNekoD/go-deptrac/pkg/domain/stopwatch"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/commands"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
-	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services/dispatchers"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services/formatters"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services/runners"
 	"github.com/elliotchance/orderedmap/v2"
@@ -58,7 +58,7 @@ func Services(builder *ContainerBuilder) error {
 	/*
 	 * Utilities
 	 */
-	eventDispatcher := dispatchers.NewEventDispatcher(debugBoolFlag != nil && *debugBoolFlag == true)
+	eventDispatcher := event_dispatchers.NewEventDispatcher(debugBoolFlag != nil && *debugBoolFlag == true)
 
 	fileInputCollector, err := input_collectors.NewFileInputCollector(
 		builderConfiguration.Paths,
@@ -109,7 +109,7 @@ func Services(builder *ContainerBuilder) error {
 	astMapExtractor := ast_map.NewAstMapExtractor(fileInputCollector, astLoader)
 
 	layerProvider := applicationServices.NewLayerProvider(builderConfiguration.Rulesets)
-	eventHelper := dispatchers.NewEventHelper(builderConfiguration.SkipViolations, layerProvider)
+	eventHelper := applicationServices.NewEventHelper(builderConfiguration.SkipViolations, layerProvider)
 
 	/*
 	 * Events (before first possible event)

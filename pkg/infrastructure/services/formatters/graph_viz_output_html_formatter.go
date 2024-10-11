@@ -3,7 +3,7 @@ package formatters
 import (
 	"encoding/base64"
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
+	services2 "github.com/KoNekoD/go-deptrac/pkg/application/services"
 	"os"
 	"path/filepath"
 
@@ -25,7 +25,7 @@ func (f *GraphVizOutputHtmlFormatter) GetName() string {
 	return "graphviz-html"
 }
 
-func (f *GraphVizOutputHtmlFormatter) output(g *graphviz.Graphviz, graph *cgraph.Graph, output services.OutputInterface, input OutputFormatterInput) error {
+func (f *GraphVizOutputHtmlFormatter) output(g *graphviz.Graphviz, graph *cgraph.Graph, output services2.OutputInterface, input OutputFormatterInput) error {
 	dumpHtmlPath := input.OutputPath
 	if dumpHtmlPath == nil || *dumpHtmlPath == "" {
 		return fmt.Errorf("no '--output' defined for GraphViz formatter")
@@ -62,6 +62,6 @@ func (f *GraphVizOutputHtmlFormatter) output(g *graphviz.Graphviz, graph *cgraph
 		return fmt.Errorf("unable to write HTML file_supportive: %v", err)
 	}
 
-	output.WriteLineFormatted(services.StringOrArrayOfStrings{String: fmt.Sprintf("<info>HTML dumped to %s</>", filepath.Clean(*dumpHtmlPath))})
+	output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: fmt.Sprintf("<info>HTML dumped to %s</>", filepath.Clean(*dumpHtmlPath))})
 	return nil
 }

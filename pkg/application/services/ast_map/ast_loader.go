@@ -1,19 +1,19 @@
 package ast_map
 
 import (
+	"github.com/KoNekoD/go-deptrac/pkg/application/event_dispatchers"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/parsers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/ast_map"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/tokens_references"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/events"
-	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services/dispatchers"
 )
 
 type AstLoader struct {
 	parser          parsers.ParserInterface
-	eventDispatcher dispatchers.EventDispatcherInterface
+	eventDispatcher event_dispatchers.EventDispatcherInterface
 }
 
-func NewAstLoader(parser parsers.ParserInterface, eventDispatcher dispatchers.EventDispatcherInterface) *AstLoader {
+func NewAstLoader(parser parsers.ParserInterface, eventDispatcher event_dispatchers.EventDispatcherInterface) *AstLoader {
 	return &AstLoader{
 		parser:          parser,
 		eventDispatcher: eventDispatcher,

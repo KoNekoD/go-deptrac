@@ -1,4 +1,4 @@
-package dispatchers
+package event_dispatchers
 
 import (
 	"fmt"
@@ -6,6 +6,10 @@ import (
 	"reflect"
 	"slices"
 )
+
+type EventDispatcherInterface interface {
+	DispatchEvent(event interface{}) error
+}
 
 type EventDispatcher struct {
 	isDebug bool

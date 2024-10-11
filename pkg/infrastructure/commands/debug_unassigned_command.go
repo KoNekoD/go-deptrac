@@ -1,7 +1,7 @@
 package commands
 
 import (
-	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
+	services2 "github.com/KoNekoD/go-deptrac/pkg/application/services"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services/runners"
 	"github.com/pkg/errors"
 )
@@ -15,15 +15,15 @@ func NewDebugUnassignedCommand(runner *runners.DebugUnassignedRunner) *DebugUnas
 	return &DebugUnassignedCommand{runner: runner}
 }
 
-func (c *DebugUnassignedCommand) Run(output services.OutputInterface) error {
+func (c *DebugUnassignedCommand) Run(output services2.OutputInterface) error {
 	result, err := c.runner.Run(output)
 	if err != nil {
-		output.GetStyle().Error(services.StringOrArrayOfStrings{String: "<fg=red>Unassigned token debugging failed.</> error: " + err.Error()})
+		output.GetStyle().Error(services2.StringOrArrayOfStrings{String: "<fg=red>Unassigned token debugging failed.</> error: " + err.Error()})
 		return errors.WithStack(err)
 	}
 
 	if result {
-		output.WriteLineFormatted(services.StringOrArrayOfStrings{String: "There are unassigned tokens."})
+		output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: "There are unassigned tokens."})
 
 		return errors.New("There are unassigned tokens.")
 	}

@@ -1,10 +1,10 @@
 package commands
 
 import (
+	"github.com/KoNekoD/go-deptrac/pkg/application/event_dispatchers"
 	"github.com/KoNekoD/go-deptrac/pkg/application/event_handlers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/commands_options"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
-	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services/dispatchers"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services/formatters"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services/runners"
 )
@@ -12,7 +12,7 @@ import (
 // AnalyseCommand - Analyses your project using the provided depfile
 type AnalyseCommand struct {
 	runner             *runners.AnalyseRunner
-	dispatcher         dispatchers.EventDispatcherInterface
+	dispatcher         event_dispatchers.EventDispatcherInterface
 	formatterProvider  *formatters.FormatterProvider
 	verboseBoolFlag    bool
 	debugBoolFlag      bool
@@ -21,7 +21,7 @@ type AnalyseCommand struct {
 	analyseOptions     *commands_options.AnalyseOptions
 }
 
-func NewAnalyseCommand(runner *runners.AnalyseRunner, dispatcher dispatchers.EventDispatcherInterface, formatterProvider *formatters.FormatterProvider, verboseBoolFlag bool, debugBoolFlag bool, consoleSubscriber *event_handlers.Console, progressSubscriber *event_handlers.Progress, analyseOptions *commands_options.AnalyseOptions) *AnalyseCommand {
+func NewAnalyseCommand(runner *runners.AnalyseRunner, dispatcher event_dispatchers.EventDispatcherInterface, formatterProvider *formatters.FormatterProvider, verboseBoolFlag bool, debugBoolFlag bool, consoleSubscriber *event_handlers.Console, progressSubscriber *event_handlers.Progress, analyseOptions *commands_options.AnalyseOptions) *AnalyseCommand {
 	return &AnalyseCommand{
 		runner:             runner,
 		dispatcher:         dispatcher,

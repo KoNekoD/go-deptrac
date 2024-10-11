@@ -1,8 +1,8 @@
 package commands
 
 import (
+	"github.com/KoNekoD/go-deptrac/pkg/application/services"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/commands_options"
-	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services/runners"
 	"github.com/pkg/errors"
 )

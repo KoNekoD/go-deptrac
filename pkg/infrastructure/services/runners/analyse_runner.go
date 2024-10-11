@@ -3,12 +3,12 @@ package runners
 import (
 	"encoding/json"
 	"fmt"
+	services2 "github.com/KoNekoD/go-deptrac/pkg/application/services"
 	"github.com/KoNekoD/go-deptrac/pkg/application/services/analysers"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/apperrors"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/commands_options"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
-	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
 	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services/formatters"
 	"github.com/hashicorp/go-multierror"
 	"strings"
@@ -27,7 +27,7 @@ func NewAnalyseRunner(analyzer *analysers.DependencyLayersAnalyser, formatterPro
 	}
 }
 
-func (r *AnalyseRunner) Run(options *commands_options.AnalyseOptions, output services.OutputInterface) error {
+func (r *AnalyseRunner) Run(options *commands_options.AnalyseOptions, output services2.OutputInterface) error {
 	outputFormatterType, err := enums.NewOutputFormatterTypeFromString(options.Formatter)
 	if err != nil {
 		return err
@@ -64,22 +64,22 @@ func (r *AnalyseRunner) Run(options *commands_options.AnalyseOptions, output ser
 	return nil
 }
 
-func (r *AnalyseRunner) printCollectViolations(output services.OutputInterface) {
+func (r *AnalyseRunner) printCollectViolations(output services2.OutputInterface) {
 	if output.IsVerbose() {
-		output.WriteLineFormatted(services.StringOrArrayOfStrings{String: "<info>collecting violations.</>"})
+		output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: "<info>collecting violations.</>"})
 	}
 }
 
-func (r *AnalyseRunner) printFormattingStart(output services.OutputInterface) {
+func (r *AnalyseRunner) printFormattingStart(output services2.OutputInterface) {
 	if output.IsVerbose() {
-		output.WriteLineFormatted(services.StringOrArrayOfStrings{String: "<info>formatting dependencies.</>"})
+		output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: "<info>formatting dependencies.</>"})
 	}
 }
 
-func (r *AnalyseRunner) printFormatterError(output services.OutputInterface, formatterName string, error error) {
-	output.WriteLineFormatted(services.StringOrArrayOfStrings{String: ""})
-	output.GetStyle().Error(services.StringOrArrayOfStrings{Strings: []string{"", fmt.Sprintf("OutputInterface formatter %s threw an Exception:", formatterName), fmt.Sprintf("Message: %s", error.Error()), ""}})
-	output.WriteLineFormatted(services.StringOrArrayOfStrings{String: ""})
+func (r *AnalyseRunner) printFormatterError(output services2.OutputInterface, formatterName string, error error) {
+	output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: ""})
+	output.GetStyle().Error(services2.StringOrArrayOfStrings{Strings: []string{"", fmt.Sprintf("OutputInterface formatter %s threw an Exception:", formatterName), fmt.Sprintf("Message: %s", error.Error()), ""}})
+	output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: ""})
 }
 
 var JsonMultiErrFormatFunc = func(es []error) string {
@@ -97,19 +97,19 @@ var JsonMultiErrFormatFunc = func(es []error) string {
 	return string(marshalled)
 }
 
-func (r *AnalyseRunner) printAnalysisException(output services.OutputInterface, exception *multierror.Error) {
+func (r *AnalyseRunner) printAnalysisException(output services2.OutputInterface, exception *multierror.Error) {
 	message := []string{"Analysis finished with an Exception.", JsonMultiErrFormatFunc(exception.Errors), ""}
-	output.GetStyle().Error(services.StringOrArrayOfStrings{Strings: message})
+	output.GetStyle().Error(services2.StringOrArrayOfStrings{Strings: message})
 }
 
-func (r *AnalyseRunner) printFormatterNotFoundException(output services.OutputInterface, formatterName string) {
-	output.WriteLineFormatted(services.StringOrArrayOfStrings{String: ""})
+func (r *AnalyseRunner) printFormatterNotFoundException(output services2.OutputInterface, formatterName string) {
+	output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: ""})
 
 	knownFormatters := make([]string, 0)
 	for _, formatterType := range r.formatterProvider.GetKnownFormatters() {
 		knownFormatters = append(knownFormatters, string(formatterType))
 	}
 
-	output.GetStyle().Error(services.StringOrArrayOfStrings{Strings: []string{fmt.Sprintf("Output formatter %s not found.", formatterName), "Available formatters:", strings.Join(knownFormatters, ", "), ""}})
-	output.WriteLineFormatted(services.StringOrArrayOfStrings{String: ""})
+	output.GetStyle().Error(services2.StringOrArrayOfStrings{Strings: []string{fmt.Sprintf("Output formatter %s not found.", formatterName), "Available formatters:", strings.Join(knownFormatters, ", "), ""}})
+	output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: ""})
 }

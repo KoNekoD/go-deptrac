@@ -2,17 +2,17 @@ package event_handlers
 
 import (
 	"fmt"
+	services2 "github.com/KoNekoD/go-deptrac/pkg/application/services"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/events"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/stopwatch"
-	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
 )
 
 type Console struct {
-	output    services.OutputInterface
+	output    services2.OutputInterface
 	stopwatch *stopwatch.Stopwatch
 }
 
-func NewConsole(output services.OutputInterface, stopwatch *stopwatch.Stopwatch) *Console {
+func NewConsole(output services2.OutputInterface, stopwatch *stopwatch.Stopwatch) *Console {
 	return &Console{
 		output:    output,
 		stopwatch: stopwatch,
@@ -27,7 +27,7 @@ func (s *Console) HandleEvent(rawEvent interface{}, stopPropagation func()) erro
 			if err != nil {
 				return err
 			}
-			s.output.WriteLineFormatted(services.StringOrArrayOfStrings{String: fmt.Sprintf("Start to create an AstMap for <info>%d</> Files.", event.ExpectedFileCount)})
+			s.output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: fmt.Sprintf("Start to create an AstMap for <info>%d</> Files.", event.ExpectedFileCount)})
 		}
 	case *events.PostCreateAstMapEvent:
 		if s.output.IsVerbose() {
@@ -35,17 +35,17 @@ func (s *Console) HandleEvent(rawEvent interface{}, stopPropagation func()) erro
 		}
 	case *events.AstFileAnalysedEvent:
 		if s.output.IsVerbose() {
-			s.output.WriteLineFormatted(services.StringOrArrayOfStrings{String: fmt.Sprintf("Parsing File %s", event.File)})
+			s.output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: fmt.Sprintf("Parsing File %s", event.File)})
 		}
 	case *events.AstFileSyntaxErrorEvent:
-		s.output.WriteLineFormatted(services.StringOrArrayOfStrings{String: fmt.Sprintf("\nSyntax Error on File %s\n<error>%s</>\n", event.File, event.SyntaxError)})
+		s.output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: fmt.Sprintf("\nSyntax Error on File %s\n<error>%s</>\n", event.File, event.SyntaxError)})
 	case *events.PreEmitEvent:
 		if s.output.IsVerbose() {
 			err := s.stopwatchStart("deps")
 			if err != nil {
 				return err
 			}
-			s.output.WriteLineFormatted(services.StringOrArrayOfStrings{String: fmt.Sprintf("start emitting dependencies <info>%s</>", event.EmitterName)})
+			s.output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: fmt.Sprintf("start emitting dependencies <info>%s</>", event.EmitterName)})
 		}
 	case *events.PostEmitEvent:
 		if s.output.IsVerbose() {
@@ -57,7 +57,7 @@ func (s *Console) HandleEvent(rawEvent interface{}, stopPropagation func()) erro
 			if err != nil {
 				return err
 			}
-			s.output.WriteLineFormatted(services.StringOrArrayOfStrings{String: "start flatten dependencies"})
+			s.output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: "start flatten dependencies"})
 		}
 	case *events.PostFlattenEvent:
 		if s.output.IsVerbose() {
@@ -81,9 +81,9 @@ func (s *Console) printMessageWithTime(event string, messageWithTime string, mes
 	period, err := s.stopwatch.Stop(event)
 
 	if err != nil {
-		s.output.WriteLineFormatted(services.StringOrArrayOfStrings{String: messageWithoutTime})
+		s.output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: messageWithoutTime})
 		return
 	}
 
-	s.output.WriteLineFormatted(services.StringOrArrayOfStrings{String: fmt.Sprintf(messageWithTime, period.ToSeconds())})
+	s.output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: fmt.Sprintf(messageWithTime, period.ToSeconds())})
 }

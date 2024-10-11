@@ -1,9 +1,9 @@
 package commands
 
 import (
+	"github.com/KoNekoD/go-deptrac/pkg/application/services"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/commands_options"
 	domainServices "github.com/KoNekoD/go-deptrac/pkg/domain/services"
-	services "github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
 )
 
 // InitCommand - init - Creates a depfile template

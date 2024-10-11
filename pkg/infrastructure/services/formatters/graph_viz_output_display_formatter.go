@@ -2,7 +2,7 @@ package formatters
 
 import (
 	"fmt"
-	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
+	"github.com/KoNekoD/go-deptrac/pkg/application/services"
 	"os/exec"
 	"runtime"
 	"time"

@@ -2,11 +2,11 @@ package formatters
 
 import (
 	"fmt"
+	services2 "github.com/KoNekoD/go-deptrac/pkg/application/services"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/dependencies"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/dtos/results/violations_rules"
 	"github.com/KoNekoD/go-deptrac/pkg/domain/enums"
-	"github.com/KoNekoD/go-deptrac/pkg/infrastructure/services"
 	"strings"
 )
 
@@ -20,7 +20,7 @@ func (g *GithubActionsOutputFormatter) GetName() enums.OutputFormatterType {
 	return enums.GithubActions
 }
 
-func (g *GithubActionsOutputFormatter) Finish(outputResult *results.OutputResult, output services.OutputInterface, outputFormatterInput *OutputFormatterInput) error {
+func (g *GithubActionsOutputFormatter) Finish(outputResult *results.OutputResult, output services2.OutputInterface, outputFormatterInput *OutputFormatterInput) error {
 	for _, rule := range outputResult.AllOf(enums.TypeViolation) {
 		g.printViolation(rule, output)
 	}
@@ -53,7 +53,7 @@ func (g *GithubActionsOutputFormatter) determineLogLevel(rule violations_rules.R
 	}
 }
 
-func (g *GithubActionsOutputFormatter) printUncovered(result *results.OutputResult, output services.OutputInterface, reportAsError bool) {
+func (g *GithubActionsOutputFormatter) printUncovered(result *results.OutputResult, output services2.OutputInterface, reportAsError bool) {
 	for _, u := range result.Uncovered() {
 		dependency := u.GetDependency()
 
@@ -63,7 +63,7 @@ func (g *GithubActionsOutputFormatter) printUncovered(result *results.OutputResu
 		}
 
 		output.WriteLineFormatted(
-			services.StringOrArrayOfStrings{
+			services2.StringOrArrayOfStrings{
 				String: fmt.Sprintf(
 					"::%s file_supportive=%s,line=%d::%s has uncovered dependency_contract on %s (%s)",
 					reportAs,
@@ -86,19 +86,19 @@ func (g *GithubActionsOutputFormatter) multilinePathMessage(dep dependencies.Dep
 	return strings.Join(lines, " ->%0A")
 }
 
-func (g *GithubActionsOutputFormatter) printErrors(result *results.OutputResult, output services.OutputInterface) {
+func (g *GithubActionsOutputFormatter) printErrors(result *results.OutputResult, output services2.OutputInterface) {
 	for _, e := range result.Errors {
-		output.WriteLineFormatted(services.StringOrArrayOfStrings{String: fmt.Sprintf("::error ::%s", e.ToString())})
+		output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: fmt.Sprintf("::error ::%s", e.ToString())})
 	}
 }
 
-func (g *GithubActionsOutputFormatter) printWarnings(result *results.OutputResult, output services.OutputInterface) {
+func (g *GithubActionsOutputFormatter) printWarnings(result *results.OutputResult, output services2.OutputInterface) {
 	for _, warning := range result.Warnings {
-		output.WriteLineFormatted(services.StringOrArrayOfStrings{String: fmt.Sprintf("::warning ::%s", warning.ToString())})
+		output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: fmt.Sprintf("::warning ::%s", warning.ToString())})
 	}
 }
 
-func (g *GithubActionsOutputFormatter) printViolation(rule violations_rules.RuleInterface, output services.OutputInterface) {
+func (g *GithubActionsOutputFormatter) printViolation(rule violations_rules.RuleInterface, output services2.OutputInterface) {
 	dependency := rule.GetDependency()
 	prefix := ""
 	dependerLayer := ""
@@ -117,5 +117,5 @@ func (g *GithubActionsOutputFormatter) printViolation(rule violations_rules.Rule
 		message += "%0A" + g.multilinePathMessage(dependency)
 
 	}
-	output.WriteLineFormatted(services.StringOrArrayOfStrings{String: fmt.Sprintf("::%s file_supportive=%s,line=%d::%s", g.determineLogLevel(rule), dependency.GetContext().FileOccurrence.FilePath, dependency.GetContext().FileOccurrence.Line, message)})
+	output.WriteLineFormatted(services2.StringOrArrayOfStrings{String: fmt.Sprintf("::%s file_supportive=%s,line=%d::%s", g.determineLogLevel(rule), dependency.GetContext().FileOccurrence.FilePath, dependency.GetContext().FileOccurrence.Line, message)})
 }
