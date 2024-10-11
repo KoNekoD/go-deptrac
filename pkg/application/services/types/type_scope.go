@@ -9,6 +9,7 @@ type TypeScope struct {
 	Namespace string
 	Uses      map[string]string
 	FileNode  *ast.File
+	FilePath  string
 }
 
 func NewTypeScope(namespace string) *TypeScope {
@@ -21,6 +22,12 @@ func NewTypeScope(namespace string) *TypeScope {
 
 func (s *TypeScope) SetFileNode(fileNode *ast.File) *TypeScope {
 	s.FileNode = fileNode
+
+	return s
+}
+
+func (s *TypeScope) SetFilePath(filepath string) *TypeScope {
+	s.FilePath = filepath
 
 	return s
 }

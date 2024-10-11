@@ -81,20 +81,10 @@ func Services(builder *ContainerBuilder) error {
 	}
 	typeResolver := types.NewTypeResolver(nodeNamer)
 	referenceExtractors := []extractors.ReferenceExtractorInterface{
-		/**
-
-		TODO: Implement all reference extractors
-
-		AnnotationReferenceExtractor.NewAnnotationReferenceExtractor(),
-		AnonymousClassExtractor.NewAnonymousClassExtractor(),
-		ClassConstantExtractor.NewClassConstantExtractor(),
-		FunctionLikeExtractor.NewFunctionLikeExtractor(),
-		PropertyExtractor.NewPropertyExtractor(),
-		KeywordExtractor.NewKeywordExtractor(),
-		StaticExtractor.NewStaticExtractor(),
-		FunctionCallResolver.NewFunctionCallResolver(),
-
-		*/
+		extractors.NewFunctionLikeExtractor(typeResolver),
+		extractors.NewPropertyExtractor(typeResolver),
+		extractors.NewKeywordExtractor(typeResolver),
+		extractors.NewFunctionCallResolver(typeResolver),
 	}
 	nikicPhpParser := parsers.NewNikicPhpParser(builder.AstFileReferenceCacheInterface, typeResolver, nodeNamer, referenceExtractors)
 	parserInterface := nikicPhpParser
@@ -247,7 +237,6 @@ func Services(builder *ContainerBuilder) error {
 		enums.CollectorTypeTypeInherits:    inheritsCollector,
 		enums.CollectorTypeTypeLayer:       dependencies_collectors.NewLayerCollector(layerResolver),
 		enums.CollectorTypeTypeMethod:      dependencies_collectors.NewMethodCollector(nikicPhpParser),
-		enums.CollectorTypeTypeSuperGlobal: dependencies_collectors.NewSuperglobalCollector(),
 		enums.CollectorTypeTypeTrait:       dependencies_collectors.NewTraitCollector(),
 		enums.CollectorTypeTypeUses:        usesCollector,
 		//CollectorType.TypePhpInternal: PhpInternalCollector

@@ -21,7 +21,6 @@ const (
 	CollectorTypeTypeInterface      CollectorType = "interface"
 	CollectorTypeTypeLayer          CollectorType = "layer_contract"
 	CollectorTypeTypeMethod         CollectorType = "method"
-	CollectorTypeTypeSuperGlobal    CollectorType = "superGlobal"
 	CollectorTypeTypeGlobal         CollectorType = "global"
 	CollectorTypeTypeTrait          CollectorType = "trait"
 	CollectorTypeTypeUses           CollectorType = "uses"
@@ -46,7 +45,6 @@ var availableTypes = []CollectorType{
 	CollectorTypeTypeInterface,
 	CollectorTypeTypeLayer,
 	CollectorTypeTypeMethod,
-	CollectorTypeTypeSuperGlobal,
 	CollectorTypeTypeGlobal,
 	CollectorTypeTypeTrait,
 	CollectorTypeTypeUses,

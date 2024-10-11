@@ -20,7 +20,6 @@ type ReferenceBuilderInterface interface {
 	CreateContext(occursAtLine int, dependencyType enums.DependencyType) *dependencies.DependencyContext
 	UnresolvedFunctionCall(functionName string, occursAtLine int) *ReferenceBuilder
 	Variable(classLikeName string, occursAtLine int) *ReferenceBuilder
-	Superglobal(superglobalName string, occursAtLine int) *ReferenceBuilder
 	ReturnType(classLikeName string, occursAtLine int) *ReferenceBuilder
 	ThrowStatement(classLikeName string, occursAtLine int) *ReferenceBuilder
 	AnonymousClassExtends(classLikeName string, occursAtLine int) *ReferenceBuilder
@@ -62,11 +61,6 @@ func (r *ReferenceBuilder) UnresolvedFunctionCall(functionName string, occursAtL
 
 func (r *ReferenceBuilder) Variable(classLikeName string, occursAtLine int) *ReferenceBuilder {
 	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(tokens.NewClassLikeTokenFromFQCN(classLikeName), r.CreateContext(occursAtLine, enums.DependencyTypeVariable)))
-	return r
-}
-
-func (r *ReferenceBuilder) Superglobal(superglobalName string, occursAtLine int) *ReferenceBuilder {
-	r.Dependencies = append(r.Dependencies, tokens.NewDependencyToken(enums.NewSuperGlobalToken(superglobalName), r.CreateContext(occursAtLine, enums.DependencyTypeSuperGlobalVariable)))
 	return r
 }
 

@@ -72,7 +72,7 @@ func (f *FileReferenceVisitor) enterNode(node ast.Node) {
 		packageFileName, err := f.nodeNamer.GetPackageFilename(f.fileReferenceBuilder.Filepath)
 		f.addErrIfNeeded(err)
 
-		f.currentTypeScope = types.NewTypeScope(packageFileName).SetFileNode(typedNode)
+		f.currentTypeScope = types.NewTypeScope(packageFileName).SetFileNode(typedNode).SetFilePath(f.fileReferenceBuilder.Filepath)
 	case *ast.FuncDecl:
 		f.enterFunction(typedNode)
 	case *ast.GenDecl:
