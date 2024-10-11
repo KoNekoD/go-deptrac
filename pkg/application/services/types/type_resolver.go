@@ -14,9 +14,7 @@ type TypeResolver struct {
 }
 
 func NewTypeResolver(nodeNamer *services.NodeNamer) *TypeResolver {
-	return &TypeResolver{
-		nodeNamer: nodeNamer,
-	}
+	return &TypeResolver{nodeNamer: nodeNamer}
 }
 
 func (r *TypeResolver) ResolvePHPParserTypes(typeScope *TypeScope, nodes ...ast.Expr) []string {
@@ -108,7 +106,7 @@ func (r *TypeResolver) resolveSelectorExpr(scope *TypeScope, v *ast.SelectorExpr
 
 		xResolvedZero := xResolved[0]
 
-		pathValidate := strings.Replace(xResolvedZero, "github.com/KoNekoD/go_deptrac/", "/home/mizuki/Documents/dev/KoNekoD/go_deptrac/", 1)
+		pathValidate := strings.Replace(xResolvedZero, "github.com/KoNekoD/go-deptrac/", "/home/mizuki/Documents/dev/KoNekoD/go-deptrac/", 1)
 		parseDir, err := parser.ParseDir(token.NewFileSet(), pathValidate, nil, 0)
 		if len(maps.Keys(parseDir)) != 1 {
 			// TODO: Add checking in go.mod, если там нет такого модуля - ошибка
