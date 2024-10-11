@@ -1,5 +1,7 @@
 package enums
 
+import "github.com/pkg/errors"
+
 type TokenType string
 
 const (
@@ -7,6 +9,19 @@ const (
 	TokenTypeFunction  TokenType = "function"
 	TokenTypeFile      TokenType = "file_supportive"
 )
+
+func NewTokenType(s string) (TokenType, error) {
+	switch s {
+	case string(TokenTypeClassLike):
+		return TokenTypeClassLike, nil
+	case string(TokenTypeFunction):
+		return TokenTypeFunction, nil
+	case string(TokenTypeFile):
+		return TokenTypeFile, nil
+	default:
+		return "", errors.New("invalid token type string: " + s)
+	}
+}
 
 func NewTokenTypeTryFromEmitterType(emitterType EmitterType) *TokenType {
 	if emitterType == EmitterTypeClassToken {

@@ -23,20 +23,20 @@ func (f *JsonOutputFormatter) GetName() string {
 
 func (f *JsonOutputFormatter) Finish(outputResult results.OutputResult, output services.OutputInterface, input OutputFormatterInput) error {
 	jsonArray := make(map[string]interface{})
-	violations := make(map[string]FileViolations)
+	violationsList := make(map[string]FileViolations)
 
 	if input.ReportSkipped {
 		for _, rule := range outputResult.AllOf(enums.TypeSkippedViolation) {
-			f.addSkipped(violations, rule.(*violations.SkippedViolation))
+			f.addSkipped(violationsList, rule.(*violations_rules.SkippedViolation))
 		}
 	}
 	if input.ReportUncovered {
 		for _, rule := range outputResult.AllOf(enums.TypeUncovered) {
-			f.addUncovered(violations, rule.(*violations.Uncovered))
+			f.addUncovered(violationsList, rule.(*violations_rules.Uncovered))
 		}
 	}
 	for _, rule := range outputResult.AllOf(enums.TypeViolation) {
-		f.addFailure(violations, rule.(*violations.Violation))
+		f.addFailure(violationsList, rule.(*violations_rules.Violation))
 	}
 
 	// Add report summary to jsonArray
@@ -50,12 +50,12 @@ func (f *JsonOutputFormatter) Finish(outputResult results.OutputResult, output s
 	}
 
 	// Add violation count to each file_supportive
-	for fileName, fileViolation := range violations {
+	for fileName, fileViolation := range violationsList {
 		fileViolation.Violations = len(fileViolation.Messages)
-		violations[fileName] = fileViolation
+		violationsList[fileName] = fileViolation
 	}
 
-	jsonArray["files"] = violations
+	jsonArray["files"] = violationsList
 
 	jsonData, err := json.MarshalIndent(jsonArray, "", "  ")
 	if err != nil {
