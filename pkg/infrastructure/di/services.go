@@ -200,6 +200,14 @@ func Services(builder *ContainerBuilder) error {
 		nil != failOnUncovered && *failOnUncovered == true,
 	)
 	RegForAnalyseCommand(consoleSubscriber, progressSubscriber, !analyseOptions.NoProgress)
+
+	// TODO
+	debugDependenciesOptions := &commands_options.DebugDependenciesOptions{}
+	debugLayerOptions := &commands_options.DebugLayerOptions{}
+	debugTokenOptions := &commands_options.DebugTokenOptions{}
+	debugUnusedOptions := &commands_options.DebugUnusedOptions{}
+	initOptions := &commands_options.InitOptions{}
+	changedFilesOptions := &commands_options.ChangedFilesOptions{}
 	//
 
 	/*
@@ -258,7 +266,21 @@ func Services(builder *ContainerBuilder) error {
 	 * Console
 	 */
 	analyseRunner := runners.NewAnalyseRunner(dependencyLayersAnalyser, formatterProvider)
+	changedFilesRunner := runners.NewChangedFilesRunner(layerForTokenAnalyser, dependencyLayersAnalyser)
+	debugDependenciesRunner := runners.NewDebugDependenciesRunner(layerDependenciesAnalyser)
+	debugLayerRunner := runners.NewDebugLayerRunner(tokenInLayerAnalyser, builderConfiguration.Layers)
+	debugTokenRunner := runners.NewDebugTokenRunner(layerForTokenAnalyser)
+	debugUnassignedRunner := runners.NewDebugUnassignedRunner(unassignedTokenAnalyser)
+	debugUnusedRunner := runners.NewDebugUnusedRunner(rulesetUsageAnalyser)
+
 	analyseCommand := commands.NewAnalyseCommand(analyseRunner, eventDispatcher, formatterProvider, *verboseBoolFlag, *debugBoolFlag, consoleSubscriber, progressSubscriber, analyseOptions)
+	changedFilesCommand := commands.NewChangedFilesCommand(changedFilesRunner, changedFilesOptions)
+	debugDependenciesCommand := commands.NewDebugDependenciesCommand(debugDependenciesRunner, debugDependenciesOptions)
+	debugLayerCommand := commands.NewDebugLayerCommand(debugLayerRunner, debugLayerOptions)
+	debugTokenCommand := commands.NewDebugTokenCommand(debugTokenRunner, debugTokenOptions)
+	debugUnassignedCommand := commands.NewDebugUnassignedCommand(debugUnassignedRunner)
+	debugUnusedCommand := commands.NewDebugUnusedCommand(debugUnusedRunner, debugUnusedOptions)
+	initCommand := commands.NewInitCommand(dumper, initOptions)
 
 	// TODO: other commands
 	// $services->set(InitCommand::class)->autowire()->tag('console_supportive.command');
@@ -317,9 +339,17 @@ func Services(builder *ContainerBuilder) error {
 	builder.FormatterProvider = formatterProvider
 	builder.FormatterConfiguration = formatterConfiguration
 	builder.AnalyseRunner = analyseRunner
-	builder.AnalyseCommand = analyseCommand
 	builder.NodeNamer = nodeNamer
 	builder.AnalyseOptions = analyseOptions
+
+	builder.AnalyseCommand = analyseCommand
+	builder.ChangedFilesCommand = changedFilesCommand
+	builder.DebugDependenciesCommand = debugDependenciesCommand
+	builder.DebugLayerCommand = debugLayerCommand
+	builder.DebugTokenCommand = debugTokenCommand
+	builder.DebugUnassignedCommand = debugUnassignedCommand
+	builder.DebugUnusedCommand = debugUnusedCommand
+	builder.InitCommand = initCommand
 
 	return nil
 }

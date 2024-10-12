@@ -73,9 +73,16 @@ type ContainerBuilder struct {
 	FormatterProvider                      *formatters.FormatterProvider
 	FormatterConfiguration                 *formatters.FormatterConfiguration
 	AnalyseRunner                          *runners.AnalyseRunner
-	AnalyseCommand                         *commands.AnalyseCommand
 	NodeNamer                              *domainServices.NodeNamer
 	AnalyseOptions                         *commands_options.AnalyseOptions
+	AnalyseCommand                         *commands.AnalyseCommand
+	ChangedFilesCommand                    *commands.ChangedFilesCommand
+	DebugDependenciesCommand               *commands.DebugDependenciesCommand
+	DebugLayerCommand                      *commands.DebugLayerCommand
+	DebugTokenCommand                      *commands.DebugTokenCommand
+	DebugUnassignedCommand                 *commands.DebugUnassignedCommand
+	DebugUnusedCommand                     *commands.DebugUnusedCommand
+	InitCommand                            *commands.InitCommand
 }
 
 func NewContainerBuilder(workingDirectory string) *ContainerBuilder {
