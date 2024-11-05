@@ -5,17 +5,18 @@ services:
 
 deptrac:
   paths:
-    - ./pkg/src
+    - ./pkg
 
   analyser:
     internal_tag: "@internal"
     types:
       - class
       - class_superglobal
-      - file
+      - file_supportive
       - function
       - function_superglobal
       - function_call
+      - use
 
   formatters:
     graphviz:
@@ -39,126 +40,22 @@ deptrac:
 
   layers:
     # Domains
-    - name: Analyser
+    - name: domain
       collectors:
         - type: directory
-          value: pkg/src/core/Analyser/.*
-    - name: Ast
+          value: pkg/domain/.*
+    - name: application
       collectors:
         - type: directory
-          value: pkg/src/core/Ast/.*
-        - type: composer
-          private: true
-          composerPath: composer.json
-          composerLockPath: composer.lock
-          packages:
-            - phpstan/phpdoc-parser
-            - nikic/php-parser
-            - phpdocumentor/type-resolver
-    - name: Console
+          value: pkg/application/.*
+    - name: infrastructure
       collectors:
         - type: directory
-          value: pkg/src/supportive/Console/.*
-    - name: Dependency
-      collectors:
-        - type: directory
-          value: pkg/src/core/Dependency/.*
-    - name: DependencyInjection
-      collectors:
-        - type: directory
-          value: pkg/src/supportive/DependencyInjection/.*
-    - name: Contract
-      collectors:
-        - type: directory
-          value: pkg/src/contract/.*
-    - name: InputCollector
-      collectors:
-        - type: directory
-          value: pkg/src/core/InputCollector/.*
-    - name: Layer
-      collectors:
-        - type: directory
-          value: pkg/src/core/Layer/.*
-    - name: OutputFormatter
-      collectors:
-        - type: directory
-          value: pkg/src/supportive/OutputFormatter/.*
-        - type: composer
-          private: true
-          composerPath: composer.json
-          composerLockPath: composer.lock
-          packages:
-            - phpdocumentor/graphviz
-    - name: File
-      collectors:
-        - type: directory
-          value: pkg/src/supportive/File/.*
-    - name: Time
-      collectors:
-        - type: directory
-          value: pkg/src/supportive/Time/.*
-    - name: Supportive
-      collectors:
-        - type: bool
-          must_not:
-            - type: directory
-              value: pkg/src/supportive/.*/.*
-          must:
-            - type: directory
-              value: pkg/src/supportive/.*
-    - name: Symfony
-      collectors:
-        - type: composer
-          composerPath: composer.json
-          composerLockPath: composer.lock
-          packages:
-            - symfony/config
-            - symfony/console
-            - symfony/dependency-injection
-            - symfony/event-dispatcher
-            - symfony/filesystem
-            - symfony/finder
-            - symfony/yaml
+          value: pkg/infrastructure/.*
 
   ruleset:
-    Layer:
-      - Ast
-      - Symfony
-      - Contract
-    Console:
-      - Analyser
-      - OutputFormatter
-      - DependencyInjection
-      - File
-      - Time
-      - Symfony
-      - Contract
-    Dependency:
-      - Ast
-      - Contract
-    Analyser:
-      - Layer
-      - Dependency
-      - Ast
-      - Symfony
-      - Contract
-    OutputFormatter:
-      - DependencyInjection
-      - Symfony
-      - Contract
-    Ast:
-      - File
-      - InputCollector
-      - Symfony
-      - Contract
-    InputCollector:
-      - File
-      - Symfony
-    DependencyInjection:
-      - Symfony
-      - Console
-      - Contract
-    Contract:
-      - Symfony
-    File:
-      - Symfony
+    application:
+      - domain
+    infrastructure:
+      - application
+      - domain

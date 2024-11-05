@@ -18,30 +18,31 @@ The depfile is the config file for this tool, in this file you define (mainly) t
 Here is an example depfile:
 
 ```yaml
-# depfile.yaml
-paths:
-  - ./src
-exclude_files:
-  - .*test.*
-layers:
-  - name: Controller
-    collectors:
-      - type: directory
-        regex: .*Controller.*
-  - name: Repository
-    collectors:
-      - type: directory
-        regex: .*Repository.*
-  - name: Service
-    collectors:
-      - type: directory
-        regex: .*Service.*
-ruleset:
-  Controller:
-    - Service
-  Service:
-    - Repository
-  Repository: ~
+# deptrac.yaml
+deptrac:
+    paths:
+      - ./src
+    exclude_files:
+      - .*test.*
+    layers:
+      - name: Controller
+        collectors:
+          - type: directory
+            value: .*Controller.*
+      - name: Repository
+        collectors:
+          - type: directory
+            value: .*Repository.*
+      - name: Service
+        collectors:
+          - type: directory
+            value: .*Service.*
+    ruleset:
+      Controller:
+        - Service
+      Service:
+        - Repository
+      Repository: ~
 ```
 
 #### Explanation
@@ -78,7 +79,7 @@ go-deptrac was only tested on Linux and should also work on OS X. Probably it do
 To run the tool, simply pass the path of the depfile:
 
 ```shell script
-go-deptrac ./examples/simple-mvc/depfile.yaml
+go_deptrac ./examples/simple_mvc/deptrac.yaml
 ```
 
 ## Contributing

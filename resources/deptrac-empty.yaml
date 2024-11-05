@@ -1,0 +1,5 @@
+deptrac:
+  paths:
+    - 'test/empty/'
+  analyser:
+    internal_tag: "@internal"
